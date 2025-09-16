@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const values = data.value.map((p: any) => [
       p.ListingKey,
-      p.UnparsedAddress,
+      p.MRD_LASTREETNUMBER+' '+p.MRD_LASTREETNAME+', '+p.MRD_LACITY,
       p.ListPrice,
       p.BedroomsTotal,
       p.BathroomsTotalInteger,

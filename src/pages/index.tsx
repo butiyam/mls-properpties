@@ -14,11 +14,11 @@ type Property = {
   PropertyType?: string;
   MRD_LASTREETNUMBER?: string;
   MRD_LASTREETNAME?: string;
-  MRD_LACITY?: string;
+  UnparsedAddress?: string;
   MRD_LEGALDESC?: string;
-  MRD_MAIN_SQFT?: number;
+  LivingArea?: number;
   BedroomsTotal?: number;
-  BathroomsFull?: number;
+  BathroomsTotalInteger?: number;
   ListPrice?: number;
   ListingKey?: string | number;
 };
@@ -26,13 +26,14 @@ type Property = {
 
 
 const [properties, setProperties] = React.useState<Property[]>([]);
-  console.log(properties);
   useEffect(() => {
     fetch('/api/properties')
       .then(res => res.json()).then(data => setProperties(Array.isArray(data) ? data : []))
       .catch(err => console.error(err));
   }, []);
 
+    if (properties.length === 0) return <div>Loading...</div>;
+    if (properties) 
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -74,7 +75,7 @@ const [properties, setProperties] = React.useState<Property[]>([]);
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0-3.866 3.582-7 8-7s8 3.134 8 7c0 3.866-3.582 7-8 7s-8-3.134-8-7z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11V3" />
           </svg>
-          {property.MRD_LASTREETNUMBER+' '+property.MRD_LASTREETNAME+', '+property.MRD_LACITY}
+          {property.UnparsedAddress}
         </div>
         <p className="text-sm text-gray-500">
           {property.MRD_LEGALDESC}
@@ -83,7 +84,7 @@ const [properties, setProperties] = React.useState<Property[]>([]);
         <div className="flex justify-between text-xs text-gray-500 border-t border-gray-200 pt-3">
           <div className="flex items-center gap-1">
            <FaRuler  size={20} />
-            {property.MRD_MAIN_SQFT} sqft
+            {property.LivingArea} sqft
           </div>
           <div className="flex items-center gap-1">
              <FaBed size={20} />
@@ -91,7 +92,7 @@ const [properties, setProperties] = React.useState<Property[]>([]);
           </div>
           <div className="flex items-center gap-1">
              <FaBath size={20} />
-            Bath {property.BathroomsFull}
+            Bath {property.BathroomsTotalInteger}
           </div>
         </div>
 

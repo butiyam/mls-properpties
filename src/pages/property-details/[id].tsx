@@ -38,7 +38,10 @@ const features = [
     <main style={{ background: '#f6f8fa', minHeight: '100vh', fontFamily: 'sans-serif' }}>
     {/* Hero Banner */}
     <div style={{ width: '100%', height: 220, overflow: 'hidden', position: 'relative' }}>
-      <Image src='/bg.png' alt="alt1" className="w-full h-48 object-cover" />
+      <Image src='/bg.png' alt="alt1" 
+       fill
+    style={{ objectFit: 'cover' }}
+    sizes="(max-width: 768px) 100vw, 700px" />
       <h1 style={{
         position: 'absolute', left: '2rem', bottom: '2rem', color: '#fff',
         background: 'rgba(20,40,60,0.35)',
@@ -58,9 +61,16 @@ const features = [
         {/* Carousel Placeholder */}
         <div>
           {/* Use a real carousel here */}
-          <Image src={property.Media && property.Media.length > 0 ? property.Media[0].MediaURL: null} alt="Property" width={500} height={266} style={{ borderRadius: 12, marginBottom: '1.2rem' }} />
+          <Image src={property.parsedMedia[0].MediaURL || null} 
+          alt="Property" 
+          width={500} 
+          height={266} 
+          style={{ borderRadius: 12, marginBottom: '1.2rem' }}
+           />
         </div>
-        <div style={{ marginBottom: '1rem', color: '#709cd8', fontWeight: 600 }}>18 Broklyn Street, New York</div>
+        <div style={{ marginBottom: '1rem', color: '#709cd8', fontWeight: 600 }}>
+          18 Broklyn Street, New York
+        </div>
         <div style={{ color: '#474d57', fontSize: '1.02rem' }}>
           Spacious modern home, 6 bedrooms, 2 baths, excellent location, pool & media amenities.
         </div>

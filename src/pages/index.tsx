@@ -20,7 +20,7 @@ type Property = {
   BedroomsTotal?: number;
   BathroomsFull?: number;
   ListPrice?: number;
-  ListingId?: string | number;
+  ListingKey?: string | number;
 };
 
 
@@ -47,7 +47,10 @@ const [properties, setProperties] = React.useState<Property[]>([]);
               ? property.Media[0].MediaURL
               : "/placeholder.jpg"
           }
-           className="w-full h-48 object-cover" 
+          layout='responsive'
+          width={16}
+          height={9}
+          objectFit='cover' 
           alt="Property image"
         />
           <span className="absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
@@ -94,7 +97,7 @@ const [properties, setProperties] = React.useState<Property[]>([]);
 
         <div className="flex justify-between items-center mt-3">
           <span className="text-lg font-bold text-blue-600">{new Intl.NumberFormat('en-US',{ style: 'currency', currency:'usd' }).format(property.ListPrice ?? 0)}</span>
-          <a href={'/property-details/'+property.ListingId} className="bg-gray-900 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300">
+          <a href={'/property-details/'+property.ListingKey} className="bg-gray-900 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300">
             Details
           </a>
         </div>

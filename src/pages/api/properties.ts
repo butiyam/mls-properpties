@@ -1,7 +1,7 @@
 // /pages/api/properties.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import db from '../lib/dbConnect';
+import db from '../../lib/dbConnect';
 import { RowDataPacket } from 'mysql2';
 
 
@@ -50,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await db.query('DELETE FROM properties');
 
     // Prepare data for bulk insert
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const values = data.value.map((p: any) => [
       p.ListingKey,
       p.UnparsedAddress,
@@ -69,6 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     return res.status(200).json(data.value);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('API /properties error:', error);
     return res.status(500).json({ error: error.message || 'Internal Server Error' });

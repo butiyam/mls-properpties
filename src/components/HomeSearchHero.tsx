@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FaSearch } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { useState } from "react";
@@ -13,20 +14,6 @@ export default function ResponsiveHomeSearchHero() {
 
   return (
     <section className="relative min-h-[500px] flex items-center justify-center bg-gray-900 overflow-hidden px-0">
-      {/* Floating Header (mobile only) */}
-      <header className="absolute top-0 left-0 w-full z-20 flex items-center justify-between px-5 py-3 bg-black md:hidden">
-        <button className="text-white text-3xl" aria-label="menu">
-          <span className="block w-8 h-1 bg-white mb-1 rounded"></span>
-          <span className="block w-8 h-1 bg-white mb-1 rounded"></span>
-          <span className="block w-8 h-1 bg-white rounded"></span>
-        </button>
-        <div className="text-white font-semibold text-sm flex items-center gap-2 tracking-wide">
-          <span className="text-xs">ⓒ</span>
-          COLDWELL BANKER <span className="font-light">REALTY</span>
-        </div>
-        <span className="w-8" />
-      </header>
-
       {/* Background Image */}
       <img
         src="/bg-hero.jpg"

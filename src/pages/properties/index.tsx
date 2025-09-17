@@ -3,9 +3,8 @@ import { useEffect, useState } from 'react';
 import { FaBath, FaBed, FaRuler, FaMapMarker, FaHome } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
-import HomeSearchHero from '@/components/HomeSearchHero';
-
-export default function Home() {
+import HeroSlider from '@/components/HeroSlider';
+export default function Properties() {
 
 type MediaItem = {
   MediaURL: string;
@@ -44,7 +43,7 @@ type Property = {
     
   return (
     <>
-    <HomeSearchHero/>
+    <HeroSlider/>
     {properties.length === 0 ?
     <><h1 className='text-black text-center'>Loading...</h1></>
     :

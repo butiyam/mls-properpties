@@ -60,12 +60,14 @@ export default function HeroSlider() {
               <Image
                 src={slide.image}
                 alt={slide.title}
-                className="w-full h-full object-cover"
+               width={400}
+               height={300}
+               style={{ width: "100%", height: "auto" }}
               />
               {/* Overlay */}
               <div className="absolute inset-0 bg-black/30 flex flex-col justify-center items-center">
-                <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow text-center">{slide.title}</h1>
-                <p className="text-lg md:text-xl text-white mb-2">{slide.subtitle}</p>
+                <h1 className="text-5xl md:text-3xl font-bold text-white mb-4 drop-shadow text-center">{slide.title}</h1>
+                <p className="text-lg md:text-xl text-white mb-2 p-5 text-center">{slide.subtitle}</p>
                 <p className="text-lg text-white">{slide.tagline}</p>
               </div>
             </div>

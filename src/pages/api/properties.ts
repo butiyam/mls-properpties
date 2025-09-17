@@ -20,6 +20,7 @@ type PropertyRow = RowDataPacket & {
   BathroomsTotalInteger: number;
   LivingArea: number;
   Media: string; // JSON string
+  AssociationAmenities: string; // JSON string
   updatedAt: Date;
 };
 
@@ -81,12 +82,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       p.City,
       p.MRD_SASTATE,
       JSON.stringify(p.Media || []),
+      JSON.stringify(p.AssociationAmenities || []),
       new Date()
     ]);
 
     if (values.length) {
       await db.query(
-        `INSERT INTO properties (ListingKey, UnparsedAddress, ListPrice, BedroomsTotal, BathroomsTotalInteger, LivingArea, MRD_LEGALDESC, YearBuilt, City, MRD_SASTATE ,Media, updatedAt) VALUES ?`,
+        `INSERT INTO properties (ListingKey, UnparsedAddress, ListPrice, BedroomsTotal, BathroomsTotalInteger, LivingArea, MRD_LEGALDESC, YearBuilt, City, MRD_SASTATE ,Media, AssociationAmenities, updatedAt) VALUES ?`,
         [values]
       );
     }

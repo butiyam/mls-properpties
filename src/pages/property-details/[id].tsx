@@ -1,25 +1,64 @@
-import { useEffect, useState } from 'react';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCalendarAlt } from "react-icons/fa";
+import { HiOutlineMail, HiOutlinePhone, HiOutlineLink } from "react-icons/hi";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from 'next/router';
-import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectFade, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
 
-export default function Home() {
 
-const features = [
-  'Air Conditioning',
-  'Washer and dryer',
-  'Swimming Pool',
-  'Basketball',
-  '24x7 Security',
-  'Central Air',
-  'Media Room',
-  'Indoor Game'
-];
+export default function PropertyDetails() {
+
+
+  // Demo property data (replace with API response)
+   const prop = {
+     title: "West Square Apartments",
+     address: "19 Brooklyn Street, New York",
+     image: "/gallery1.png",
+     description: "Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Praesent varius rutrum nulla ut metus varius laoreet.",
+     overview: [
+       { label: "Number ID", value: "#9168", icon: <FaMapMarkerAlt /> },
+       { label: "Type", value: "Apartment", icon: <FaBed /> },
+       { label: "Build Year", value: "2021", icon: <FaCalendarAlt /> },
+       { label: "Bed", value: "2", icon: <FaBed /> },
+       { label: "Bath", value: "2", icon: <FaBath /> },
+       { label: "Size", value: "1850 sqft", icon: <FaRulerCombined /> }
+     ],
+     amenities: [
+       "Air Conditioning", "Washer and dryer", "Swimming Pool", "Basketball", "24/7 Security", "Central Air", "Media Room", "Indoor Game"
+     ],
+     map: "https://www.openstreetmap.org/export/embed.html?bbox=-73.95%2C40.67%2C-73.93%2C40.69&layer=mapnik", // example embed
+     owner: {
+       name: "Samakcodez",
+       profileUrl: "https://trinityimpact.com",
+       avatar: "/avatar.jpg",
+     },
+     contact: {
+       address: "19 Brooklyn Street, New York",
+       phone: "+1(666) 888-919",
+       email: "contact@example.com",
+       website: "https://example.com"
+     }
+   };
+
+interface ParsedMedia {
+  ImageHeight: number;
+  ResourceRecordID: string;
+  Order: number;
+  ImageWidth: number;
+  MediaURL: string;
+  MediaModificationTimestamp: string;
+  MediaKey: string;
+}
 
   const router = useRouter();
   const { id } = router.query;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
+  const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
 
    
   useEffect(() => {
@@ -35,136 +74,217 @@ const features = [
     if (property) 
 
   return (
-    <main style={{ background: '#f6f8fa', minHeight: '100vh', fontFamily: 'sans-serif' }}>
-    {/* Hero Banner */}
-    <div style={{ width: '100%', height: 220, overflow: 'hidden', position: 'relative' }}>
-      <Image src='/bg.png' alt="alt1" 
-       fill
-    style={{ objectFit: 'cover' }}
-    sizes="(max-width: 768px) 100vw, 700px" />
-      <h1 style={{
-        position: 'absolute', left: '2rem', bottom: '2rem', color: '#fff',
-        background: 'rgba(20,40,60,0.35)',
-        padding: '0.7rem 2.7rem', borderRadius: 14, fontSize: '2rem', fontWeight: 800
-      }}>
-      Title Here
-      </h1>
-    </div>
+    <div className="bg-[#f8fafc] min-h-screen py-8 px-2">
+         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+           {/* Main Content */}
+           <section className="lg:col-span-2 flex flex-col gap-4">
+             {/* Title & Gallery */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <div className="font-bold text-black text-2xl"> Title </div>
+               <div className="flex items-center gap-2 text-gray-500 mt-1">
+                 <FaMapMarkerAlt />
+                 <span>{property.UnparsedAddress}</span>
+               </div>
+                <Swiper
+                       modules={[EffectFade, Autoplay]}
+                       effect="fade"
+                       autoplay={{ delay: 4500, disableOnInteraction: false }}
+                       loop
+                       className="w-full h-full"
+                     >
+                       {property.parsedMedia.map((slide: ParsedMedia, idx: number) => (
+                         <SwiperSlide key={idx}>
 
-    {/* Page Content Grid */}
-    <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', width: '100%', flexWrap: 'wrap', marginTop: '2rem' }}>
-      {/* Main Card */}
-      <section style={{
-        background: '#fff', borderRadius: 16, boxShadow: '0 2px 10px rgba(46,97,156,0.07)',
-        flex: '1 0 540px', maxWidth: 560, minWidth: 340, padding: '1.5rem'
-      }}>
-        {/* Carousel Placeholder */}
-        <div>
-          {/* Use a real carousel here */}
-          <Image src={property.parsedMedia[0].MediaURL || null} 
-          alt="Property" 
-          width={500} 
-          height={266} 
-          style={{ borderRadius: 12, marginBottom: '1.2rem' }}
-           />
-        </div>
-        <div style={{ marginBottom: '1rem', color: '#709cd8', fontWeight: 600 }}>
-          18 Broklyn Street, New York
-        </div>
-        <div style={{ color: '#474d57', fontSize: '1.02rem' }}>
-          Spacious modern home, 6 bedrooms, 2 baths, excellent location, pool & media amenities.
-        </div>
-        <div style={{ margin: '1.2rem 0', borderTop: '1px solid #e5e5e5' }}>
-          <h3 className='text-black font-bold mt-5'>Overview</h3>
-          <ul style={{ padding: 0, margin: 0, listStyle: 'none', color: '#474d57' }}>
-            <li><strong>Type:</strong> 2021</li>
-            <li><strong>Build Year:</strong> Yes</li>
-            <li><strong>Bed:</strong> {property.BedroomsTotal}</li>
-            <li><strong>Bath:</strong> {property.BathroomsTotalInteger}</li>
-            <li><strong>Size:</strong> {property.LivingArea} sqft</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Sidebar Cards */}
-      <aside style={{ flex: '1 0 260px', maxWidth: 305, minWidth: 220, display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-        {/* Author Info */}
-        <section style={{ background: '#fff', padding: '1.1rem', borderRadius: 14, boxShadow: '0 1px 7px #709cd84c' }}>
-          <h4 className='text-black font-bold mb-5' >Author Info</h4>
-          <div>
-            <span style={{ fontWeight: 600, color: '#417ec7',}}>Sam Jacobson</span><br />
-            <a href="mailto:sam@cottage.com" style={{ color: '#417ec7', fontSize: '0.97rem' }}>sam@cottage.com</a>
-          </div>
-        </section>
-        {/* Property Contact */}
-        <section style={{ background: '#fff', padding: '1.1rem', borderRadius: 14, boxShadow: '0 1px 7px #709cd84c', marginBottom: '1rem' }}>
-          <h4 className='text-black font-bold mb-5'>Property Contact</h4>
-          <div>
-            <div style={{color: '#417ec7'}}>18 Broklyn Street, New York</div>
-            <a href="tel:555-1234" style={{ color: '#417ec7' }}>555-1234</a>
-            <br />
-            <a href="mailto:info@gravenhurst.com" style={{ color: '#417ec7', fontSize: '0.97rem' }}>info@gravenhurst.com</a>
-          </div>
-        </section>
-      </aside>
-    </div>
-
-    {/* Sections: Video, Features, Map, Reviews */}
-    <div style={{ maxWidth: 870, margin: '3rem auto', background: '#fff', borderRadius: 18, boxShadow: '0 4px 21px #417ec716', padding: '2rem' }}>
-      {/* Preview Video */}
-      <section style={{ marginBottom: '2.2rem' }}>
-        <h3 className='text-black font-bold'>Preview Video</h3>
-        <div style={{ borderRadius: 12, overflow: 'hidden', maxWidth: 600 }}>
-          <iframe width="100%" height="340" src="https://www.youtube.com/embed/7d7lQKzvqGo" title="Preview Video" frameBorder="0" allowFullScreen />
-        </div>
-      </section>
-
-      {/* Features & Amenities */}
-      <section style={{ marginBottom: '1.7rem' }}>
-        <h3 className='text-black font-bold' >Features & Amenities</h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.7rem' }}>
-          {features.map(feature => (
-            <span key={feature} style={{
-              background: '#e5f0fa',
-              color: '#417ec7',
-              padding: '0.45rem 1rem',
-              borderRadius: 8,
-              fontWeight: 500,
-              fontSize: '0.97rem'
-            }}>{feature}</span>
-          ))}
-        </div>
-      </section>
-
-      {/* Location Map */}
-      <section style={{ marginBottom: '1.7rem' }}>
-        <h3 className='text-black font-bold'>Location</h3>
-        <div style={{ borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 8px #417ec778' }}>
-          <iframe
-            width="100%" height="260" frameBorder="0"
-            src="https://maps.google.com/maps?q=18%20Broklyn%20Street,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed"
-            allowFullScreen
-            title="Location Map"
-          ></iframe>
-        </div>
-      </section>
-
-      {/* Review Section */}
-      <section>
-        <h3 className='text-black font-bold'>Reviews</h3>
-        <div style={{ marginBottom: '1.1rem', color: '#aaa' }}>There are no reviews yet.</div>
-        <form style={{ background: '#f3f8ff', padding: '1rem', borderRadius: 12 }}>
-          <label htmlFor="review" style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 500 }}>Leave a Review</label>
-          <textarea id="review" rows={4} style={{ width: '100%', borderRadius: 8, border: '1px solid #d6e6f8', padding: '0.7rem', marginBottom: '1rem' }}/>
-          <button type="submit" style={{
-            background: '#417ec7', color: '#fff', border: 'none', borderRadius: 8,
-            padding: '0.65rem 1.6rem', fontWeight: 600, cursor: 'pointer'
-          }}>Submit Review</button>
-        </form>
-      </section>
-    </div>
-
-    
-  </main>
+                             <Image
+                               src={slide.MediaURL}
+                               alt={`Slide ${idx + 1}`}
+                              width={slide.ImageWidth}
+                              height={slide.ImageHeight}
+                              style={{ borderRadius: '20px', width: "100%", height: "auto" }}
+                              className="mt-5 object-cover border" />
+                          
+                        
+                         </SwiperSlide>
+                       ))}
+                     </Swiper>
+            
+               {/* Ratings or location info row can be added here */}
+             </div>
+   
+             {/* Description */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <p className="text-gray-700">{property.MRD_LEGALDESC}</p>
+               <p className="mt-2 text-gray-700">
+                 Nullam turpis sem sit amet orci eget eros faucibus tincidunt. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+               </p>
+             </div>
+   
+             {/* Overview Section */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <div className="font-bold text-black text-lg mb-4">Overview</div>
+               <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">                  
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaMapMarkerAlt />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Listing ID</div>
+                       <div className="font-semibold text-[#2d3243]">#{property.ListingKey}</div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaBed />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Type</div>
+                       <div className="font-semibold text-[#2d3243]">Residential</div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaCalendarAlt />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Build Year</div>
+                       <div className="font-semibold text-[#2d3243]">{property.YearBuilt}</div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaBed />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Bed</div>
+                       <div className="font-semibold text-[#2d3243]">{property.BedroomsTotal}</div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaBath />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Bath</div>
+                       <div className="font-semibold text-[#2d3243]">{property.BathroomsTotalInteger}</div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaRulerCombined />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Size</div>
+                       <div className="font-semibold text-[#2d3243]">{property.LivingArea} sqft</div>
+                     </div>
+                   </div>  
+               </div>
+             </div>
+   
+             {/* Features & Amenities Section */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <div className="font-bold text-black text-lg mb-4">Features & Amenities</div>
+               <div className="flex flex-wrap gap-3">
+                 {property.parsedAssociationAmenities.map((amenity: string, idx: number) => (
+                   <span key={idx} className="px-3 py-1 bg-[#e6f1c6] rounded-full text-[#2d3243] text-sm font-medium">
+                     {amenity}
+                   </span>
+                 ))}
+               </div>
+             </div>
+   
+             {/* Location / Map Section */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <div className="font-bold text-black text-lg mb-4">Location</div>
+               <div className="rounded-lg overflow-hidden border">
+                 <iframe
+                   src={prop.map}
+                   width="100%"
+                   height="300"
+                   className="border-none"
+                   allowFullScreen
+                   loading="lazy"
+                   referrerPolicy="no-referrer-when-downgrade"
+                   title="Map"
+                 />
+               </div>
+               <div className="mt-3 flex items-center gap-2 text-gray-500">
+                 <FaMapMarkerAlt />
+                 <span>{property.UnparsedAddress}</span>
+                 <a
+                   href={`https://maps.google.com/?q=${encodeURIComponent(property.UnparsedAddress)}`}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="ml-auto px-3 py-1 bg-[#e6f1c6] rounded-full text-[#2d3243] text-sm font-semibold hover:bg-[#d6eeb4]"
+                 >
+                   Get Directions
+                 </a>
+               </div>
+             </div>
+           </section>
+   
+           {/* Sidebar */}
+           <aside className="flex flex-col gap-6">
+             {/* Author Info */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <div className="font-bold text-black text-lg mb-2">Author Info</div>
+               <div className="flex items-center gap-3 mb-3">
+                 <Image src={prop.owner.avatar} alt={prop.owner.name} width={30} height={30} className="rounded-full object-cover" />
+                 <div className="font-semibold text-[#2d3243]">{prop.owner.name}</div>
+               </div>
+               <div className="text-xs text-gray-500 mb-2">Member since 2 months ago</div>
+               <a
+                 href={prop.owner.profileUrl}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="block px-4 py-2 rounded-lg bg-[#e6f1c6] text-[#2d3243] font-semibold text-center mt-3"
+               >
+                 View Profile
+               </a>
+             </div>
+   
+             {/* Property Contact */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <div className="font-bold text-black text-lg mb-2">Property Contact</div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><FaMapMarkerAlt /> {prop.contact.address}</div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlinePhone /> {prop.contact.phone}</div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {prop.contact.email}</div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineLink /> <a href={prop.contact.website} className="underline text-[#2d3243]">{prop.contact.website}</a></div>
+             </div>
+   
+             {/* Contact Listing Owner */}
+             <div className="bg-white rounded-xl shadow-md p-6">
+               <div className="font-bold text-black text-lg mb-2">Contact Listing Owner</div>
+               <form className="flex flex-col gap-3">
+                 <input
+                   className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-[#e6f1c6]"
+                   type="text"
+                   placeholder="Name"
+                   value={contactForm.name}
+                   onChange={e => setContactForm({ ...contactForm, name: e.target.value })}
+                 />
+                 <input
+                   className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-[#e6f1c6]"
+                   type="email"
+                   placeholder="Email"
+                   value={contactForm.email}
+                   onChange={e => setContactForm({ ...contactForm, email: e.target.value })}
+                 />
+                 <textarea
+                   className="border border-gray-300 rounded px-4 py-2 resize-none focus:outline-none focus:ring focus:border-[#e6f1c6]"
+                   placeholder="Message..."
+                   value={contactForm.message}
+                   onChange={e => setContactForm({ ...contactForm, message: e.target.value })}
+                 />
+                 <button
+                   className="px-4 py-2 rounded-lg bg-[#e6f1c6] text-[#2d3243] font-semibold hover:bg-[#d6eeb4]"
+                   type="submit"
+                 >
+                   Submit Now
+                 </button>
+               </form>
+             </div>
+           </aside>
+         </div>
+       </div>
   );
 }

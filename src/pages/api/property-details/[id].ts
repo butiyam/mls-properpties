@@ -6,11 +6,16 @@ type PropertyDetails = RowDataPacket & {
   ListingId: string | number;
   PropertyType?: string;
   Media: string;           // original JSON string from DB
+  AssociationAmenities: string; // original JSON string from DB
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  parsedMedia?: any[];  
+  parsedMedia?: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  parsedAssociationAmenities?: any[];  
   MRD_LASTREETNUMBER?: string;
   MRD_LASTREETNAME?: string;
   MRD_LACITY?: string;
+  YearBuilt?: number;
+  UnparsedAddress?: string;
   MRD_LEGALDESC?: string;
   MRD_MAIN_SQFT?: number;
   BedroomsTotal?: number;
@@ -40,6 +45,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       property.parsedMedia = JSON.parse(property.Media);
     } catch {
       property.parsedMedia = [];
+    }
+   }
+
+   if (property.AssociationAmenities) {
+    try {
+      property.parsedAssociationAmenities = JSON.parse(property.AssociationAmenities);
+    } catch {
+      property.parsedAssociationAmenities = [];
     }
    }
 

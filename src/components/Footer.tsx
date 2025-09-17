@@ -12,13 +12,13 @@ const galleryImages = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2d3243] text-white pt-8">
+    <footer className="bg-[#16243e] text-white pt-8">
       {/* Contact Bar */}
-      <div className="max-w-4xl mx-auto mb-10">
-        <div className="bg-[#1fe6e6] rounded-2xl flex flex-wrap justify-between items-center p-6 gap-6 md:gap-0 shadow-md">
+      <div className="max-w-6xl mx-auto mb-10 p-5">
+        <div className="bg-[#00bfa6] rounded-2xl flex flex-wrap justify-between items-center p-6 gap-6 md:gap-0 shadow-md">
           {/* Address */}
           <div className="flex items-center gap-2 min-w-[200px]">
-            <div className="bg-[#26fff9] p-3 rounded-full text-white"><FaMapMarkerAlt size={22} /></div>
+            <div className="bg-[#fff] p-3 rounded-full text-white"><FaMapMarkerAlt fill="#00bfa6" size={22} /></div>
             <div>
               <div className="font-semibold">Address</div>
               <div className="text-sm text-white">7 N. Grant Street Suite LL<br />Hinsdale, IL 60521</div>
@@ -26,7 +26,7 @@ export default function Footer() {
           </div>
           {/* Email */}
           <div className="flex items-center gap-2 min-w-[200px]">
-            <div className="bg-[#26fff9] p-3 rounded-full text-white"><FaEnvelope size={22} /></div>
+            <div className="bg-[#fff] p-3 rounded-full text-white"><FaEnvelope fill="#00bfa6" size={22} /></div>
             <div>
               <div className="font-semibold">Send Email</div>
               <div className="text-sm text-white">info@obrglobal.com</div>
@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
           {/* Call */}
           <div className="flex items-center gap-2 min-w-[180px]">
-            <div className="bg-[#26fff9] p-3 rounded-full text-white"><FaPhoneAlt size={22} /></div>
+            <div className="bg-[#fff] p-3 rounded-full text-[#00bfa6]"><FaPhoneAlt fill="#00bfa6" size={22} /></div>
             <div>
               <div className="font-semibold">Call Today</div>
               <div className="text-sm text-white">(630) 242-5662</div>
@@ -42,7 +42,7 @@ export default function Footer() {
           </div>
           {/* Fax */}
           <div className="flex items-center gap-2 min-w-[160px]">
-            <div className="bg-[#26fff9] p-3 rounded-full text-white"><FaFax size={22} /></div>
+            <div className="bg-[#fff] p-3 rounded-full text-white"><FaFax fill="#00bfa6" size={22} /></div>
             <div>
               <div className="font-semibold">Fax</div>
               <div className="text-sm text-white">(312) 291-4258</div>
@@ -54,8 +54,8 @@ export default function Footer() {
       {/* Main Footer */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 pb-8 items-start">
         {/* Company & Social */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <Image src="/logo-footer.png" alt="Company Logo" />
+        <div className="flex flex-col items-center md:items-start text-center md:text-left p-5">
+            <Image src="/logo-footer.png" width={180}  height={180} alt="Company Logo" />
             <p className="mb-4 text-gray-200">Discover timeless elegance, world-class design, and unmatched locations.<br />
               Your next extraordinary home awaits.</p>
             <div className="flex gap-5 justify-center md:justify-start mb-4">
@@ -67,7 +67,7 @@ export default function Footer() {
             </div>
         </div>
         {/* Quick Links */}
-        <div className="flex flex-col items-center md:items-start">
+        <div className="flex flex-col items-center md:items-start p-5">
           <h4 className="text-lg font-semibold mb-2 border-b-2 border-[#1fe6e6] w-fit">Quick Links</h4>
           <ul className="space-y-3 text-[#1fe6e6] text-base mt-2 font-semibold">
             <li>
@@ -83,15 +83,18 @@ export default function Footer() {
           </ul>
         </div>
         {/* Gallery */}
-        <div>
+        <div className="p-5">
           <h4 className="text-lg font-semibold mb-2 border-b-2 border-[#1fe6e6] w-fit">Gallery</h4>
-          <div className="grid grid-cols-3 gap-2 mt-2">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
             {galleryImages.slice(0,6).map((img, idx) => (
               <Image
                 key={idx}
                 src={img}
+                width={400}
+                height={300}
+                style={{ width: "100%", height: "auto" }}
                 alt={`Property ${idx+1}`}
-                className="w-full h-20 object-cover rounded-md"
+                className="object-cover rounded-md"
               />
             ))}
           </div>
@@ -99,7 +102,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-gray-600 py-4 text-center text-gray-400 text-sm">
+      <div className="border-t border-gray-600 py-4 text-center text-gray-200 text-sm">
         &copy; 2025 Oak Brook Realty. Designed By Samak Solutions
       </div>
     </footer>

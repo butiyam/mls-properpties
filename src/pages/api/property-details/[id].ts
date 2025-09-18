@@ -16,7 +16,7 @@ type PropertyDetails = RowDataPacket & {
   MRD_LACITY?: string;
   YearBuilt?: number;
   UnparsedAddress?: string;
-  MRD_LEGALDESC?: string;
+  PublicRemarks?: string;
   MRD_MAIN_SQFT?: number;
   BedroomsTotal?: number;
   BathroomsFull?: number;

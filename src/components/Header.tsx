@@ -10,6 +10,7 @@ export default function Header() {
     <header className="bg-[#2d3243] flex items-center justify-between px-4 py-3 relative">
       {/* Logo and name */}
       <div className="flex items-center gap-3">
+        <Link href="/">
         <Image
           src="/logo.jpeg"
           alt="Oak Brook Realty"
@@ -17,6 +18,7 @@ export default function Header() {
           height={60}
           className="object-cover rounded"
         />
+        </Link>
         <div className="text-white font-bold text-base leading-tight hidden sm:block">
           Oak Brook<br />
           Realty

@@ -58,8 +58,32 @@ interface ParsedMedia {
   const { id } = router.query;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
-  const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
+ 
+  function diffInMonths(date1 : string) {
+  const d1 = new Date(date1);
+  const d2 = new Date();
 
+  const years = d2.getFullYear() - d1.getFullYear();
+  const months = d2.getMonth() - d1.getMonth();
+  return years * 12 + months;
+}
+function sendEmail(agentEmail: string, ListingId : string) {
+
+  const nameElement = window.document.getElementById('name') as HTMLInputElement | null;
+  const name = nameElement ? encodeURIComponent(nameElement.value) : '';
+
+  const messageElement = document.getElementById('message') as HTMLTextAreaElement | null;
+  const message = messageElement ? encodeURIComponent(messageElement.value) : '';
+
+  const subject = encodeURIComponent("Property Enquiry");
+   const body = encodeURIComponent(
+    `Name: ${name}\n ListingId: ${ListingId} \n Message: ${message}`
+  );
+
+  const mailtoLink = `mailto:${agentEmail}?subject=${subject}&body=${body}`;
+
+  window.location.href = mailtoLink;
+}
    
   useEffect(() => {
       if (!id) return;
@@ -113,7 +137,7 @@ interface ParsedMedia {
    
              {/* Description */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <p className="text-gray-700">{property.MRD_LEGALDESC}</p>
+               <p className="text-gray-700">{property.PublicRemarks}</p>
                <p className="mt-2 text-gray-700">
                  Nullam turpis sem sit amet orci eget eros faucibus tincidunt. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
                </p>
@@ -226,58 +250,49 @@ interface ParsedMedia {
            <aside className="flex flex-col gap-6">
              {/* Author Info */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <div className="font-bold text-black text-lg mb-2">Author Info</div>
+               <div className="font-bold text-black text-lg mb-2">Agent Info</div>
                <div className="flex items-center gap-3 mb-3">
                  <Image src={prop.owner.avatar} alt={prop.owner.name} width={30} height={30} className="rounded-full object-cover" />
-                 <div className="font-semibold text-[#2d3243]">{prop.owner.name}</div>
+                 <div className="font-semibold text-[#2d3243]">{property.ListAgentFullName}</div>
                </div>
-               <div className="text-xs text-gray-500 mb-2">Member since 2 months ago</div>
-               <a
-                 href={prop.owner.profileUrl}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="block px-4 py-2 rounded-lg bg-[#e6f1c6] text-[#2d3243] font-semibold text-center mt-3"
-               >
-                 View Profile
-               </a>
+               <div className="text-xs text-gray-500 mb-2">Member since {diffInMonths(property.ListingContractDate)} months ago</div>
+               
              </div>
    
              {/* Property Contact */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <div className="font-bold text-black text-lg mb-2">Property Contact</div>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><FaMapMarkerAlt /> {prop.contact.address}</div>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlinePhone /> {prop.contact.phone}</div>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {prop.contact.email}</div>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineLink /> <a href={prop.contact.website} className="underline text-[#2d3243]">{prop.contact.website}</a></div>
+               <div className="font-bold text-black text-lg mb-2">Agent Contact</div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlinePhone /> {property.ListAgentOfficePhone}</div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail}</div>
+               {property.ListOfficeURL?
+               <>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineLink /> <a href={property.ListOfficeURL} target="_blank" className="underline text-[#2d3243]">{property.ListOfficeURL}</a></div>
+               </>
+               :
+               <></>
+              }
              </div>
    
              {/* Contact Listing Owner */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <div className="font-bold text-black text-lg mb-2">Contact Listing Owner</div>
-               <form className="flex flex-col gap-3">
+               <div className="font-bold text-black text-lg mb-2">Contact Listing Agent</div>
+               <form action={"mailto:"+property.ListAgentEmail} method="GET" encType="text/plain" className="flex flex-col gap-3">
                  <input
                    className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-[#e6f1c6]"
                    type="text"
                    placeholder="Name"
-                   value={contactForm.name}
-                   onChange={e => setContactForm({ ...contactForm, name: e.target.value })}
+                   id="name"
                  />
-                 <input
-                   className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-[#e6f1c6]"
-                   type="email"
-                   placeholder="Email"
-                   value={contactForm.email}
-                   onChange={e => setContactForm({ ...contactForm, email: e.target.value })}
-                 />
+                 
                  <textarea
                    className="border border-gray-300 rounded px-4 py-2 resize-none focus:outline-none focus:ring focus:border-[#e6f1c6]"
                    placeholder="Message..."
-                   value={contactForm.message}
-                   onChange={e => setContactForm({ ...contactForm, message: e.target.value })}
+                   id="message"
                  />
                  <button
+                 type="button"
                    className="px-4 py-2 rounded-lg bg-[#e6f1c6] text-[#2d3243] font-semibold hover:bg-[#d6eeb4]"
-                   type="submit"
+                   onClick={ () => sendEmail(property.ListAgentEmail, property.ListingKey)}
                  >
                    Submit Now
                  </button>

@@ -6,7 +6,7 @@ import { RowDataPacket } from 'mysql2';
 
 
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
-const MLS_ENDPOINT = 'https://api.mlsgrid.com/v2/Property?$expand=Media,Rooms,UnitTypes';
+const MLS_ENDPOINT = 'https://api.mlsgrid.com/v2/Property?$expand=Media,Rooms,UnitTypes&$filter=PropertyType eq 7 and StandardStatus eq 1';
 //https://api.mlsgrid.com/v2/Property?$expand=Media,Rooms,UnitTypes&$filter=PropertyType eq 7 and StandardStatus eq 1
 
 type LastUpdatedRow = RowDataPacket & { lastUpdated: string | null };
@@ -19,6 +19,7 @@ type PropertyRow = RowDataPacket & {
   BedroomsTotal: number;
   BathroomsTotalInteger: number;
   LivingArea: number;
+  PublicRemarks: string;
   Media: string; // JSON string
   AssociationAmenities: string; // JSON string
   updatedAt: Date;
@@ -27,10 +28,42 @@ type PropertyRow = RowDataPacket & {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
 
+  let query = 'SELECT * FROM properties WHERE 1=1';
+  const params = [];
+
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
   const offset = (page - 1) * limit;
 
+  const city = (req.query.city as string) || 0;
+  const bed = parseInt(req.query.bed as string) || 0;
+  const bath = parseInt(req.query.bath as string) || 0;
+  const priceMin = (req.query.priceMin as string) || 0;
+  const priceMax = (req.query.priceMax as string) || 0;
+
+  
+  if (bed) {
+    query += ' AND BedroomsTotal = ?';
+    params.push(bed);
+  }
+  if (bath) {
+    query += ' AND BathroomsTotalInteger = ?';
+    params.push(bath);
+  }
+  if (priceMin && priceMax) {
+    query += ' AND ListPrice BETWEEN ? AND ?';
+    params.push(priceMin, priceMax);
+  }
+  
+  if (city) {
+    query += ' AND City = ?';
+    params.push(city);
+  }
+
+  query += ' LIMIT ? OFFSET ?';
+  params.push(limit, offset);
+
+    //  return res.status(500).json({ error: query  +priceMax });
     // Check last update time from DB cache
     const [rows] = await db.query<LastUpdatedRow[]>('SELECT MAX(updatedAt) AS lastUpdated FROM properties');
         
@@ -40,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (lastUpdated && now - lastUpdated < CACHE_DURATION) {
       // Serve cached properties
-      const [properties] = await db.query<PropertyRow[]>('SELECT * FROM properties LIMIT ? OFFSET ?',[limit, offset]);
+      const [properties] = await db.query<PropertyRow[]>(query,params);
       // Parse Media JSON strings before sending
       const parsedProperties = properties.map(p => ({
         ...p,
@@ -77,24 +110,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       p.BedroomsTotal,
       p.BathroomsTotalInteger,
       p.LivingArea,
-      p.MRD_LEGALDESC,
+      p.PublicRemarks,
       p.YearBuilt,
       p.City,
       p.MRD_SASTATE,
       JSON.stringify(p.Media || []),
       JSON.stringify(p.AssociationAmenities || []),
+      p.ListAgentFullName,
+      p.ListAgentEmail,
+      p.ListAgentOfficePhone,
+      p.ListOfficeURL,
+      p.ListingContractDate,
       new Date()
     ]);
 
     if (values.length) {
       await db.query(
-        `INSERT INTO properties (ListingKey, UnparsedAddress, ListPrice, BedroomsTotal, BathroomsTotalInteger, LivingArea, MRD_LEGALDESC, YearBuilt, City, MRD_SASTATE ,Media, AssociationAmenities, updatedAt) VALUES ?`,
+        `INSERT INTO properties (ListingKey, UnparsedAddress, ListPrice, BedroomsTotal, BathroomsTotalInteger, LivingArea, PublicRemarks, YearBuilt, City, MRD_SASTATE ,Media, AssociationAmenities, ListAgentFullName, ListAgentEmail, ListAgentOfficePhone, ListOfficeURL, ListingContractDate, updatedAt) VALUES ?`,
         [values]
       );
     }
 
     // Serve cached properties
-      const [properties] = await db.query<PropertyRow[]>('SELECT * FROM properties LIMIT ? OFFSET ?',[limit, offset]);
+      const [properties] = await db.query<PropertyRow[]>(query,params);
       // Parse Media JSON strings before sending
       const parsedProperties = properties.map(p => ({
         ...p,

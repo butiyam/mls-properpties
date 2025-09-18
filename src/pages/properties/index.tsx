@@ -50,7 +50,7 @@ type Property = {
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">Properties for Sale</h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {properties.map((property, index) => (
           <>
           <div key={index} className="bg-[#FFF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -60,9 +60,8 @@ type Property = {
                   ? property.Media[0].MediaURL
                   : "/placeholder.jpg"
               }
-              layout='responsive'
-              width={16}
-              height={9}
+              width={400}
+              height={200}
               style={{borderRadius: '16px', padding: '10px'}}
               objectFit='cover' 
               alt="Property image"
@@ -80,15 +79,12 @@ type Property = {
 
       <div className="p-4 space-y-3">
         <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
-         Gravenhurst Cottage
-          </h2>
+          {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA |'+(property.LivingArea)?.toLocaleString()+' Sqft'}
+        </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">
           <FaMapMarker/>
           {property.UnparsedAddress}
         </div>
-        <p className="text-sm text-gray-500">
-          {property.MRD_LEGALDESC}
-        </p>
 
         <div className="flex justify-between text-xs text-gray-500 border-t border-gray-200 pt-3">
           <div className="flex items-center gap-1">

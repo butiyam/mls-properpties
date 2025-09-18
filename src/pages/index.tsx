@@ -75,7 +75,7 @@ type Property = {
           <div className="hidden md:flex flex-row gap-0 bg-white shadow-lg rounded items-center overflow-hidden">
             <input
               type="text"
-              placeholder="Neighborhood, City, ZIP or MLS#"
+              placeholder="City"
               className="h-16 px-6 py-3 w-full text-xl outline-none border-none rounded-none bg-white flex-1"
               value={form.location}
               onChange={e => setForm({ ...form, location: e.target.value })}
@@ -128,7 +128,7 @@ type Property = {
             <div className="flex w-full gap-2 items-center">
               <input
                 type="text"
-                placeholder="Neighborhood, City, ZIP or MLS#"
+                placeholder="City"
                 className="flex-1 py-3 px-2 text-lg border border-gray-200 rounded focus:outline-none"
                 value={form.location}
                 onChange={e => setForm({ ...form, location: e.target.value })}
@@ -198,9 +198,8 @@ type Property = {
                   ? property.Media[0].MediaURL
                   : "/placeholder.jpg"
               }
-              layout='responsive'
-              width={16}
-              height={9}
+              width={400}
+              height={200}
               style={{borderRadius: '16px', padding: '10px'}}
               objectFit='cover' 
               alt="Property image"

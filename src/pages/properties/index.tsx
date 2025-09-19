@@ -4,6 +4,9 @@ import { FaBath, FaBed, FaRuler, FaMapMarker, FaHome } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
 import HeroSlider from '@/components/HeroSlider';
+import ClipLoader from "react-spinners/ClipLoader";
+
+
 export default function Properties() {
 
 type MediaItem = {
@@ -45,7 +48,15 @@ type Property = {
     <>
     <HeroSlider/>
     {properties.length === 0 ?
-    <><h1 className='text-black text-center'>Loading...</h1></>
+  <div style={{
+      display: "flex",
+      background:'#2d3243',
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100px",      // full viewport height for vertical centering
+    }}>
+      <ClipLoader size={50} color="#e6f1c6" />
+    </div>
     :
     <>
     <div className="container mx-auto px-4 py-8">
@@ -58,7 +69,7 @@ type Property = {
             <Image  src={
                 property.Media && property.Media.length > 0
                   ? property.Media[0].MediaURL
-                  : "/placeholder.jpg"
+                  : "/placeholder.png"
               }
               width={400}
               height={200}
@@ -66,11 +77,11 @@ type Property = {
               objectFit='cover' 
               alt="Property image"
             />
-          <span className="absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
+          <span className="hidden absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
             Featured
           </span>
         
-        <div className="absolute top-2 right-2 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
+        <div className="hidden absolute top-2 right-2 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
           </svg>
@@ -82,21 +93,21 @@ type Property = {
           {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA |'+(property.LivingArea)?.toLocaleString()+' Sqft'}
         </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">
-          <FaMapMarker/>
+          <FaMapMarker fill='#00BFA6' />
           {property.UnparsedAddress}
         </div>
 
         <div className="flex justify-between text-xs text-gray-500 border-t border-gray-200 pt-3">
           <div className="flex items-center gap-1">
-           <FaRuler  size={20} />
+           <FaRuler fill='#00BFA6'  size={20} />
             {property.LivingArea} sqft
           </div>
           <div className="flex items-center gap-1">
-             <FaBed size={20} />
+             <FaBed fill='#00BFA6' size={20} />
             Bed {property.BedroomsTotal}
           </div>
           <div className="flex items-center gap-1">
-             <FaBath size={20} />
+             <FaBath fill='#00BFA6' size={20} />
             Bath {property.BathroomsTotalInteger}
           </div>
         </div>
@@ -105,7 +116,7 @@ type Property = {
           <span className="text-lg font-bold text-[#00BFA6] pl-2">
             {new Intl.NumberFormat('en-US',{ style: 'currency', currency:'usd' }).format(property.ListPrice ?? 0)}
           </span>
-          <a href={'/property-details/'+property.ListingKey} className="flex bg-gray-900 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300">
+          <a href={'/property-details/'+property.ListingKey} className="flex bg-[#00BFA6] text-white px-4 py-1 rounded">
           <FaHome className='mt-0.5 mr-2'/>  Details
           </a>
         </div>

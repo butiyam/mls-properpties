@@ -104,7 +104,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
            <section className="lg:col-span-2 flex flex-col gap-4">
              {/* Title & Gallery */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <div className="font-bold text-black text-2xl"> Title </div>
+               <div className="hidden font-bold text-black text-2xl"> Title </div>
                <div className="flex items-center gap-2 text-gray-500 mt-1">
                  <FaMapMarkerAlt />
                  <span>{property.UnparsedAddress}</span>
@@ -122,9 +122,10 @@ function sendEmail(agentEmail: string, ListingId : string) {
                              <Image
                                src={slide.MediaURL}
                                alt={`Slide ${idx + 1}`}
-                              width={slide.ImageWidth}
-                              height={slide.ImageHeight}
-                              style={{ borderRadius: '20px', width: "100%", height: "auto" }}
+                              width={800}
+                              height={400}
+                              loading='lazy'
+                              style={{ borderRadius: '20px', maxWidth: "100%", maxHeight: "400px" }}
                               className="mt-5 object-cover border" />
                           
                         
@@ -262,8 +263,17 @@ function sendEmail(agentEmail: string, ListingId : string) {
              {/* Property Contact */}
              <div className="bg-white rounded-xl shadow-md p-6">
                <div className="font-bold text-black text-lg mb-2">Agent Contact</div>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlinePhone /> {property.ListAgentOfficePhone}</div>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail}</div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlinePhone /> {property.ListAgentOfficePhone? property.ListAgentOfficePhone: 'NA' }</div>
+               {property.ListAgentEmail.split(';').length == 1 ?
+              <>
+               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail? property.ListAgentEmail : 'NA'}</div>
+               </>
+               :
+               <>
+                  <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail? property.ListAgentEmail.split(';')[0] : 'NA'}</div>
+                  <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail? property.ListAgentEmail.split(';')[1] : 'NA'}</div>
+               </>
+               }
                {property.ListOfficeURL?
                <>
                <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineLink /> <a href={property.ListOfficeURL} target="_blank" className="underline text-[#2d3243]">{property.ListOfficeURL}</a></div>

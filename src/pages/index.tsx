@@ -1,11 +1,9 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { FaBath, FaBed, FaRuler, FaMapMarker, FaHome } from 'react-icons/fa';
-import { FaSearch } from "react-icons/fa";
-import { HiOutlineLocationMarker } from "react-icons/hi";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
-import HomeSearchHero from '@/components/HomeSearchHero';
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function Home() {
 
@@ -72,16 +70,16 @@ type Property = {
         {/* Search Bar */}
         <form className="w-full max-w-5xl md:mx-auto">
           {/* Desktop: horizontal layout */}
-          <div className="hidden md:flex flex-row gap-0 bg-white shadow-lg rounded items-center overflow-hidden">
+          <div className="hidden md:flex flex-row gap-0 bg-[#2d3243] shadow-lg border border-[#e6f1c6] rounded-full items-center overflow-hidden">
             <input
               type="text"
               placeholder="City"
-              className="h-16 px-6 py-3 w-full text-xl outline-none border-none rounded-none bg-white flex-1"
+              className="text-[#e6f1c6] h-16 px-6 py-3 w-full text-xl outline-none border-none rounded-none bg-white flex-1"
               value={form.location}
               onChange={e => setForm({ ...form, location: e.target.value })}
             />
             <select
-              className="h-16 px-5 py-3 text-lg border-l border-gray-100 outline-none bg-white min-w-[140px]"
+              className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-r border-l border-[#e6f1c6]  outline-none bg-white min-w-[140px]"
               value={form.minPrice}
               onChange={e => setForm({ ...form, minPrice: e.target.value })}
             >
@@ -91,7 +89,7 @@ type Property = {
               <option value="200000">$200,000</option>
             </select>
             <select
-              className="h-16 px-5 py-3 text-lg border-l border-gray-100 outline-none bg-white min-w-[140px]"
+              className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
               value={form.maxPrice}
               onChange={e => setForm({ ...form, maxPrice: e.target.value })}
             >
@@ -101,7 +99,7 @@ type Property = {
               <option value="600000">$600,000</option>
             </select>
             <select
-              className="h-16 px-5 py-3 text-lg border-l border-gray-100 outline-none bg-white min-w-[100px]"
+              className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
               value={form.bed}
               onChange={e => setForm({ ...form, bed: e.target.value })}
             >
@@ -112,7 +110,7 @@ type Property = {
               <option value="4">4+</option>
             </select>
             <select
-              className="h-16 px-5 py-3 text-lg border-l border-gray-100 outline-none bg-white min-w-[100px]"
+              className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
               value={form.bath}
               onChange={e => setForm({ ...form, bath: e.target.value })}
             >
@@ -124,19 +122,19 @@ type Property = {
             </select>
           </div>
           {/* Mobile: stacked layout */}
-          <div className="md:hidden flex flex-col gap-3 bg-white rounded shadow-lg px-3 py-4 w-full">
+          <div className="md:hidden flex flex-col gap-3 bg-[#2d3243] border border-[#e6f1c6] rounded shadow-lg px-3 py-4 w-full">
             <div className="flex w-full gap-2 items-center">
               <input
                 type="text"
                 placeholder="City"
-                className="flex-1 py-3 px-2 text-lg border border-gray-200 rounded focus:outline-none"
+                className="text-[#e6f1c6] flex-1 py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
                 value={form.location}
                 onChange={e => setForm({ ...form, location: e.target.value })}
               />
             </div>
             <div className="grid grid-cols-2 gap-2 pt-2">
               <select
-                className="w-full py-3 px-2 text-lg border border-gray-200 rounded focus:outline-none"
+                className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
                 value={form.minPrice}
                 onChange={e => setForm({ ...form, minPrice: e.target.value })}
               >
@@ -146,7 +144,7 @@ type Property = {
                 <option value="200000">$200,000</option>
               </select>
               <select
-                className="w-full py-3 px-2 text-lg border border-gray-200 rounded focus:outline-none"
+                className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
                 value={form.maxPrice}
                 onChange={e => setForm({ ...form, maxPrice: e.target.value })}
               >
@@ -156,7 +154,7 @@ type Property = {
                 <option value="600000">$600,000</option>
               </select>
               <select
-                className="w-full py-3 px-2 text-lg border border-gray-200 rounded focus:outline-none"
+                className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
                 value={form.bed}
                 onChange={e => setForm({ ...form, bed: e.target.value })}
               >
@@ -167,7 +165,7 @@ type Property = {
                 <option value="4">4+</option>
               </select>
               <select
-                className="w-full py-3 px-2 text-lg border border-gray-200 rounded focus:outline-none"
+                className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
                 value={form.bath}
                 onChange={e => setForm({ ...form, bath: e.target.value })}
               >
@@ -183,7 +181,16 @@ type Property = {
       </div>
     </section>
     {properties.length === 0 ?
-    <><h1 className='text-black text-center'>Loading...</h1></>
+    <div style={{
+      display: "flex",
+      background:'#2d3243',
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100px",      // full viewport height for vertical centering
+    }}>
+      <ClipLoader size={50} color="#e6f1c6" />
+    </div>
+
     :
     <>
     <div className="container mx-auto px-4 py-8">
@@ -199,16 +206,17 @@ type Property = {
                   : "/placeholder.jpg"
               }
               width={400}
-              height={200}
-              style={{borderRadius: '16px', padding: '10px'}}
-              objectFit='cover' 
+              height={300}
+              loading='lazy'
+              style={{borderRadius: '16px', padding: '10px', maxWidth:'100%', maxHeight: '250px'}}
+             
               alt="Property image"
             />
-          <span className="absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
+          <span className="hidden absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
             Featured
           </span>
         
-        <div className="absolute top-2 right-2 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
+        <div className="hidden absolute top-2 right-2 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
           </svg>
@@ -220,7 +228,7 @@ type Property = {
         {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA |'+(property.LivingArea)?.toLocaleString()+' Sqft'}
           </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">
-          <FaMapMarker/>
+          <FaMapMarker fill='#00BFA6' />
           {property.UnparsedAddress}
         </div>
         <p className="text-sm text-gray-500">
@@ -229,15 +237,15 @@ type Property = {
 
         <div className="flex justify-between text-xs text-gray-500 border-t border-gray-200 pt-3">
           <div className="flex items-center gap-1">
-           <FaRuler  size={20} />
+           <FaRuler fill='#00BFA6'  size={20} />
             {property.LivingArea} sqft
           </div>
           <div className="flex items-center gap-1">
-             <FaBed size={20} />
+             <FaBed fill='#00BFA6' size={20} />
             Bed {property.BedroomsTotal}
           </div>
           <div className="flex items-center gap-1">
-             <FaBath size={20} />
+             <FaBath fill='#00BFA6' size={20} />
             Bath {property.BathroomsTotalInteger}
           </div>
         </div>
@@ -246,8 +254,8 @@ type Property = {
           <span className="text-sm font-bold text-[#00BFA6] pl-2">
             {new Intl.NumberFormat('en-US',{ style: 'currency', currency:'usd' }).format(property.ListPrice ?? 0)}
           </span>
-          <a href={'/property-details/'+property.ListingKey} className="flex bg-gray-900 text-white px-4 py-1 rounded hover:bg-blue-600 transition-colors duration-300">
-          <FaHome className='mt-0.5 mr-2'/>  Details
+          <a href={'/property-details/'+property.ListingKey} className="flex bg-[#00BFA6] text-white px-4 py-1 rounded">
+          <FaHome  className='mt-0.5 mr-2'/>  Details
           </a>
         </div>
       </div>

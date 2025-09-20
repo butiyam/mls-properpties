@@ -4,10 +4,14 @@ import { HiOutlineMail, HiOutlinePhone, HiOutlineLink } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/router';
+
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectFade, Autoplay } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
+
+// Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/effect-fade';
+import 'swiper/css/navigation';
+
 
 
 export default function PropertyDetails() {
@@ -110,10 +114,10 @@ function sendEmail(agentEmail: string, ListingId : string) {
                  <span>{property.UnparsedAddress}</span>
                </div>
                 <Swiper
-                       modules={[EffectFade, Autoplay]}
-                       effect="fade"
-                       autoplay={{ delay: 4500, disableOnInteraction: false }}
-                       loop
+                        modules={[Navigation]}
+      navigation={true}
+      spaceBetween={10}
+      slidesPerView={1}
                        className="w-full h-full"
                      >
                        {property.parsedMedia.map((slide: ParsedMedia, idx: number) => (
@@ -127,8 +131,6 @@ function sendEmail(agentEmail: string, ListingId : string) {
                               loading='lazy'
                               style={{ borderRadius: '20px', maxWidth: "100%", maxHeight: "400px" }}
                               className="mt-5 object-cover border" />
-                          
-                        
                          </SwiperSlide>
                        ))}
                      </Swiper>

@@ -33,7 +33,7 @@ type Property = {
     bath: "",
   });
 
- const [selectedAddress, setSelectedAddress] = useState("");
+ //const [selectedAddress, setSelectedAddress] = useState("");
  const [showMap, setShowMap] = useState(false);
  const [properties, setProperties] = React.useState<Property[]>([]);
  const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ type Property = {
 
 
 const handleMapSelect = (address: string) => {
-  setSelectedAddress(address);
+  //setSelectedAddress(address);
   setForm({ ...form, location: address });
   setShowMap(false); // close map after selection
 };
@@ -281,7 +281,7 @@ const handleMapSelect = (address: string) => {
     :
     <></>
   }
-  { properties.length > 0 ?
+  {  properties.length > 0 ?
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">SHOWING {page == 1 ? page : 12*page - 12+1} - {12*page} OF {total} LISTINGS</h1>

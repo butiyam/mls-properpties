@@ -48,15 +48,6 @@ export default function PropertyDetails() {
      }
    };
 
-interface ParsedMedia {
-  ImageHeight: number;
-  ResourceRecordID: string;
-  Order: number;
-  ImageWidth: number;
-  MediaURL: string;
-  MediaModificationTimestamp: string;
-  MediaKey: string;
-}
 
   const router = useRouter();
   const { id } = router.query;

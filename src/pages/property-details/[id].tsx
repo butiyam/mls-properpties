@@ -120,11 +120,11 @@ function sendEmail(agentEmail: string, ListingId : string) {
       slidesPerView={1}
                        className="w-full h-full"
                      >
-                       {property.parsedMedia.map((slide: ParsedMedia, idx: number) => (
+                       {property.parsedMedia.map((slide: string, idx: number) => (
                          <SwiperSlide key={idx}>
 
                              <Image
-                               src={slide.MediaURL}
+                               src={slide}
                                alt={`Slide ${idx + 1}`}
                               width={800}
                               height={400}

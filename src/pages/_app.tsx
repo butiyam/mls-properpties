@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Header from '../components/Header';
-import HeroSlider from "@/components/HeroSlider";
+//import HeroSlider from "@/components/HeroSlider";
 import Footer from "@/components/Footer";
 
 

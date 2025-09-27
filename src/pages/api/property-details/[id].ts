@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../lib/dbConnect'; // Adjust path as needed
 import { RowDataPacket } from 'mysql2';
+import axios from 'axios';
 
 type PropertyDetails = RowDataPacket & {
-  ListingId: string | number;
+  ListingId: string;
   PropertyType?: string;
   Media: string;           // original JSON string from DB
   AssociationAmenities: string; // original JSON string from DB
@@ -24,6 +25,21 @@ type PropertyDetails = RowDataPacket & {
   // Add any other fields you need
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function fetchMediaForProperties(ListingId: string): Promise<any[]> {
+  const token = process.env.API_BEARER_TOKEN;
+  try {
+    const mediaRes = await axios.get(
+      `https://api.mlsgrid.com/v2/Property('${ListingId}')?$expand=Media`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    // MLS API usually puts related media under 'Media' property
+    return mediaRes.data.Media ?? [];
+  } catch (error) {
+    console.error(`Failed to fetch media for ${ListingId}:`, error);
+    return [];
+  }
+}
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing property ID' });
@@ -40,13 +56,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const property = rows[0];
     // Parse Media if stored as JSON string
-    if (property.Media) {
     try {
-      property.parsedMedia = JSON.parse(property.Media);
-    } catch {
-      property.parsedMedia = [];
+      property.parsedMedia = JSON.parse(property.Media)//await fetchMediaForProperties(property.ListingKey);
+    } catch (error: unknown){
+      property.parsedMedia = [error];
     }
-   }
+   
 
    if (property.AssociationAmenities) {
     try {

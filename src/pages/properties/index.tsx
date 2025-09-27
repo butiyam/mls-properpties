@@ -9,12 +9,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 export default function Properties() {
 
-type MediaItem = {
-  MediaURL: string;
-};
-
 type Property = {
-  Media?: MediaItem[];
+  Media?: string;
   PropertyType?: string;
   MRD_LASTREETNUMBER?: string;
   MRD_LASTREETNAME?: string;
@@ -66,15 +62,11 @@ type Property = {
           <>
           <div key={index} className="bg-[#FFF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
            <div className="relative">
-            <Image  src={
-                property.Media && property.Media.length > 0
-                  ? property.Media[0].MediaURL
-                  : "/placeholder.png"
-              }
-              width={400}
+            <Image  src={ property.Media && property.Media.length > 0 ? property.Media[0]
+                  : "/placeholder.png"}
+              width={500}
               height={200}
-              style={{borderRadius: '16px', padding: '10px'}}
-              objectFit='cover' 
+              style={{borderRadius: '16px', padding: '10px', maxWidth: '500px', maxHeight:'200px'}}
               alt="Property image"
             />
           <span className="hidden absolute top-2 left-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">

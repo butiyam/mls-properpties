@@ -5,9 +5,12 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
 import HeroSlider from '@/components/HeroSlider';
 import ClipLoader from "react-spinners/ClipLoader";
+import Head from 'next/head';
 
 
 export default function Properties() {
+
+  const title = `Available Properties | Oak Brook Reality`;
 
 type Property = {
   Media?: string;
@@ -41,7 +44,11 @@ type Property = {
 
     
   return (
+  
     <>
+       <Head>
+        <title>{title}</title>
+      </Head>
     <HeroSlider/>
     {properties.length === 0 ?
   <div style={{
@@ -59,7 +66,7 @@ type Property = {
       <h1 className="text-2xl font-bold text-center text-black mb-8">Properties for Sale</h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {properties.map((property, index) => (
-          <>
+          
           <div key={index} className="bg-[#FFF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
            <div className="relative">
             <Image  src={ property.Media && property.Media.length > 0 ? property.Media[0]
@@ -114,7 +121,7 @@ type Property = {
         </div>
       </div>
           </div>
-    </>
+    
         ))}
       </div>
         {/* Pagination controls */}

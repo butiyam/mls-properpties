@@ -43,16 +43,25 @@ const slides = [
   },
   // Add more slides as needed
 ];
-
 export default function HeroSlider() {
   return (
-    <div className="relative w-full h-[440px] overflow-hidden">
+    <div className="relative w-full h-[300px] md:h-[350px] sm:h-[250px] overflow-hidden">
       <Swiper
         modules={[EffectFade, Autoplay]}
         effect="fade"
         autoplay={{ delay: 4500, disableOnInteraction: false }}
         loop
         className="w-full h-full"
+        breakpoints={{
+          // when window width is >= 640px (sm breakpoint)
+          640: {
+            height: 350,
+          },
+          // when window width is >= 768px (md breakpoint)
+          768: {
+            height: 440,
+          },
+        }}
       >
         {slides.map((slide, idx) => (
           <SwiperSlide key={idx}>
@@ -60,15 +69,22 @@ export default function HeroSlider() {
               <Image
                 src={slide.image}
                 alt={slide.title}
-               width={400}
-               height={300}
-               style={{ width: "100%", height: "auto" }}
+                width={400}
+                height={300}
+                style={{ width: "100%", maxHeight: "600px", objectFit: "cover" }}
+                priority // optionally preload images for hero sliders
               />
               {/* Overlay */}
-              <div className="absolute inset-0 bg-black/30 flex flex-col justify-center items-center">
-                <h1 className="text-5xl md:text-3xl font-bold text-white mb-4 drop-shadow text-center">{slide.title}</h1>
-                <p className="text-lg md:text-xl text-white mb-2 p-5 text-center">{slide.subtitle}</p>
-                <p className="text-lg text-white">{slide.tagline}</p>
+              <div className="absolute inset-0 bg-black/30 flex flex-col justify-center items-center p-4">
+                <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow text-center">
+                  {slide.title}
+                </h1>
+                <p className="text-base md:text-lg text-white mb-2 px-4 text-center">
+                  {slide.subtitle}
+                </p>
+                <p className="text-sm sm:text-base hidden sm:block text-white">
+                  {slide.tagline}
+                </p>
               </div>
             </div>
           </SwiperSlide>

@@ -19,7 +19,7 @@ export default function Header() {
           className="object-cover rounded"
         />
         </Link>
-        <div className="text-white font-bold text-base leading-tight hidden sm:block">
+        <div className="text-white font-bold text-base leading-tight">
           Oak Brook<br />
           Realty
         </div>

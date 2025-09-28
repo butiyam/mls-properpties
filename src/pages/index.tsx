@@ -8,6 +8,7 @@ import axios from 'axios';
 import dynamic from "next/dynamic";
 import PlacesAutocompleteInput from '@/components/PlacesAutocompleteInput';
 import PlacesAutocompleteInputMobile from '@/components/PlacesAutocompleteInputMobile';
+import Head from 'next/head';
 
 const PropertyMap = dynamic(() => import("../components/PropertyMap"), { ssr: false });
 
@@ -117,6 +118,9 @@ React.useEffect(() => {
     
   return (
     <>
+      <Head>
+        <title>Home | Oak Brook Reality</title>
+      </Head>
 <section className="relative min-h-[500px] flex items-center justify-center bg-gray-900 overflow-hidden px-0">
   {/* Background Image */}
   <img
@@ -308,7 +312,6 @@ React.useEffect(() => {
       <h1 className="text-2xl font-bold text-center text-black mb-8">SHOWING {page == 1 ? page : 12*page - 12+1} - {12*page} OF {total} LISTINGS</h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         { properties.map((property, index) => (
-          <>
           <div key={index} className="bg-[#FFF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
            <div className="relative">
             <Image  src={ property.Media && property.Media.length > 0 ? property.Media[0]
@@ -368,7 +371,6 @@ React.useEffect(() => {
         </div>
       </div>
           </div>
-    </>
         ))}
       </div>
         {/* Pagination controls */}

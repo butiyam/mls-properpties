@@ -8,6 +8,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import axios from "axios";
+import Head from 'next/head';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -19,6 +20,8 @@ export default function PropertyDetails() {
 
   const router = useRouter();
   const { id } = router.query;
+  const title = id ? `Property Details for ${id} | Oak Brook Reality` : 'Loading...';
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -69,6 +72,9 @@ function sendEmail(agentEmail: string, ListingId : string) {
 
   return (
     <>
+     <Head>
+        <title>{title}</title>
+      </Head>
     { loading ?
       <div style={{
       display: "flex",
@@ -126,7 +132,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
              {/* Overview Section */}
              <div className="bg-white rounded-xl shadow-md p-6">
                <div className="font-bold text-black text-lg mb-4">Overview</div>
-               <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">                  
+               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">                  
                    <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
                      <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
                       <FaMapMarkerAlt />

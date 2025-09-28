@@ -6,6 +6,9 @@ import Image from 'next/image';
 import ClipLoader from "react-spinners/ClipLoader";
 import axios from 'axios';
 import dynamic from "next/dynamic";
+import PlacesAutocompleteInput from '@/components/PlacesAutocompleteInput';
+import PlacesAutocompleteInputMobile from '@/components/PlacesAutocompleteInputMobile';
+
 const PropertyMap = dynamic(() => import("../components/PropertyMap"), { ssr: false });
 
 
@@ -26,39 +29,62 @@ type Property = {
 };
 
  const [form, setForm] = useState({
-    location: "",
+    location: "Oak Brook",
     minPrice: "",
     maxPrice: "",
     bed: "",
     bath: "",
   });
 
- //const [selectedAddress, setSelectedAddress] = useState("");
- const [showMap, setShowMap] = useState(false);
- const [properties, setProperties] = React.useState<Property[]>([]);
- const [loading, setLoading] = useState(false);
- const [page, setPage] = useState(1);
- const [limit] = useState(12); // Adjust as needed
- const [total, setTotal] = useState(0);
-  
+  const [inputValue, setInputValue] = useState("Oak Brook, IL, USA");
+  const [showMap, setShowMap] = useState(false);
+  const [properties, setProperties] = React.useState<Property[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(12); // Adjust as needed
+  const [total, setTotal] = useState(0);
+    
+  const handleMapSelect = (address: string) => {
+    setInputValue(address);
+    setForm({ ...form, location: address });
+    setShowMap(false); // close map after selection
+  };
+
+  const handleAddressSelect = (address: string) => {
+    //setSelectedAddress(address);
+    setForm({ ...form, location: address });
+    console.log('Selected address from child:', address);
+    // You can now use this to update filters or send API requests
+  };
 
 
-const handleMapSelect = (address: string) => {
-  //setSelectedAddress(address);
-  setForm({ ...form, location: address });
-  setShowMap(false); // close map after selection
-};
+React.useEffect(() => {
+  const fetchProperties = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get("/api/properties", {
+        params: {
+          city: form.location,
+          priceMin: form.minPrice,
+          priceMax: form.maxPrice,
+          bed: form.bed,
+          bath: form.bath,
+          page,
+          limit,
+        }
+      });
+      setProperties(res.data.data);
+      setTotal(res.data.total);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  fetchProperties();
+}, []); // run once on mount
 
-  /*useEffect(() => {
-    fetch(`/api/properties?page=${page}&limit=${limit}&city=${form.location}&priceMin=${form.minPrice}&priceMax=${form.maxPrice}&bed=${form.bed}&bath=${form.bath}`)
-      .then(res => res.json()).then(data => {
-         setProperties(Array.isArray(data.data) ? data.data : []);
-         setTotal(data.total);
-        })
-      .catch(err => console.error(err));
-     // console.log(form)
-  }, [page, limit, form]);*/
   
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,14 +136,10 @@ const handleMapSelect = (address: string) => {
     <form className="w-full max-w-5xl md:mx-auto" onSubmit={handleSearch}>
       {/* Desktop */}
       <div className="hidden md:flex flex-row gap-0 bg-[#2d3243] shadow-lg border border-[#e6f1c6] rounded-full items-center overflow-hidden">
-        <input
-          type="text"
-          placeholder="City"
-          className="text-[#e6f1c6] h-16 px-6 py-3 w-full text-xl outline-none border-none rounded-none bg-white flex-1"
-          value={form.location}
-          onChange={e => setForm({ ...form, location: e.target.value })}
-        />
+        <PlacesAutocompleteInput inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />
         <select
+          id="minPrice"
+          style={{ backgroundColor: '#000' }}
           className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-r border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
           value={form.minPrice}
           onChange={e => setForm({ ...form, minPrice: e.target.value })}
@@ -128,6 +150,7 @@ const handleMapSelect = (address: string) => {
           <option value="200000">$200,000</option>
         </select>
         <select
+          id="maxPrice"
           className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
           value={form.maxPrice}
           onChange={e => setForm({ ...form, maxPrice: e.target.value })}
@@ -138,6 +161,7 @@ const handleMapSelect = (address: string) => {
           <option value="600000">$600,000</option>
         </select>
         <select
+          id="bed"
           className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
           value={form.bed}
           onChange={e => setForm({ ...form, bed: e.target.value })}
@@ -149,6 +173,7 @@ const handleMapSelect = (address: string) => {
           <option value="4">4+</option>
         </select>
         <select
+          id="bath"
           className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
           value={form.bath}
           onChange={e => setForm({ ...form, bath: e.target.value })}
@@ -163,7 +188,7 @@ const handleMapSelect = (address: string) => {
         {/* Map Button */}
         <button
           type="button"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-3  ml-2 flex items-center gap-2"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-5  ml-2 flex items-center gap-2"
           onClick={() => setShowMap(true)}
 
         >
@@ -172,7 +197,7 @@ const handleMapSelect = (address: string) => {
           {/* Search Button */}
         <button
           type="submit"
-          className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-r-full flex items-center gap-2"
+          className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-5 rounded-r-full flex items-center gap-2"
         >
         Search
         </button>
@@ -180,17 +205,10 @@ const handleMapSelect = (address: string) => {
 
       {/* Mobile */}
       <div className="md:hidden flex flex-col gap-3 bg-[#2d3243] border border-[#e6f1c6] rounded shadow-lg px-3 py-4 w-full">
-        <div className="flex w-full gap-2 items-center">
-          <input
-            type="text"
-            placeholder="City"
-            className="text-[#e6f1c6] flex-1 py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
-            value={form.location}
-            onChange={e => setForm({ ...form, location: e.target.value })}
-          />
-        </div>
+        <PlacesAutocompleteInputMobile inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />
         <div className="grid grid-cols-2 gap-2 pt-2">
           <select
+            id="minPriceMobile"
             className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
             value={form.minPrice}
             onChange={e => setForm({ ...form, minPrice: e.target.value })}
@@ -201,6 +219,7 @@ const handleMapSelect = (address: string) => {
             <option value="200000">$200,000</option>
           </select>
           <select
+            id="maxPriceMobile"
             className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
             value={form.maxPrice}
             onChange={e => setForm({ ...form, maxPrice: e.target.value })}
@@ -211,6 +230,7 @@ const handleMapSelect = (address: string) => {
             <option value="600000">$600,000</option>
           </select>
           <select
+            id="bedMobile"
             className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
             value={form.bed}
             onChange={e => setForm({ ...form, bed: e.target.value })}
@@ -222,6 +242,7 @@ const handleMapSelect = (address: string) => {
             <option value="4">4+</option>
           </select>
           <select
+            id="bathMobile"
             className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
             value={form.bath}
             onChange={e => setForm({ ...form, bath: e.target.value })}
@@ -281,7 +302,7 @@ const handleMapSelect = (address: string) => {
     :
     <></>
   }
-  {  properties.length > 0 ?
+  { !loading && properties.length > 0 ?
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">SHOWING {page == 1 ? page : 12*page - 12+1} - {12*page} OF {total} LISTINGS</h1>
@@ -371,12 +392,16 @@ const handleMapSelect = (address: string) => {
       
     </div>
     </>
-    :
+    :<></>
+      }
+  { !loading && properties.length == 0 ?
       <>
         <div className="container mx-auto px-4 py-8">
          <h1 className="text-2xl font-bold text-center text-black">FOUND 0 RESULT.</h1>
         </div>
       </>
+      :
+      <></>
 
     }
     </>

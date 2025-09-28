@@ -1,0 +1,56 @@
+import React, { useState, useRef } from "react";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
+
+const libraries = ["places"];
+
+type Props = {
+  inputValue: string;
+  setInputValue: (v: string) => void;
+  onAddressSelect: (address: string) => void;
+};
+
+const PlacesAutocompleteInputMobile: React.FC<Props> = ({inputValue, setInputValue, onAddressSelect }) => {
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    libraries: libraries as any[],
+  });
+
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    autocompleteRef.current = autocomplete;
+  };
+
+  const onPlaceChanged = () => {
+    if (autocompleteRef.current !== null) {
+      const place = autocompleteRef.current.getPlace();
+      let selectedAddress = "";
+      if (place.formatted_address) {
+        selectedAddress = place.formatted_address;
+      } else if (place.name) {
+        selectedAddress = place.name;
+      }
+      setInputValue(selectedAddress);
+      onAddressSelect(selectedAddress); // Pass selection to parent
+      //console.log("Selected place:", place);
+    }
+  };
+
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading...</div>;
+
+  return (
+    <Autocomplete className="flex w-full gap-2 items-center" onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+      <input
+        type="text"
+        placeholder="Oak Brook, IL, USA"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className = "text-[#e6f1c6] flex-1  py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+      />
+    </Autocomplete>
+  );
+};
+
+export default PlacesAutocompleteInputMobile;

@@ -27,7 +27,7 @@ body {
 
 
 input, select, optgroup, textarea {
-background-color: transparent !important;
+background-color: #2d3243 !important;
 }
 
 input::placeholder,

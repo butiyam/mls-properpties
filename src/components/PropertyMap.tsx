@@ -60,10 +60,7 @@ export default function PropertyMap({ onSelectLocation, onClose }: Props) {
       {/* Close button: absolute & very high z-index, pointer events enabled */}
       <div style={{ position: "absolute", top: 12, right: 12, zIndex: 99999 }}>
         <button
-          onClick={() => {
-            console.log("Map close clicked");
-            onClose();
-          }}
+          onClick={() => { onClose(); }}
           className="bg-red-600 text-white px-3 py-1 rounded shadow"
           style={{ pointerEvents: "auto" }}
         >

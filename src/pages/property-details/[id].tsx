@@ -4,9 +4,10 @@ import { HiOutlineMail, HiOutlinePhone, HiOutlineLink } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/router';
-
+import ClipLoader from "react-spinners/ClipLoader";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
+import axios from "axios";
 
 // Import Swiper styles
 import 'swiper/css';
@@ -16,43 +17,11 @@ import 'swiper/css/navigation';
 
 export default function PropertyDetails() {
 
-
-  // Demo property data (replace with API response)
-   const prop = {
-     title: "West Square Apartments",
-     address: "19 Brooklyn Street, New York",
-     image: "/gallery1.png",
-     description: "Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Praesent varius rutrum nulla ut metus varius laoreet.",
-     overview: [
-       { label: "Number ID", value: "#9168", icon: <FaMapMarkerAlt /> },
-       { label: "Type", value: "Apartment", icon: <FaBed /> },
-       { label: "Build Year", value: "2021", icon: <FaCalendarAlt /> },
-       { label: "Bed", value: "2", icon: <FaBed /> },
-       { label: "Bath", value: "2", icon: <FaBath /> },
-       { label: "Size", value: "1850 sqft", icon: <FaRulerCombined /> }
-     ],
-     amenities: [
-       "Air Conditioning", "Washer and dryer", "Swimming Pool", "Basketball", "24/7 Security", "Central Air", "Media Room", "Indoor Game"
-     ],
-     map: "https://www.openstreetmap.org/export/embed.html?bbox=-73.95%2C40.67%2C-73.93%2C40.69&layer=mapnik", // example embed
-     owner: {
-       name: "Samakcodez",
-       profileUrl: "https://trinityimpact.com",
-       avatar: "/avatar.jpg",
-     },
-     contact: {
-       address: "19 Brooklyn Street, New York",
-       phone: "+1(666) 888-919",
-       email: "contact@example.com",
-       website: "https://example.com"
-     }
-   };
-
-
   const router = useRouter();
   const { id } = router.query;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
  
   function diffInMonths(date1 : string) {
   const d1 = new Date(date1);
@@ -81,18 +50,37 @@ function sendEmail(agentEmail: string, ListingId : string) {
 }
    
   useEffect(() => {
-      if (!id) return;
-    fetch(`/api/property-details/${id}`)
-      .then(res => res.json())
-      .then(data => setProperty(data))
-      .catch(err => console.error(err));
+    if (!id) return;
+
+    const fetchProperty = async () => {
+    try {
+       const res = await axios.get(`/api/property-details/${id}`);
+      setProperty(res.data);
+    } catch (error) {
+       console.error(error);
+    } finally{
+     setLoading(false);
+    }
+  }
+  fetchProperty();
+
   }, [id]);
 
 
-    if (!property) return <div>Loading...</div>;
-    if (property) 
-
   return (
+    <>
+    { loading ?
+      <div style={{
+      display: "flex",
+      background:'#2d3243',
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100px",// full viewport height for vertical centering
+    }}>
+      <ClipLoader size={50} color="#e6f1c6" />
+    </div>
+      :
+      <>
     <div className="bg-[#f8fafc] min-h-screen py-8 px-2">
          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
            {/* Main Content */}
@@ -106,9 +94,9 @@ function sendEmail(agentEmail: string, ListingId : string) {
                </div>
                 <Swiper
                         modules={[Navigation]}
-      navigation={true}
-      spaceBetween={10}
-      slidesPerView={1}
+                        navigation={true}
+                        spaceBetween={10}
+                        slidesPerView={1}
                        className="w-full h-full"
                      >
                        {property.parsedMedia.map((slide: string, idx: number) => (
@@ -132,9 +120,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
              {/* Description */}
              <div className="bg-white rounded-xl shadow-md p-6">
                <p className="text-gray-700">{property.PublicRemarks}</p>
-               <p className="mt-2 text-gray-700">
-                 Nullam turpis sem sit amet orci eget eros faucibus tincidunt. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
-               </p>
+              
              </div>
    
              {/* Overview Section */}
@@ -202,11 +188,12 @@ function sendEmail(agentEmail: string, ListingId : string) {
              <div className="bg-white rounded-xl shadow-md p-6">
                <div className="font-bold text-black text-lg mb-4">Features & Amenities</div>
                <div className="flex flex-wrap gap-3">
-                 {property.parsedAssociationAmenities.map((amenity: string, idx: number) => (
+                 { property.parsedAssociationAmenities.length > 0 ?
+                   property.parsedAssociationAmenities.map((amenity: string, idx: number) => (
                    <span key={idx} className="px-3 py-1 bg-[#e6f1c6] rounded-full text-[#2d3243] text-sm font-medium">
                      {amenity}
                    </span>
-                 ))}
+                 )):<><span className="px-3 py-1 bg-[#e6f1c6] rounded-full text-[#2d3243] text-sm font-medium">NA</span></>}
                </div>
              </div>
    
@@ -215,7 +202,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
                <div className="font-bold text-black text-lg mb-4">Location</div>
                <div className="rounded-lg overflow-hidden border">
                  <iframe
-                   src={prop.map}
+                   src="https://www.openstreetmap.org/export/embed.html?bbox=-73.95%2C40.67%2C-73.93%2C40.69&layer=mapnik"
                    width="100%"
                    height="300"
                    className="border-none"
@@ -244,9 +231,9 @@ function sendEmail(agentEmail: string, ListingId : string) {
            <aside className="flex flex-col gap-6">
              {/* Author Info */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <div className="font-bold text-black text-lg mb-2">Agent Info</div>
+               <div className="font-bold text-black text-lg mb-2">Client Info</div>
                <div className="flex items-center gap-3 mb-3">
-                 <Image src={prop.owner.avatar} alt={prop.owner.name} width={30} height={30} className="rounded-full object-cover" />
+                 <Image src="/avatar.jpg" alt="client avatar" width={30} height={30} className="rounded-full object-cover" />
                  <div className="font-semibold text-[#2d3243]">{property.ListAgentFullName}</div>
                </div>
                <div className="text-xs text-gray-500 mb-2">Member since {diffInMonths(property.ListingContractDate)} months ago</div>
@@ -255,7 +242,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
    
              {/* Property Contact */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <div className="font-bold text-black text-lg mb-2">Agent Contact</div>
+               <div className="font-bold text-black text-lg mb-2">Client Contact</div>
                <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlinePhone /> {property.ListAgentOfficePhone? property.ListAgentOfficePhone: 'NA' }</div>
                {property.ListAgentEmail.split(';').length == 1 ?
               <>
@@ -303,6 +290,9 @@ function sendEmail(agentEmail: string, ListingId : string) {
              </div>
            </aside>
          </div>
-       </div>
+    </div>
+    </>
+    }
+    </>
   );
 }

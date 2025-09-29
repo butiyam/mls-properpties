@@ -18,9 +18,12 @@ export default function Home() {
 type Property = {
   Media?: string;
   PropertyType?: string;
-  MRD_LASTREETNUMBER?: string;
-  MRD_LASTREETNAME?: string;
-  UnparsedAddress?: string;
+  StreetNumber?: number;
+  StreetName?: string;
+  StreetSuffix?: string;
+  PostalCode?: number;
+  City?: string;
+  StateOrProvince?: string;
   PublicRemarks?: string;
   LivingArea?: number;
   BedroomsTotal?: number;
@@ -29,8 +32,20 @@ type Property = {
   ListingKey?: string | number;
 };
 
+type Address = {
+  streetnumber: string;
+  streetname: string;
+  city: string;
+  state: string;
+  postalcode: string;
+};
+
  const [form, setForm] = useState({
-    location: "Oak Brook",
+    streetname: "",
+    streetnumber: "",
+    city: "",
+    state: "",
+    postalcode: "",
     minPrice: "",
     maxPrice: "",
     bed: "",
@@ -45,16 +60,32 @@ type Property = {
   const [limit] = useState(12); // Adjust as needed
   const [total, setTotal] = useState(0);
     
-  const handleMapSelect = (address: string) => {
-    setInputValue(address);
-    setForm({ ...form, location: address });
+  const handleMapSelect = (address: Address[]) => {
+     setInputValue(`${address[0].streetnumber} ${address[0].streetname}, ${address[0].city}, ${address[0].state} ${address[0].postalcode} `);
+     setForm({ ...form, 
+                  streetname: address[0].streetname, 
+                  streetnumber: address[0].streetnumber,
+                  city: address[0].city,
+                  state: address[0].state,
+                  postalcode: address[0].postalcode 
+                });
     setShowMap(false); // close map after selection
   };
 
-  const handleAddressSelect = (address: string) => {
+
+  const handleAddressSelect = (address: Address[]) => {
     //setSelectedAddress(address);
-    setForm({ ...form, location: address });
-    console.log('Selected address from child:', address);
+     //setForm({ ...form, streetnumber: address[0].streetnumber });
+     //setForm({ ...form, streetname: address[0].streetname });
+     setForm({ ...form, 
+                  streetname: address[0].streetname, 
+                  streetnumber: address[0].streetnumber,
+                  city: address[0].city,
+                  state: address[0].state,
+                  postalcode: address[0].postalcode 
+                });
+   //  setForm({ ...form, postalcode: address[0].postalcode });
+    console.log('Selected address from child:', address[0].city);
     // You can now use this to update filters or send API requests
   };
 
@@ -65,7 +96,11 @@ React.useEffect(() => {
     try {
       const res = await axios.get("/api/properties", {
         params: {
-          city: form.location,
+          city: form.city,
+          streetname: form.streetname,
+          streetnumber: form.streetnumber,
+          state: form.state,
+          postalcode: form.postalcode,
           priceMin: form.minPrice,
           priceMax: form.maxPrice,
           bed: form.bed,
@@ -84,7 +119,7 @@ React.useEffect(() => {
   };
 
   fetchProperties();
-}, []); // run once on mount
+}, [page]); // run once on mount
 
   
   const handleSearch = async (e: React.FormEvent) => {
@@ -94,7 +129,11 @@ React.useEffect(() => {
     try {
       const res = await axios.get("/api/properties", {
         params: {
-          city: form.location,
+          city: form.city,
+          streetname: form.streetname,
+          streetnumber: form.streetnumber,
+          state: form.state,
+          postalcode: form.postalcode,
           priceMin: form.minPrice,
           priceMax: form.maxPrice,
           bed: form.bed,
@@ -336,11 +375,11 @@ React.useEffect(() => {
 
       <div className="p-4 space-y-3">
         <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
-        {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA |'+(property.LivingArea)?.toLocaleString()+' Sqft'}
+        {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA | '+(property.LivingArea)?.toLocaleString()+' Sqft'}
           </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">
           <FaMapMarker fill='#00BFA6' />
-          {property.UnparsedAddress}
+          {property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode}
         </div>
         <p className="text-sm text-gray-500">
           

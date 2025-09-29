@@ -3,10 +3,18 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 const libraries = ["places"];
 
+type Address = {
+  streetnumber: string;
+  streetname: string;
+  city: string;
+  state: string;
+  postalcode: string;
+};
+
 type Props = {
   inputValue: string;
   setInputValue: (v: string) => void;
-  onAddressSelect: (address: string) => void;
+  onAddressSelect: (address: Address[]) => void;
 };
 
 const PlacesAutocompleteInputMobile: React.FC<Props> = ({inputValue, setInputValue, onAddressSelect }) => {
@@ -22,6 +30,27 @@ const PlacesAutocompleteInputMobile: React.FC<Props> = ({inputValue, setInputVal
     autocompleteRef.current = autocomplete;
   };
 
+  
+ const extractCityStateCountry = (addressComponents: google.maps.GeocoderAddressComponent[] = []) => {
+    let streetname = "";
+    let streetnumber = "";
+    let postalcode = "";
+    let city = "";
+    let state = "";
+  
+
+    addressComponents.forEach((component) => {
+      if (component.types.includes("route")) streetname = component.long_name;
+      if (component.types.includes("street_number")) streetnumber = component.long_name;
+      if (component.types.includes("postal_code")) postalcode = component.long_name;
+      if (component.types.includes("locality")) city = component.long_name;
+      if (component.types.includes("administrative_area_level_1")) state = component.short_name;
+     
+    });
+
+    return [{ streetnumber, streetname, city, state, postalcode }];
+  };
+
   const onPlaceChanged = () => {
     if (autocompleteRef.current !== null) {
       const place = autocompleteRef.current.getPlace();
@@ -32,7 +61,7 @@ const PlacesAutocompleteInputMobile: React.FC<Props> = ({inputValue, setInputVal
         selectedAddress = place.name;
       }
       setInputValue(selectedAddress);
-      onAddressSelect(selectedAddress); // Pass selection to parent
+      onAddressSelect(extractCityStateCountry(place.address_components || [])); // Pass selection to parent
       //console.log("Selected place:", place);
     }
   };
@@ -47,7 +76,7 @@ const PlacesAutocompleteInputMobile: React.FC<Props> = ({inputValue, setInputVal
         placeholder="Oak Brook, IL, USA"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className = "text-[#e6f1c6] flex-1  py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+        className = "text-[#e6f1c6] w-full flex-1  py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
       />
     </Autocomplete>
   );

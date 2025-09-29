@@ -24,6 +24,10 @@ export default function PropertyDetails() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
+  const [bbox, setBBox] = useState();
+  const [lat, setLat] = useState();
+  const [lon, setLon] = useState();
+
   const [loading, setLoading] = useState(true);
  
   function diffInMonths(date1 : string) {
@@ -59,6 +63,11 @@ function sendEmail(agentEmail: string, ListingId : string) {
     try {
        const res = await axios.get(`/api/property-details/${id}`);
       setProperty(res.data);
+      const getLatLong = await axios.get(`https://nominatim.openstreetmap.org/search?q=${res.data.StreetNumber+' '+res.data.StreetName+' '+res.data.StreetSuffix+', '+res.data.City+', '+res.data.StateOrProvince+' '+res.data.PostalCode}&format=json`);
+      setBBox( getLatLong.data[0].boundingbox);
+      setLat(getLatLong.data[0].lat);
+      setLon(getLatLong.data[0].lon);
+
     } catch (error) {
        console.error(error);
     } finally{
@@ -96,7 +105,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
                <div className="hidden font-bold text-black text-2xl"> Title </div>
                <div className="flex items-center gap-2 text-gray-500 mt-1">
                  <FaMapMarkerAlt />
-                 <span>{property.UnparsedAddress}</span>
+                 <span> {property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode}</span>
                </div>
                 <Swiper
                         modules={[Navigation]}
@@ -208,7 +217,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
                <div className="font-bold text-black text-lg mb-4">Location</div>
                <div className="rounded-lg overflow-hidden border">
                  <iframe
-                   src="https://www.openstreetmap.org/export/embed.html?bbox=-73.95%2C40.67%2C-73.93%2C40.69&layer=mapnik"
+                   src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`}
                    width="100%"
                    height="300"
                    className="border-none"
@@ -220,9 +229,9 @@ function sendEmail(agentEmail: string, ListingId : string) {
                </div>
                <div className="mt-3 flex items-center gap-2 text-gray-500">
                  <FaMapMarkerAlt />
-                 <span>{property.UnparsedAddress}</span>
+                 <span> {property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode}</span>
                  <a
-                   href={`https://maps.google.com/?q=${encodeURIComponent(property.UnparsedAddress)}`}
+                   href={`https://maps.google.com/?q=${property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode}`}
                    target="_blank"
                    rel="noopener noreferrer"
                    className="ml-auto px-3 py-1 bg-[#e6f1c6] rounded-full text-[#2d3243] text-sm font-semibold hover:bg-[#d6eeb4]"

@@ -12,9 +12,10 @@ type PropertyDetails = RowDataPacket & {
   parsedMedia?: any[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   parsedAssociationAmenities?: any[];  
-  MRD_LASTREETNUMBER?: string;
-  MRD_LASTREETNAME?: string;
-  MRD_LACITY?: string;
+  StreetNumber?: string;
+  StreetName?: string;
+  City?: string;
+  StateOrProvince?: string;
   YearBuilt?: number;
   UnparsedAddress?: string;
   PublicRemarks?: string;
@@ -61,7 +62,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (error: unknown){
       property.parsedMedia = [error];
     }
-   
 
    if (property.AssociationAmenities) {
     try {

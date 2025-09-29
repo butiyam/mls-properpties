@@ -2,8 +2,16 @@
 import React from "react";
 import { useLoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 
+type Address = {
+  streetnumber: string;
+  streetname: string;
+  city: string;
+  state: string;
+  postalcode: string;
+};
+
 type Props = {
-  onSelectLocation: (address: string) => void;
+  onSelectLocation: (address: Address[]) => void;
   onClose: () => void;
 };
 
@@ -13,25 +21,25 @@ export default function PropertyMap({ onSelectLocation, onClose }: Props) {
     libraries: ["places"],
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const extractCityStateCountry = (addressComponents: any[]) => {
-    let city = '';
-    let state = '';
-    let country = '';
+  
+ const extractCityStateCountry = (addressComponents: google.maps.GeocoderAddressComponent[] = []) => {
+    let streetname = "";
+    let streetnumber = "";
+    let postalcode = "";
+    let city = "";
+    let state = "";
+  
 
     addressComponents.forEach((component) => {
-      if (component.types.includes("locality")) {
-        city = component.long_name;
-      }
-      if (component.types.includes("administrative_area_level_1")) {
-        state = component.short_name; // e.g. IL
-      }
-      if (component.types.includes("country")) {
-        country = component.short_name; // e.g. US
-      }
+      if (component.types.includes("route")) streetname = component.long_name;
+      if (component.types.includes("street_number")) streetnumber = component.long_name;
+      if (component.types.includes("postal_code")) postalcode = component.long_name;
+      if (component.types.includes("locality")) city = component.long_name;
+      if (component.types.includes("administrative_area_level_1")) state = component.short_name;
+     
     });
 
-    return `${city}, ${state}, ${country}`;
+    return [{ streetnumber, streetname, city, state, postalcode }];
   };
 
 

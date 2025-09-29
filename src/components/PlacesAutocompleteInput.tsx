@@ -3,10 +3,18 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 const libraries = ["places"];
 
+type Address = {
+  streetnumber: string;
+  streetname: string;
+  city: string;
+  state: string;
+  postalcode: string;
+};
+
 type Props = {
   inputValue: string;
   setInputValue: (v: string) => void;
-  onAddressSelect: (address: string) => void;
+  onAddressSelect: (address: Address[]) => void;
 };
 
 const PlacesAutocompleteInput: React.FC<Props> = ({ inputValue, setInputValue, onAddressSelect }) => {
@@ -23,17 +31,39 @@ const PlacesAutocompleteInput: React.FC<Props> = ({ inputValue, setInputValue, o
     autocompleteRef.current = autocomplete;
   };
 
+ const extractCityStateCountry = (addressComponents: google.maps.GeocoderAddressComponent[] = []) => {
+    let streetname = "";
+    let streetnumber = "";
+    let postalcode = "";
+    let city = "";
+    let state = "";
+  
+
+    addressComponents.forEach((component) => {
+      if (component.types.includes("route")) streetname = component.long_name;
+      if (component.types.includes("street_number")) streetnumber = component.long_name;
+      if (component.types.includes("postal_code")) postalcode = component.long_name;
+      if (component.types.includes("locality")) city = component.long_name;
+      if (component.types.includes("administrative_area_level_1")) state = component.short_name;
+     
+    });
+
+    return [{ streetnumber, streetname, city, state, postalcode }];
+  };
+  
   const onPlaceChanged = () => {
     if (autocompleteRef.current !== null) {
       const place = autocompleteRef.current.getPlace();
       let selectedAddress = "";
+      
       if (place.formatted_address) {
+        //console.log(place)
         selectedAddress = place.formatted_address;
       } else if (place.name) {
         selectedAddress = place.name;
       }
       setInputValue(selectedAddress);
-      onAddressSelect(selectedAddress); // Pass selection to parent
+      onAddressSelect(extractCityStateCountry(place.address_components || [])); // Pass selection to parent
      // console.log("Selected place:", place);
     }
   };
@@ -48,7 +78,7 @@ const PlacesAutocompleteInput: React.FC<Props> = ({ inputValue, setInputValue, o
         placeholder="Oak Brook, IL, USA"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className = "text-[#e6f1c6] h-16 px-6 py-3 text-xl outline-none border-none rounded-none bg-white flex-1"
+        className = "text-[#e6f1c6] w-full h-16 px-6 py-3 text-xl outline-none border-none rounded-none bg-white flex-1"
       />
     </Autocomplete>
   );

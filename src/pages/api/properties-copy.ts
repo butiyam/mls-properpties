@@ -5,11 +5,12 @@ import axios from 'axios';
 import db from '../../lib/dbConnect';
 import { RowDataPacket } from 'mysql2';
 import { uploadMLSImagesBatch } from '@/utils/uploadMLS';
-import { stat } from 'fs';
 
-//const MLS_ENDPOINT = 'https://api.mlsgrid.com/v2/Property?$top=5000&$filter=PropertyType eq 7 and StandardStatus eq 1';
+const CACHE_DURATION = 100440 * 60 * 1000; // 1440 minutes
+const MLS_ENDPOINT = 'https://api.mlsgrid.com/v2/Property?$top=5000&$filter=PropertyType eq 7 and StandardStatus eq 1';
 const token = process.env.API_BEARER_TOKEN;
 
+type LastUpdatedRow = RowDataPacket & { lastUpdated: string | null };
 type TotalRow = RowDataPacket & { total: number | null };
 type PropertyRow = RowDataPacket & {
   id: number;
@@ -52,7 +53,7 @@ async function syncPropertiesWithMedia(properties: PropertyRow[]) {
 
     if (mediaUrls.length > 0) {
       // Upload all MLS media to Cloudinary
-      const cloudinaryUrls = await uploadMLSImagesBatch(mediaUrls[0], property.ListingKey);
+      const cloudinaryUrls = await uploadMLSImagesBatch(mediaUrls, property.ListingKey);
 
       // Save uploaded URLs to DB
       await db.query('UPDATE properties SET Media = ? WHERE ListingKey = ? AND Media = ?', [
@@ -72,11 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const limit = parseInt(req.query.limit as string) || 12;
     const offset = (page - 1) * limit;
 
-    const streetname = (req.query.streetname as string) || '';
-    const streetnumber = (req.query.streetnumber as string) || '';
-    const postalcode = (req.query.postalcode as string) || '';
     const city = (req.query.city as string) || '';
-    const state = (req.query.state as string) || '';
     const bed = parseInt(req.query.bed as string) || 0;
     const bath = parseInt(req.query.bath as string) || 0;
     const priceMin = parseInt(req.query.priceMin as string) || 0;
@@ -114,54 +111,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       params3.push(priceMin, priceMax);
     }
     if (city) {
-      query += ' AND City LIKE ?';
-      query2 += ' AND City LIKE ?';
+      query += ' AND UnparsedAddress LIKE ?';
+      query2 += ' AND UnparsedAddress LIKE ?';
+     
+      const city_name = city.split(',')[0].trim()  // split city name only like, "Oak Brook"
 
-      params.push(`%${city}%`);
-      params2.push(`%${city}%`);
-      params3.push(`%${city}%`);
+      params.push(`%${city_name}%`);
+      params2.push(`%${city_name}%`);
+      params3.push(`%${city_name}%`);
     
     }
-    if (state) {
-      query += ' AND StateOrProvince LIKE ?';
-      query2 += ' AND StateOrProvince LIKE ?';
-    
-      params.push(`%${state}%`);
-      params2.push(`%${state}%`);
-      params3.push(`%${state}%`);
-    
-    }
-
-   /*  if (streetname) {
-      query += ' AND StreetName LIKE ?';
-      query2 += ' AND StreetName LIKE ?';
-    
-      params.push(`%${streetname}%`);
-      params2.push(`%${streetname}%`);
-      params3.push(`%${streetname}%`);
-    
-    }
-
-     if (streetnumber) {
-      query += ' AND StreetNumber LIKE ?';
-      query2 += ' AND StreetNumber LIKE ?';
-    
-      params.push(`%${streetnumber}%`);
-      params2.push(`%${streetnumber}%`);
-      params3.push(`%${streetnumber}%`);
-    
-    }
-    
-    if (postalcode) {
-      query += ' AND PostalCode LIKE ?';
-      query2 += ' AND PostalCode LIKE ?';
-    
-      params.push(`%${postalcode}%`);
-      params2.push(`%${postalcode}%`);
-      params3.push(`%${postalcode}%`);
-    
-    }*/
-
       query3 = query;
       query3 +=  ' AND Media = ?'
       params3.push('[]');
@@ -172,6 +131,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     params.push(limit, offset);
     params3.push(limit, offset);
 
+    // Check last update timestamp
+    const [rows] = await db.query<LastUpdatedRow[]>('SELECT MAX(updatedAt) AS lastUpdated FROM properties');
+    const lastUpdated = rows[0]?.lastUpdated ? new Date(rows[0].lastUpdated).getTime() : 0;
+    const now = Date.now();
+
+    if (lastUpdated && now - lastUpdated < CACHE_DURATION) {
       // Serve cached properties
       const [properties] = await db.query<PropertyRow[]>(query, params);
 
@@ -206,7 +171,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await syncPropertiesWithMedia(noMediaProperties);
 
       // Fetch all newly inserted properties after Media inserted
-      let [parsedProperties] = await db.query<PropertyRow[]>(query, params);
+      let [parsedProperties] = await db.query<PropertyRow[]>(query3, params3);
 
       parsedProperties = properties.map(p => ({
         ...p,
@@ -221,7 +186,67 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         page,
         limit
       });
-    
+    }
+
+    // Fetch fresh data from MLS
+    const { data } = await axios.get(MLS_ENDPOINT, {
+      headers: { Authorization: `Bearer ${process.env.API_BEARER_TOKEN}` }
+    });
+
+    if (!Array.isArray(data.value)) throw new Error('Invalid MLS data');
+
+    // Clear old cached data
+    await db.query('DELETE FROM properties');
+
+    // Bulk insert
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const values = data.value.map((p: any) => [
+      p.ListingKey,
+      `${p.MRD_LASTREETNUMBER || ''} ${p.MRD_LASTREETNAME || ''}, ${p.MRD_LACITY || ''}`,
+      p.ListPrice || 0,
+      p.BedroomsTotal || 0,
+      p.BathroomsTotalInteger || 0,
+      p.LivingArea || 0,
+      p.PublicRemarks || '',
+      p.YearBuilt || '',
+      p.City || '',
+      p.MRD_SASTATE || '',
+      JSON.stringify([]), // Media initially empty
+      JSON.stringify(p.AssociationAmenities || []),
+      p.ListAgentFullName || '',
+      p.ListAgentEmail || '',
+      p.ListAgentOfficePhone || '',
+      p.ListOfficeURL || '',
+      p.ListingContractDate || '',
+      new Date()
+    ]);
+
+    if (values.length) {
+      await db.query(
+        `INSERT INTO properties 
+        (ListingKey, UnparsedAddress, ListPrice, BedroomsTotal, BathroomsTotalInteger, LivingArea, PublicRemarks, YearBuilt, City, MRD_SASTATE, Media, AssociationAmenities, ListAgentFullName, ListAgentEmail, ListAgentOfficePhone, ListOfficeURL, ListingContractDate, updatedAt) 
+        VALUES ?`,
+        [values]
+      );
+    }
+
+    // Fetch all newly inserted properties
+    const [properties] = await db.query<PropertyRow[]>(query, params);
+
+    // Upload media to Cloudinary & save URLs
+    await syncPropertiesWithMedia(properties);
+
+    // Fetch all newly inserted properties after MEdia inserted
+    const [parsedProperties] = await db.query<PropertyRow[]>(query, params);
+
+    const [countRows] = await db.query<TotalRow[]>('SELECT COUNT(*) AS total FROM properties');
+
+    return res.status(200).json({
+      data: parsedProperties,
+      total: countRows[0]?.total ?? 0,
+      page,
+      limit
+    });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {

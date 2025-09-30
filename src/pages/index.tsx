@@ -57,7 +57,7 @@ type Address = {
   const [properties, setProperties] = React.useState<Property[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [limit] = useState(12); // Adjust as needed
+  const [limit] = useState(20); // Adjust as needed
   const [total, setTotal] = useState(0);
     
   const handleMapSelect = (address: Address[]) => {
@@ -343,8 +343,10 @@ React.useEffect(() => {
   { !loading && properties.length > 0 ?
     <>
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-center text-black mb-8">SHOWING {page == 1 ? page : 12*page - 12+1} - {12*page} OF {total} LISTINGS</h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <h1 className="text-2xl font-bold text-center text-black mb-8">
+      SHOWING {page == 1 ? page : 20*page - 20+1} - {total > 20 ? 20*page : total  } OF {total} LISTINGS
+      </h1>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         { properties.map((property, index) => (
           <div key={index} className="bg-[#FFF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
            <div className="relative">
@@ -629,8 +631,10 @@ React.useEffect(() => {
   { !loading && properties.length > 0 ?
     <>
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-center text-black mb-8">SHOWING {page == 1 ? page : 12*page - 12+1} - {12*page} OF {total} LISTINGS</h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <h1 className="text-2xl font-bold text-center text-black mb-8">
+      SHOWING {page == 1 ? page : 20*page - 20+1} - {total > 20 ? 20*page : total  } OF {total} LISTINGS
+      </h1>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         { properties.map((property, index) => (
           <div key={index} className="bg-[#FFF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
            <div className="relative">

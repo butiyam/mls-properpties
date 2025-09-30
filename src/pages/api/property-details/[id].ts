@@ -146,7 +146,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const property = rows[0];
     const Media: unknown[] = JSON.parse(property.Media as unknown as string);
-
+          property.Media = Media;
     // Parse Media if stored as JSON string
     try {
       if (!Media){

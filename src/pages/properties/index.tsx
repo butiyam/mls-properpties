@@ -31,7 +31,7 @@ type Property = {
 
  const [properties, setProperties] = React.useState<Property[]>([]);
  const [page, setPage] = useState(1);
- const [limit] = useState(12); // Adjust as needed
+ const [limit] = useState(20); // Adjust as needed
  const [total, setTotal] = useState(0);
   
   useEffect(() => {
@@ -67,7 +67,7 @@ type Property = {
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">Properties for Sale</h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {properties.map((property, index) => (
           
           <div key={index} className="bg-[#FFF] rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">

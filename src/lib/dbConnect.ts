@@ -6,6 +6,9 @@ const db = mysql.createPool({
   user: process.env.MYSQL_USER!,
   password: process.env.MYSQL_PASSWORD!,
   database: process.env.MYSQL_DB!,
+  waitForConnections: true,
+  connectionLimit: 10, // avoid overload
+  queueLimit: 0
 });
 
 export default db;

@@ -59,8 +59,9 @@ async function syncPropertiesWithMedia(properties: PropertyRow[]) {
         property.ListingKey,
         '[]'
       ]);
+      await new Promise(res => setTimeout(res, 50)); // 50ms pause
 
-      console.log(`Property ${property.ListingKey} uploaded & saved:`, cloudinaryUrls);
+      //console.log(`Property ${property.ListingKey} uploaded & saved:`, cloudinaryUrls);
     }
   }
 }

@@ -76,7 +76,7 @@ const PlacesAutocompleteInputMobile: React.FC<Props> = ({inputValue, setInputVal
         placeholder="Oak Brook, IL, USA"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className = "text-[#e6f1c6] w-full flex-1  py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+        className = "text-[#e6f1c6] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
       />
     </Autocomplete>
   );

@@ -91,7 +91,7 @@ type Property = {
       </div>
 
       <div className="p-4 space-y-3">
-        <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
+        <h2 className="text-md font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
           {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA |'+(property.LivingArea)?.toLocaleString()+' Sqft'}
         </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">
@@ -115,7 +115,7 @@ type Property = {
         </div>
 
         <div className="bg-[#E9EBEC] rounded-lg flex justify-between items-center mt-3">
-          <span className="text-lg font-bold text-[#00BFA6] pl-2">
+          <span className="text-md font-bold text-[#00BFA6] pl-2">
             {new Intl.NumberFormat('en-US',{ style: 'currency', currency:'usd' }).format(property.ListPrice ?? 0)}
           </span>
           <a href={'/property-details/'+property.ListingKey} className="flex bg-[#00BFA6] text-white px-4 py-1 rounded">

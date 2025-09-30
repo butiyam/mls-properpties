@@ -191,7 +191,7 @@ React.useEffect(() => {
         <select
           id="minPrice"
           style={{ backgroundColor: '#000' }}
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-r border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-r border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
           value={form.minPrice}
           onChange={e => setForm({ ...form, minPrice: e.target.value })}
         >
@@ -202,7 +202,7 @@ React.useEffect(() => {
         </select>
         <select
           id="maxPrice"
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
           value={form.maxPrice}
           onChange={e => setForm({ ...form, maxPrice: e.target.value })}
         >
@@ -213,7 +213,7 @@ React.useEffect(() => {
         </select>
         <select
           id="bed"
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
           value={form.bed}
           onChange={e => setForm({ ...form, bed: e.target.value })}
         >
@@ -225,7 +225,7 @@ React.useEffect(() => {
         </select>
         <select
           id="bath"
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
           value={form.bath}
           onChange={e => setForm({ ...form, bath: e.target.value })}
         >
@@ -260,7 +260,7 @@ React.useEffect(() => {
         <div className="grid grid-cols-2 gap-2 pt-2">
           <select
             id="minPriceMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.minPrice}
             onChange={e => setForm({ ...form, minPrice: e.target.value })}
           >
@@ -271,7 +271,7 @@ React.useEffect(() => {
           </select>
           <select
             id="maxPriceMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.maxPrice}
             onChange={e => setForm({ ...form, maxPrice: e.target.value })}
           >
@@ -282,7 +282,7 @@ React.useEffect(() => {
           </select>
           <select
             id="bedMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.bed}
             onChange={e => setForm({ ...form, bed: e.target.value })}
           >
@@ -294,7 +294,7 @@ React.useEffect(() => {
           </select>
           <select
             id="bathMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.bath}
             onChange={e => setForm({ ...form, bath: e.target.value })}
           >
@@ -371,7 +371,7 @@ React.useEffect(() => {
       </div>
 
       <div className="p-4 space-y-3">
-        <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
+        <h2 className="text-md font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
         {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA | '+(property.LivingArea)?.toLocaleString()+' Sqft'}
           </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">
@@ -457,15 +457,15 @@ React.useEffect(() => {
       {/* Normal homepage */}
       { /* Hero + search + listings */ }
       <section className="relative min-h-[500px] flex items-center justify-center bg-gray-900 overflow-hidden px-0">
-  {/* Background Image */}
-  <img
-    src="/bg-hero.jpg"
-    alt="Home search background"
-    className="absolute inset-0 w-full h-full object-cover opacity-70 z-0"
-  />
+      {/* Background Image */}
+      <img
+        src="/bg-hero.jpg"
+        alt="Home search background"
+        className="absolute inset-0 w-full h-full object-cover opacity-70 z-0"
+      />
 
   {/* Main Content */}
-  <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0 md:pt-8">
+  <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0 md:pt-8 m-5">
     {/* Heading */}
     <h1 className="text-white text-center font-serif font-bold text-4xl md:text-7xl mb-8 md:mb-12 drop-shadow-lg max-w-4xl px-4 md:px-0">
       Find a home<br className="md:hidden" /> in style
@@ -479,7 +479,7 @@ React.useEffect(() => {
         <select
           id="minPrice"
           style={{ backgroundColor: '#000' }}
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-r border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-r border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
           value={form.minPrice}
           onChange={e => setForm({ ...form, minPrice: e.target.value })}
         >
@@ -490,7 +490,7 @@ React.useEffect(() => {
         </select>
         <select
           id="maxPrice"
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none bg-white min-w-[140px]"
           value={form.maxPrice}
           onChange={e => setForm({ ...form, maxPrice: e.target.value })}
         >
@@ -501,7 +501,7 @@ React.useEffect(() => {
         </select>
         <select
           id="bed"
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
           value={form.bed}
           onChange={e => setForm({ ...form, bed: e.target.value })}
         >
@@ -513,7 +513,7 @@ React.useEffect(() => {
         </select>
         <select
           id="bath"
-          className="text-[#e6f1c6] h-16 px-5 py-3 text-lg border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
+          className="text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none bg-white min-w-[100px]"
           value={form.bath}
           onChange={e => setForm({ ...form, bath: e.target.value })}
         >
@@ -548,7 +548,7 @@ React.useEffect(() => {
         <div className="grid grid-cols-2 gap-2 pt-2">
           <select
             id="minPriceMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.minPrice}
             onChange={e => setForm({ ...form, minPrice: e.target.value })}
           >
@@ -559,7 +559,7 @@ React.useEffect(() => {
           </select>
           <select
             id="maxPriceMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.maxPrice}
             onChange={e => setForm({ ...form, maxPrice: e.target.value })}
           >
@@ -570,7 +570,7 @@ React.useEffect(() => {
           </select>
           <select
             id="bedMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.bed}
             onChange={e => setForm({ ...form, bed: e.target.value })}
           >
@@ -582,7 +582,7 @@ React.useEffect(() => {
           </select>
           <select
             id="bathMobile"
-            className="text-[#e6f1c6] w-full py-3 px-2 text-lg border border-[#e6f1c6] rounded focus:outline-none"
+            className="text-[#e6f1c6] w-full py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"
             value={form.bath}
             onChange={e => setForm({ ...form, bath: e.target.value })}
           >
@@ -659,7 +659,7 @@ React.useEffect(() => {
       </div>
 
       <div className="p-4 space-y-3">
-        <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
+        <h2 className="text-md font-semibold text-gray-800 hover:text-blue-600 cursor-pointer">
         {property.BedroomsTotal + ' BR | '+property.BathroomsTotalInteger+' BA | '+(property.LivingArea)?.toLocaleString()+' Sqft'}
           </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">

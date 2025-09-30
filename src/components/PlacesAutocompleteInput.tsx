@@ -64,7 +64,7 @@ const PlacesAutocompleteInput: React.FC<Props> = ({ inputValue, setInputValue, o
       }
       setInputValue(selectedAddress);
       onAddressSelect(extractCityStateCountry(place.address_components || [])); // Pass selection to parent
-     // console.log("Selected place:", place);
+     console.log("Selected place:", place);
     }
   };
 

@@ -1,19 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// /pages/api/properties.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
+import axios from "axios";
 import db from '../../lib/dbConnect';
-import { RowDataPacket } from 'mysql2';
-import { uploadMLSImagesBatch } from '@/utils/uploadMLS';
+                     
+const INITIAL_URL = "https://api.mlsgrid.com/v2/Property?$top=5000&$filter=OriginatingSystemName eq 'mred' and MlgCanView eq true and PropertyType eq 7 and StandardStatus eq 1";
 
-const MLS_ENDPOINT = 'https://api.mlsgrid.com/v2/Property?$top=5000&$filter=PropertyType eq 7 and StandardStatus eq 1';
-const token = process.env.API_BEARER_TOKEN;
+async function fetchAllProperties() {
+  let url = INITIAL_URL;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
+  while (url) {
 
     // Fetch fresh data from MLS API
-    const { data } = await axios.get(MLS_ENDPOINT, { headers: { Authorization: `Bearer ${process.env.API_BEARER_TOKEN}` } });
+    const { data } = await axios.get(url, { headers: { Authorization: `Bearer ${process.env.API_BEARER_TOKEN}`, Accept: "application/json"  } });
 
     if (!Array.isArray(data.value)) throw new Error('Invalid MLS data');
 
@@ -42,10 +38,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       new Date()
     ]);
 
-    if (values.length) {
-     console.log(values.length)
-    // Upsert each property to update selected fields excluding Media
-
+      if (values.length) {
+      
+      // Upsert each property to update selected fields excluding Media
       const rowCount = values.length;
       const placeholders = '(' + new Array(20).fill('?').join(', ') + ')';
       const allPlaceholders = new Array(rowCount).fill(placeholders).join(', ');
@@ -53,6 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Flatten all values arrays into one single array of params
       const flatValues = values.flat();
 
+      
     await db.query(
       `INSERT INTO properties 
         (ListingKey,
@@ -102,12 +98,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     }
-
-  return res.status(200).json({ status: 'success', msg: 'Updated done!' });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    console.error('API /properties error:', error);
-    return res.status(500).json({ error: error.message || 'Internal Server Error' });
+    
+    url = data['@odata.nextLink'] || null;
+    console.log(url);
   }
+
 }
+
+(async () => {
+  await fetchAllProperties();
+  console.log(`🎉 Finished! All Records`);
+})();

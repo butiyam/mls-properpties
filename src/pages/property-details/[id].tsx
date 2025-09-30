@@ -1,6 +1,6 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCalendarAlt } from "react-icons/fa";
-import { HiOutlineMail, HiOutlinePhone, HiOutlineLink } from "react-icons/hi";
+import { HiOutlineMail, HiOutlinePhone, HiOutlineLocationMarker } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/router';
@@ -30,14 +30,6 @@ export default function PropertyDetails() {
 
   const [loading, setLoading] = useState(true);
  
-  function diffInMonths(date1 : string) {
-  const d1 = new Date(date1);
-  const d2 = new Date();
-
-  const years = d2.getFullYear() - d1.getFullYear();
-  const months = d2.getMonth() - d1.getMonth();
-  return years * 12 + months;
-}
 function sendEmail(agentEmail: string, ListingId : string) {
 
   const nameElement = window.document.getElementById('name') as HTMLInputElement | null;
@@ -63,7 +55,8 @@ function sendEmail(agentEmail: string, ListingId : string) {
     try {
        const res = await axios.get(`/api/property-details/${id}`);
       setProperty(res.data);
-      const getLatLong = await axios.get(`https://nominatim.openstreetmap.org/search?q=${res.data.StreetNumber+' '+res.data.StreetName+' '+res.data.StreetSuffix+', '+res.data.City+', '+res.data.StateOrProvince+' '+res.data.PostalCode}&format=json`);
+      const getLatLong = await axios.get(`https://nominatim.openstreetmap.org/search?q=${res.data.StreetNumber+' '+(res.data.StreetName+res.data.StreetSuffix? ' '+res.data.StreetSuffix: '')+', '+res.data.City+', '+res.data.StateOrProvince+' '+res.data.PostalCode}&format=json`);
+      //console.error(getLatLong);
       setBBox( getLatLong.data[0].boundingbox);
       setLat(getLatLong.data[0].lat);
       setLon(getLatLong.data[0].lon);
@@ -114,7 +107,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
                         slidesPerView={1}
                        className="w-full h-full"
                      >
-                       {property.parsedMedia.map((slide: string, idx: number) => (
+                       {property.Media.map((slide: string, idx: number) => (
                          <SwiperSlide key={idx}>
 
                              <Image
@@ -249,39 +242,37 @@ function sendEmail(agentEmail: string, ListingId : string) {
                <div className="font-bold text-black text-lg mb-2">Client Info</div>
                <div className="flex items-center gap-3 mb-3">
                  <Image src="/avatar.jpg" alt="client avatar" width={30} height={30} className="rounded-full object-cover" />
-                 <div className="font-semibold text-[#2d3243]">{property.ListAgentFullName}</div>
+                 <div className="font-semibold text-[#2d3243]">
+                  Ranesh Phillips
+                 </div>
                </div>
-               <div className="text-xs text-gray-500 mb-2">Member since {diffInMonths(property.ListingContractDate)} months ago</div>
+               <div className="text-xs text-gray-500 mb-2">
+               Passionate about luxury real estate, Ranesh specializes in high-end properties and is committed to providing clients with personalized service, market expertise, and an exceptional experience from start to finish.
+               </div>
                
              </div>
    
              {/* Property Contact */}
              <div className="bg-white rounded-xl shadow-md p-6">
                <div className="font-bold text-black text-lg mb-2">Client Contact</div>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlinePhone /> {property.ListAgentOfficePhone? property.ListAgentOfficePhone: 'NA' }</div>
-               {property.ListAgentEmail.split(';').length == 1 ?
-              <>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail? property.ListAgentEmail : 'NA'}</div>
-               </>
-               :
-               <>
-                  <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail? property.ListAgentEmail.split(';')[0] : 'NA'}</div>
-                  <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineMail /> {property.ListAgentEmail? property.ListAgentEmail.split(';')[1] : 'NA'}</div>
-               </>
-               }
-               {property.ListOfficeURL?
-               <>
-               <div className="mb-2 flex items-center gap-2 text-gray-700"><HiOutlineLink /> <a href={property.ListOfficeURL} target="_blank" className="underline text-[#2d3243]">{property.ListOfficeURL}</a></div>
-               </>
-               :
-               <></>
-              }
+               <div className="mb-2 flex items-center gap-2 text-gray-700">
+                <HiOutlinePhone /> 
+                 (630) 242-5662
+                </div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700">
+                <HiOutlineMail /> 
+                 info@obrglobal.com
+                </div>
+               <div className="mb-2 flex items-center gap-2 text-gray-700">
+                 <HiOutlineLocationMarker />
+                  7 N. Grant Street Suite LL Hinsdale, IL 60521
+                </div>
              </div>
    
              {/* Contact Listing Owner */}
              <div className="bg-white rounded-xl shadow-md p-6">
                <div className="font-bold text-black text-lg mb-2">Contact Listing Agent</div>
-               <form action={"mailto:"+property.ListAgentEmail} method="GET" encType="text/plain" className="flex flex-col gap-3">
+               <form action={"mailto:info@obrglobal.com"} method="GET" encType="text/plain" className="flex flex-col gap-3">
                  <input
                    className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-[#e6f1c6]"
                    type="text"
@@ -297,7 +288,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
                  <button
                  type="button"
                    className="px-4 py-2 rounded-lg bg-[#e6f1c6] text-[#2d3243] font-semibold hover:bg-[#d6eeb4]"
-                   onClick={ () => sendEmail(property.ListAgentEmail, property.ListingKey)}
+                   onClick={ () => sendEmail('info@obrglobal.com', property.ListingKey)}
                  >
                    Submit Now
                  </button>

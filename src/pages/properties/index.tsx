@@ -15,9 +15,12 @@ export default function Properties() {
 type Property = {
   Media?: string;
   PropertyType?: string;
-  MRD_LASTREETNUMBER?: string;
-  MRD_LASTREETNAME?: string;
-  UnparsedAddress?: string;
+  StreetNumber?: number;
+  StreetName?: string;
+  StreetSuffix?: string;
+  PostalCode?: number;
+  City?: string;
+  StateOrProvince?: string;
   MRD_LEGALDESC?: string;
   LivingArea?: number;
   BedroomsTotal?: number;
@@ -93,7 +96,7 @@ type Property = {
         </h2>
         <div className="text-sm text-gray-500 flex items-center gap-1">
           <FaMapMarker fill='#00BFA6' />
-          {property.UnparsedAddress}
+          {property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode}
         </div>
 
         <div className="flex justify-between text-xs text-gray-500 border-t border-gray-200 pt-3">

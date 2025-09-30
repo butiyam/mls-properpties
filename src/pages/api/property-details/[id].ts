@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../lib/dbConnect'; // Adjust path as needed
 import { RowDataPacket } from 'mysql2';
 import axios from 'axios';
-
+import { uploadMLSImagesBatch } from '@/utils/uploadMLS';
+const token = process.env.API_BEARER_TOKEN;
 type PropertyDetails = RowDataPacket & {
   ListingId: string;
   PropertyType?: string;
-  Media: string;           // original JSON string from DB
-  AssociationAmenities: string; // original JSON string from DB
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  parsedMedia?: any[];
+  Media?: any[]; // original JSON string from DB
+  AssociationAmenities: string; // original JSON string from DB
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   parsedAssociationAmenities?: any[];  
   StreetNumber?: string;
@@ -26,21 +27,109 @@ type PropertyDetails = RowDataPacket & {
   // Add any other fields you need
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function fetchMediaForProperties(ListingId: string): Promise<any[]> {
-  const token = process.env.API_BEARER_TOKEN;
+type PropertyMeida = RowDataPacket & {
+Media?: string[];
+  // Add any other fields you need
+};
+
+type PropertyRow = RowDataPacket & {
+  id: number;
+  ListingKey: string;
+  UnparsedAddress: string;
+  ListPrice: number;
+  BedroomsTotal: number;
+  BathroomsTotalInteger: number;
+  LivingArea: number;
+  PublicRemarks: string;
+  Media: string; // JSON array stored as string
+  AssociationAmenities: string; // JSON string
+  updatedAt: Date;
+};
+
+async function fetchMLSMedia(property: PropertyDetails) {
+
   try {
-    const mediaRes = await axios.get(
-      `https://api.mlsgrid.com/v2/Property('${ListingId}')?$expand=Media`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    // MLS API usually puts related media under 'Media' property
-    return mediaRes.data.Media ?? [];
+    const res = await axios.get(`https://api.mlsgrid.com/v2/Property('${property.ListingKey}')?$expand=Media`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    // Always return array of URLs
+    const mediaArray: string[] = Array.isArray(res.data.Media)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ? res.data.Media.map((m: any) => m.MediaURL)
+      : [];
+
+    return mediaArray;
   } catch (error) {
-    console.error(`Failed to fetch media for ${ListingId}:`, error);
+    console.error(`Failed to fetch media fors ${property[0]}:`, error);
     return [];
   }
 }
+
+async function syncPropertiesWithMedia(property: PropertyDetails, skip: boolean
+) {
+ 
+    let mediaUrls = await fetchMLSMedia(property);
+    
+    // Keep only first 10
+    if (mediaUrls.length > 10) {
+       mediaUrls = mediaUrls.slice(0, 10);
+    }
+
+    if (mediaUrls.length > 0) {
+      console.log(mediaUrls.length)
+      // Upload all MLS media to Cloudinary
+      const cloudinaryUrls = await uploadMLSImagesBatch(mediaUrls.length > 1 && skip ? mediaUrls.slice(1) : mediaUrls , property.ListingKey);
+
+      if(skip){
+        let Media: string[];
+        try {
+          
+         const [rows] = await db.query<PropertyMeida[]>('SELECT Media FROM properties WHERE ListingKey = ? LIMIT 1', [property.ListingKey] );
+         const p = rows[0];
+
+           if (Array.isArray(p.Media)) {
+            Media = p.Media; 
+          } else if (typeof p.Media === "string") {
+            try {
+              Media = JSON.parse(p.Media || "[]");
+            } catch {
+              Media = [];
+            }
+          } else {
+            Media = [];
+          }
+
+        if(mediaUrls.length > 1){
+          console.log('first image url will be skipped')       
+          if (skip) {
+            console.log('at last added 1 url');
+            
+            cloudinaryUrls.unshift( Media[0] );
+          }
+        }
+        if(mediaUrls.length === 1){
+          console.log(Media[0])
+            cloudinaryUrls.unshift(Media[0]);
+        }
+        
+        } catch (error) {
+         console.log(error) 
+        }
+    }
+
+      // Save uploaded URLs to DB
+      await db.query('UPDATE properties SET Media = ? WHERE ListingKey = ? AND Media = ?', [
+        JSON.stringify(cloudinaryUrls),
+        property.ListingKey,
+        '[]'
+      ]);
+
+      return cloudinaryUrls;
+    }
+  
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Missing property ID' });
@@ -56,9 +145,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const property = rows[0];
+
     // Parse Media if stored as JSON string
     try {
-      property.parsedMedia = JSON.parse(property.Media)//await fetchMediaForProperties(property.ListingKey);
+      if (!property.Media){
+
+        const m = await syncPropertiesWithMedia(property, false);
+        property.Media = m;
+      }else{
+        if(JSON.parse(property.Media).length > 1){
+        
+          property.Media = JSON.parse(property.Media);
+        }else{
+          console.log('its 1')
+          const mm = await syncPropertiesWithMedia(property, true);
+         
+          property.Media = (mm);
+        }
+      }
+
+
     } catch (error: unknown){
       property.parsedMedia = [error];
     }
@@ -70,6 +176,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       property.parsedAssociationAmenities = [];
     }
    }
+
+      if(!property.StreetNumber){
+        property.StreetNumber = '';
+      }
+      if(!property.StreetName){
+        property.StreetName = '';
+      }
+      
+      if(!property.StreetSuffix){
+        property.StreetSuffix = '';
+      }
 
     return res.status(200).json(property);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

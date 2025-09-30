@@ -5,7 +5,6 @@ import axios from 'axios';
 import db from '../../lib/dbConnect';
 import { RowDataPacket } from 'mysql2';
 import { uploadMLSImagesBatch } from '@/utils/uploadMLS';
-import { stat } from 'fs';
 
 //const MLS_ENDPOINT = 'https://api.mlsgrid.com/v2/Property?$top=5000&$filter=PropertyType eq 7 and StandardStatus eq 1';
 const token = process.env.API_BEARER_TOKEN;
@@ -48,7 +47,7 @@ async function fetchMLSMedia(property: PropertyRow) {
 async function syncPropertiesWithMedia(properties: PropertyRow[]) {
   for (const property of properties) {
    console.log(property.ListingKey)
-    const mediaUrls = await fetchMLSMedia(property);
+   const mediaUrls = await fetchMLSMedia(property);
 
     if (mediaUrls.length > 0) {
       // Upload all MLS media to Cloudinary
@@ -208,9 +207,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Fetch all newly inserted properties after Media inserted
       let [parsedProperties] = await db.query<PropertyRow[]>(query, params);
 
-      parsedProperties = properties.map(p => ({
+      parsedProperties = parsedProperties.map(p => ({
         ...p,
-        Media: p.Media ? JSON.parse(p.Media) : []
+        Media: p.Media ? JSON.parse(p.Media) : [],
+        StreetNumber: p.StreetNumber ? p.StreetNumber : '',
+        StreetName: p.StreetName ? p.StreetName : '',
+        StreetSuffix: p.StreetSuffix ? p.StreetSuffix : '', 
       }));
 
       const [countRows] = await db.query<TotalRow[]>(query2, params2);

@@ -145,18 +145,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const property = rows[0];
+    const Media: unknown[] = JSON.parse(property.Media as unknown as string);
 
     // Parse Media if stored as JSON string
     try {
-      if (!property.Media){
-
+      if (!Media){
         const m = await syncPropertiesWithMedia(property, false);
         property.Media = m;
       }else{
-        if(JSON.parse(property.Media).length > 1){
+        if(Media.length === 1){
         
-          property.Media = JSON.parse(property.Media);
-        }else{
           console.log('its 1')
           const mm = await syncPropertiesWithMedia(property, true);
          

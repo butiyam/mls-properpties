@@ -43,8 +43,8 @@ type Address = {
  const [form, setForm] = useState({
     streetname: "",
     streetnumber: "",
-    city: "",
-    state: "",
+    city: "Oak Brook",
+    state: "IL",
     postalcode: "",
     minPrice: "",
     maxPrice: "",
@@ -137,7 +137,8 @@ React.useEffect(() => {
           priceMin: form.minPrice,
           priceMax: form.maxPrice,
           bed: form.bed,
-          bath: form.bath
+          bath: form.bath,
+          limit: limit
         }
       });
 

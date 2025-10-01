@@ -150,6 +150,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Parse Media if stored as JSON string
     try {
       if (!Media){
+        console.log('null')
         const m = await syncPropertiesWithMedia(property, false);
         property.Media = m;
       }else{

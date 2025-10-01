@@ -1,9 +1,9 @@
 import axios from "axios";
 import db from '../../lib/dbConnect';
                      
-const INITIAL_URL = "https://api.mlsgrid.com/v2/Property?$top=5000&$filter=OriginatingSystemName%20eq%20%27mred%27%20and%20MlgCanView%20eq%20true%20and%20PropertyType%20eq%207%20and%20StandardStatus%20eq%201&$skip=15000";
+const INITIAL_URL = "https://api.mlsgrid.com/v2/Property?$top=5000&$filter=OriginatingSystemName%20eq%20%27mred%27%20and%20MlgCanView%20eq%20true%20and%20PropertyType%20eq%207%20and%20StandardStatus%20eq%201";
 
-async function fetchAllProperties() {
+ export default async function fetchAllProperties() {
   let url = INITIAL_URL;
 
   while (url) {

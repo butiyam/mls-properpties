@@ -35,7 +35,7 @@ const INITIAL_URL = "https://api.mlsgrid.com/v2/Property?$top=5000&$filter=Origi
       p.ListAgentOfficePhone || '',
       p.ListOfficeURL || '',
       p.ListingContractDate || '',
-      new Date()
+      p.OriginalEntryTimestamp || ''
     ]);
 
       if (values.length) {

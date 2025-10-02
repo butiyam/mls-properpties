@@ -284,6 +284,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
                    className="border border-gray-300 rounded px-4 py-2 resize-none focus:outline-none focus:ring focus:border-[#e6f1c6]"
                    placeholder="Message..."
                    id="message"
+                   value={`Hi, I would like to know more about ${property.StreetNumber+' '+ property.StreetName+' '+ property.StreetSuffix}`}
                  />
                  <button
                  type="button"

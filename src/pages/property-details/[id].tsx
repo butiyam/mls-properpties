@@ -274,14 +274,14 @@ function sendEmail(agentEmail: string, ListingId : string) {
                <div className="font-bold text-black text-lg mb-2">Contact Listing Agent</div>
                <form action={"mailto:info@obrglobal.com"} method="GET" encType="text/plain" className="flex flex-col gap-3">
                  <input
-                   className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-[#e6f1c6]"
+                   className="contect-form text-[#2d3243] border border-[#2d3243] rounded px-4 py-2 focus:outline-none focus:ring focus:border-[#e6f1c6]"
                    type="text"
                    placeholder="Name"
                    id="name"
                  />
                  
                  <textarea
-                   className="border border-gray-300 rounded px-4 py-2 resize-none focus:outline-none focus:ring focus:border-[#e6f1c6]"
+                   className="contect-form text-[#2d3243] border border-[#2d3243] rounded px-4 py-2 resize-none focus:outline-none focus:ring focus:border-[#e6f1c6]"
                    placeholder="Message..."
                    id="message"
                    value={`Hi, I would like to know more about ${property.StreetNumber+' '+ property.StreetName+' '+ property.StreetSuffix}`}

@@ -4,7 +4,6 @@ import { FaDotCircle } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
 import HeroSlider from '@/components/HeroSlider';
-import ClipLoader from "react-spinners/ClipLoader";
 import Head from 'next/head';
 import Link from 'next/link';
 import { SkeletonPropertyCard }  from "@/components/SkeletonPropertyCard ";

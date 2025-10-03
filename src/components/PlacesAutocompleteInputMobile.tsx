@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 const libraries = ["places"];
@@ -73,7 +73,7 @@ const PlacesAutocompleteInputMobile: React.FC<Props> = ({inputValue, setInputVal
     <Autocomplete className="flex w-full gap-2 items-center" onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
       <input
         type="text"
-        placeholder="Oak Brook, IL, USA"
+        placeholder="Location"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         className = "text-[#e6f1c6] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none"

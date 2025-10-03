@@ -27,13 +27,23 @@ body {
 
 
 input, select, optgroup, textarea {
-background-color: #2d3243 !important;
+background-color: #2d3243;
+}
+
+.contect-form {
+  background-color: #f3f5f5;
+}
+.contect-form::placeholder {
+  color: #2d3243;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 input::placeholder,
 textarea::placeholder {
   color: #e6f1c6;
-  opacity: 1;
 }
 
 input:-ms-input-placeholder,

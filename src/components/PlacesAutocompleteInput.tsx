@@ -75,7 +75,7 @@ const PlacesAutocompleteInput: React.FC<Props> = ({ inputValue, setInputValue, o
     <Autocomplete className="w-full"  onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
       <input
         type="text"
-        placeholder="Oak Brook, IL, USA"
+        placeholder="Location"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         className = "text-[#e6f1c6] w-full h-16 px-6 py-3 text-md outline-none border-none rounded-none bg-white flex-1"

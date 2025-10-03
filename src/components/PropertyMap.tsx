@@ -119,7 +119,10 @@ export default function PropertyMap({ onSelectLocation, properties, onClose }: M
        
         >
           <div
-             onClick={() => setSelectedProperty(property)}
+              onClick={(e) => {
+                e.stopPropagation();  // Prevent map click event
+                setSelectedProperty(property);
+              }}
             style={{
               width: '50px',
               backgroundColor: "#375fae",

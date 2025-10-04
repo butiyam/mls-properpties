@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { GoogleMap, OverlayView, InfoWindow, useJsApiLoader  } from '@react-google-maps/api';
 import React, { useState } from 'react';
 import { PropertyData } from '@/lib/types';

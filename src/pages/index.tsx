@@ -81,8 +81,8 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
  const [form, setForm] = useState({
     streetname: "",
     streetnumber: "",
-    city: "Oak Brook",
-    state: "IL",
+    city: "",
+    state: "",
     postalcode: "",
     minPrice: 0,
     maxPrice: 0,
@@ -93,7 +93,7 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
   const [modalOpen, setModalOpen] = useState(false);
   const [bedbathsmodalOpen, setBedBathsModalOpen] = useState(false);
   const [filterOpen, setFilterOpen] = React.useState(false);
-
+  const [selectedAddress, setSelectedAddress] = useState<Address[]>([]);
   const [inputValue, setInputValue] = useState("Oak Brook, IL, USA");
   const [showMap, setShowMap] = useState(false);
   const [propertyData, setPropertyData] = React.useState<PropertyData[]>([]); 
@@ -144,7 +144,7 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
 
 
   const handleAddressSelect = (address: Address[]) => {
-    //setSelectedAddress(address);
+      setSelectedAddress(address);
      //setForm({ ...form, streetnumber: address[0].streetnumber });
      //setForm({ ...form, streetname: address[0].streetname });
      setForm({ ...form, 
@@ -155,6 +155,7 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
                   postalcode: address[0].postalcode 
                 });
    //  setForm({ ...form, postalcode: address[0].postalcode });
+   console.log(inputValue);
     console.log('Selected address from child:', address[0].city);
     // You can now use this to update filters or send API requests
   };
@@ -162,7 +163,6 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function processProperties(rawProps: any[]) {
   const processedProps = await Promise.all(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rawProps.map(async (prop) => {
       const latLng = await getLatLngFromAddress(
         `${prop.StreetNumber} ${prop.StreetName} ${prop.StreetSuffix}, ${prop.City}, ${prop.StateOrProvince} ${prop.PostalCode}`
@@ -191,10 +191,10 @@ React.useEffect(() => {
     try {
       const res = await axios.get("/api/properties", {
         params: {
-          city: form.city,
+          city: 'Oak Brook',
           streetname: form.streetname,
           streetnumber: form.streetnumber,
-          state: form.state,
+          state: 'IL',
           postalcode: form.postalcode,
           priceMin: form.minPrice,
           priceMax: form.maxPrice,
@@ -220,6 +220,7 @@ React.useEffect(() => {
   };
 
   fetchProperties();
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [page]); // run once on mount
 
   
@@ -227,13 +228,15 @@ React.useEffect(() => {
     e.preventDefault();
     setLoading(true);
 
+    const parts = inputValue? inputValue.split(',').map(s => s.trim()) : [];
+
     try {
       const res = await axios.get("/api/properties", {
         params: {
-          city: form.city,
+          city: selectedAddress.length > 0 ?  selectedAddress[0].city  : (parts.length > 0? parts[0] : ''),
           streetname: form.streetname,
           streetnumber: form.streetnumber,
-          state: form.state,
+          state: selectedAddress.length > 0 ? selectedAddress[0].state : (parts.length > 0? parts[1] : ''),
           postalcode: form.postalcode,
           priceMin: form.minPrice,
           priceMax: form.maxPrice,

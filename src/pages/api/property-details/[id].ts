@@ -8,8 +8,7 @@ const token = process.env.API_BEARER_TOKEN;
 type PropertyDetails = RowDataPacket & {
   ListingId: string;
   PropertyType?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Media?: any[]; // original JSON string from DB
+  Media?: string; // original JSON string from DB
   AssociationAmenities: string; // original JSON string from DB
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   parsedAssociationAmenities?: any[];  
@@ -136,7 +135,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const [rows] = await db.query<PropertyDetails[]>(
-      'SELECT * FROM properties WHERE ListingKey = ? LIMIT 1',
+      'SELECT * FROM final_properties WHERE ListingKey = ? LIMIT 1',
       [id]
     );
 
@@ -145,28 +144,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const property = rows[0];
-    const Media: unknown[] = JSON.parse(property.Media as unknown as string);
-          property.Media = Media;
+
     // Parse Media if stored as JSON string
+    if (property.Media) {
     try {
-      if (!Media){
-        console.log('null')
-        const m = await syncPropertiesWithMedia(property, false);
-        property.Media = m;
-      }else{
-        if(Media.length === 1){
-        
-          console.log('its 1')
-          const mm = await syncPropertiesWithMedia(property, true);
-         
-          property.Media = (mm);
-        }
-      }
-
-
-    } catch (error: unknown){
-      property.parsedMedia = [error];
+      property.Media = JSON.parse(property.Media);
+    } catch {
+      property.Media = '[]';
     }
+   }
 
    if (property.AssociationAmenities) {
     try {

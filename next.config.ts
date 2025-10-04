@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "media.mlsgrid.com",
       },
+      {
+        protocol: "https",
+        hostname: "images-listings.coldwellbanker.com",
+      },
     ],
   },
 };

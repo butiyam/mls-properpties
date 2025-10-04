@@ -82,8 +82,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const priceMin = parseInt(req.query.priceMin as string) || 0;
     const priceMax = parseInt(req.query.priceMax as string) || 0;
 
-    let query = 'SELECT * FROM properties WHERE 1=1';
-    let query2 = 'SELECT COUNT(*) AS total FROM properties WHERE 1=1';
+    let query = 'SELECT * FROM final_properties WHERE 1=1';
+    let query2 = 'SELECT COUNT(*) AS total FROM final_properties WHERE 1=1';
     let query3 = '';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params: any[] = [];
@@ -176,7 +176,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const [properties] = await db.query<PropertyRow[]>(query, params);
 
       // Filter properties that have non-empty Media
-      const noMediaProperties = properties.filter((p) => {
+    /*  const noMediaProperties = properties.filter((p) => {
       if (!p.Media) return true; // no Media at all → keep
 
       try {
@@ -198,17 +198,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // not JSON → check if it's an empty string
         return !(typeof p.Media === "string" && p.Media.trim().length > 0);
       }
-    });
+    });*/
 
 
       // Upload media to Cloudinary & save URLs
-      console.log(noMediaProperties.length)
-      await syncPropertiesWithMedia(noMediaProperties);
+      //console.log(noMediaProperties.length)
+     //await syncPropertiesWithMedia(noMediaProperties);
 
       // Fetch all newly inserted properties after Media inserted
-      let [parsedProperties] = await db.query<PropertyRow[]>(query, params);
+      //let [parsedProperties] = await db.query<PropertyRow[]>(query, params);
 
-      parsedProperties = parsedProperties.map(p => ({
+    const  parsedProperties = properties.map(p => ({
         ...p,
         Media: p.Media ? JSON.parse(p.Media) : [],
         StreetNumber: p.StreetNumber ? p.StreetNumber : '',

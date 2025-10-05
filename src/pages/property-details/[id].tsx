@@ -1,5 +1,5 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCalendarAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCalendarAlt,  FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { HiOutlineMail, HiOutlinePhone, HiOutlineLocationMarker } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -13,8 +13,7 @@ import Head from 'next/head';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
-
-
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export default function PropertyDetails() {
 
@@ -47,6 +46,39 @@ function sendEmail(agentEmail: string, ListingId : string) {
 
   window.location.href = mailtoLink;
 }
+
+
+function ExpandableDescription({ text, maxLength = 260 }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = text.length > maxLength;
+
+  return (
+    <div>
+      <p className="text-gray-700">
+        {expanded || !isLong ? text : text.slice(0, maxLength) + '…'}
+        {!expanded && isLong && (
+          <a
+            href="#"
+            onClick={e => { e.preventDefault(); setExpanded(true); }}
+            style={{ color: "#375FAE", marginLeft: 8, textDecoration: "none", fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}
+          >
+            CONTINUE READING <FaChevronDown style={{ marginLeft: 4 }} />
+          </a>
+        )}
+        {expanded && isLong && (
+          <a
+            href="#"
+            onClick={e => { e.preventDefault(); setExpanded(false); }}
+            style={{ color: "#375FAE", marginLeft: 8, textDecoration: "none", fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}
+          >
+            SHOW LESS <FaChevronUp style={{ marginLeft: 4 }} />
+          </a>
+        )}
+      </p>
+    </div>
+  );
+}
+
    
   useEffect(() => {
     if (!id) return;
@@ -116,8 +148,8 @@ function sendEmail(agentEmail: string, ListingId : string) {
                               width={800}
                               height={400}
                               loading='lazy'
-                              style={{ borderRadius: '20px', maxWidth: "100%", maxHeight: "400px" }}
-                              className="mt-5 object-cover border" />
+                              style={{ maxWidth: "100%", maxHeight: "400px" }}
+                              className="mt-5 object-cover rounded" />
                          </SwiperSlide>
                        ))}
                      </Swiper>
@@ -127,8 +159,7 @@ function sendEmail(agentEmail: string, ListingId : string) {
    
              {/* Description */}
              <div className="bg-white rounded-xl shadow-md p-6">
-               <p className="text-gray-700">{property.PublicRemarks}</p>
-              
+              <ExpandableDescription text={property.PublicRemarks} />              
              </div>
    
              {/* Overview Section */}
@@ -210,27 +241,13 @@ function sendEmail(agentEmail: string, ListingId : string) {
                <div className="font-bold text-black text-lg mb-4">Location</div>
                <div className="rounded-lg overflow-hidden border">
                  <iframe
-                   src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`}
-                   width="100%"
-                   height="300"
-                   className="border-none"
-                   allowFullScreen
-                   loading="lazy"
-                   referrerPolicy="no-referrer-when-downgrade"
-                   title="Map"
-                 />
-               </div>
-               <div className="mt-3 flex items-center gap-2 text-gray-500">
-                 <FaMapMarkerAlt />
-                 <span> {property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode}</span>
-                 <a
-                   href={`https://maps.google.com/?q=${property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode}`}
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className="ml-auto px-3 py-1 bg-[#e6f1c6] rounded-full text-[#2d3243] text-sm font-semibold hover:bg-[#d6eeb4]"
-                 >
-                   Get Directions
-                 </a>
+                  width="100%"
+                  height="300"
+                  allowFullScreen
+                  loading="lazy"
+                  src={"https://www.google.com/maps/embed/v1/place?key="+API_KEY+"&q="+property.StreetNumber+' '+property.StreetName+' '+property.StreetSuffix+', '+property.City+', '+property.StateOrProvince+' '+property.PostalCode+"&zoom=18&maptype=roadmap"}
+                  className="border-none">
+                </iframe>
                </div>
              </div>
            </section>

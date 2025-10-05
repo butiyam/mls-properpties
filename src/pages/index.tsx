@@ -1,6 +1,6 @@
 import React from 'react';
 import {  useState } from 'react';
-import {  FaLocationArrow , FaDotCircle, FaBed } from 'react-icons/fa';
+import {  FaLocationArrow , FaDotCircle, FaBed, FaCamera  } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -28,6 +28,7 @@ type Property = {
   StreetSuffix?: string;
   PostalCode?: number;
   City?: string;
+  PhotosCount?: number;
   StateOrProvince?: string;
   PublicRemarks?: string;
   LivingArea?: number;
@@ -47,7 +48,7 @@ type Address = {
 };
 
 function isNew(dateString: string): boolean {
-  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // milliseconds in 1 day
+  const ONE_DAY_MS = 168 * 60 * 60 * 1000; // milliseconds in 7 days
 
   const inputDate = new Date(dateString);
   const currentDate = new Date();
@@ -76,6 +77,28 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
   } else {
     throw new Error("Geocoding error: " + data.status);
   }
+}
+
+function PhotoBadge({ count }) {
+  return (
+    <div style={{
+      position: 'absolute',
+      bottom: 16,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      background: 'rgba(0,0,0,0.6)',
+      borderRadius: 20,
+      padding: '2px 10px',
+      display: 'flex',
+      alignItems: 'center',
+      color: '#fff',
+      fontSize: 18,
+      fontWeight: 500
+    }}>
+      <FaCamera style={{ marginRight: 4 }} />
+      <span style={{ fontSize: 16 }}>{count}</span>
+    </div>
+  );
 }
 
  const [form, setForm] = useState({
@@ -405,11 +428,10 @@ React.useEffect(() => {
                   </>
                   :<></>
                 }
-                <button className="hidden absolute right-2 top-2 bg-white/80 rounded-full p-1">
-                  <svg width={20} height={20} fill="none" stroke="currentColor">
-                    <path d="M10 17l-6-6a6 6 0 018-8 6 6 0 018 8l-6 6z" />
-                  </svg>
-                </button>
+                  <button  className="flex bg-[#0009] photo-badge pl-10 pr-10 absolute right-2 top-2 text-[#FFF] items-center text-xs rounded" >
+                  <FaCamera />
+                   <span className="pl-2 text-xs">{property.PhotosCount}</span>
+                  </button>
               </div>
               <div className="p-4">
                 <div className="flex flex justify-between mb-1">
@@ -624,11 +646,10 @@ React.useEffect(() => {
                   </>
                   :<></>
                 }
-                <button className="hidden absolute right-2 top-2 bg-white/80 rounded-full p-1">
-                  <svg width={20} height={20} fill="none" stroke="currentColor">
-                    <path d="M10 17l-6-6a6 6 0 018-8 6 6 0 018 8l-6 6z" />
-                  </svg>
-                </button>
+                 <button  className="flex bg-[#0009] photo-badge pl-10 pr-10 absolute right-2 top-2 text-[#FFF] items-center text-xs rounded" >
+                  <FaCamera />
+                   <span className="pl-2 text-xs">{property.PhotosCount}</span>
+                  </button>
               </div>
               <div className="p-4">
                 <div className="flex flex justify-between mb-1">

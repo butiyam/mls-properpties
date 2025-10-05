@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { FaDotCircle } from 'react-icons/fa';
+import { FaDotCircle, FaCamera } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
 import HeroSlider from '@/components/HeroSlider';
@@ -20,6 +20,7 @@ type Property = {
   StreetName?: string;
   StreetSuffix?: string;
   PostalCode?: number;
+  PhotosCount?: number;
   City?: string;
   StateOrProvince?: string;
   MRD_LEGALDESC?: string;
@@ -38,7 +39,7 @@ type Property = {
   
  
 function isNew(dateString: string): boolean {
-  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // milliseconds in 1 day
+  const ONE_DAY_MS = 168 * 60 * 60 * 1000; // milliseconds in 7 days
 
   const inputDate = new Date(dateString);
   const currentDate = new Date();
@@ -103,11 +104,10 @@ function isNew(dateString: string): boolean {
                   </>
                   :<></>
                 }
-                <button className="hidden absolute right-2 top-2 bg-white/80 rounded-full p-1">
-                  <svg width={20} height={20} fill="none" stroke="currentColor">
-                    <path d="M10 17l-6-6a6 6 0 018-8 6 6 0 018 8l-6 6z" />
-                  </svg>
-                </button>
+                 <button  className="flex bg-[#0009] photo-badge pl-10 pr-10 absolute right-2 top-2 text-[#FFF] items-center text-xs rounded" >
+                  <FaCamera />
+                   <span className="pl-2 text-xs">{property.PhotosCount}</span>
+                  </button>
               </div>
               <div className="p-4">
                 <div className="flex flex justify-between mb-1">

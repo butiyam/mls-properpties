@@ -36,6 +36,12 @@ background-color: #2d3243;
 .contect-form::placeholder {
   color: #2d3243;
 }
+/* styles.css */
+.photo-badge {
+  padding: 2px 10px;
+  /* ...other styles... */
+}
+
 
 .clickable {
   cursor: pointer;

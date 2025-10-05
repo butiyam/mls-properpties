@@ -135,7 +135,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const [rows] = await db.query<PropertyDetails[]>(
-      'SELECT * FROM final_properties WHERE ListingKey = ? LIMIT 1',
+      'SELECT * FROM final_properties WHERE ListingKey = ?  AND ListPrice > 0 LIMIT 1',
       [id]
     );
 

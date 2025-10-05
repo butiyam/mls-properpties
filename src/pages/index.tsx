@@ -79,28 +79,6 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
   }
 }
 
-function PhotoBadge({ count }) {
-  return (
-    <div style={{
-      position: 'absolute',
-      bottom: 16,
-      left: '50%',
-      transform: 'translateX(-50%)',
-      background: 'rgba(0,0,0,0.6)',
-      borderRadius: 20,
-      padding: '2px 10px',
-      display: 'flex',
-      alignItems: 'center',
-      color: '#fff',
-      fontSize: 18,
-      fontWeight: 500
-    }}>
-      <FaCamera style={{ marginRight: 4 }} />
-      <span style={{ fontSize: 16 }}>{count}</span>
-    </div>
-  );
-}
-
  const [form, setForm] = useState({
     streetname: "",
     streetnumber: "",

@@ -23,9 +23,6 @@ export default function PropertyDetails() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [property, setProperty] = useState<any>(null);
-  const [bbox, setBBox] = useState();
-  const [lat, setLat] = useState();
-  const [lon, setLon] = useState();
 
   const [loading, setLoading] = useState(true);
  
@@ -47,8 +44,12 @@ function sendEmail(agentEmail: string, ListingId : string) {
   window.location.href = mailtoLink;
 }
 
+type ExpandableDescriptionProps = {
+  text: string;
+};
 
-function ExpandableDescription({ text, maxLength = 260 }) {
+function ExpandableDescription({ text }: ExpandableDescriptionProps) {
+  const  maxLength = 260;
   const [expanded, setExpanded] = useState(false);
   const isLong = text.length > maxLength;
 
@@ -60,7 +61,7 @@ function ExpandableDescription({ text, maxLength = 260 }) {
           <a
             href="#"
             onClick={e => { e.preventDefault(); setExpanded(true); }}
-            style={{ color: "#375FAE", marginLeft: 8, textDecoration: "none", fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}
+            className="inline-flex items-center text-[#375FAE] ml-2 font-medium"
           >
             CONTINUE READING <FaChevronDown style={{ marginLeft: 4 }} />
           </a>
@@ -69,7 +70,7 @@ function ExpandableDescription({ text, maxLength = 260 }) {
           <a
             href="#"
             onClick={e => { e.preventDefault(); setExpanded(false); }}
-            style={{ color: "#375FAE", marginLeft: 8, textDecoration: "none", fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}
+            className="inline-flex items-center text-[#375FAE] ml-2 font-medium"
           >
             SHOW LESS <FaChevronUp style={{ marginLeft: 4 }} />
           </a>
@@ -87,11 +88,6 @@ function ExpandableDescription({ text, maxLength = 260 }) {
     try {
        const res = await axios.get(`/api/property-details/${id}`);
       setProperty(res.data);
-      const getLatLong = await axios.get(`https://nominatim.openstreetmap.org/search?q=${res.data.StreetNumber+' '+(res.data.StreetName+res.data.StreetSuffix? ' '+res.data.StreetSuffix: '')+', '+res.data.City+', '+res.data.StateOrProvince+' '+res.data.PostalCode}&format=json`);
-      //console.error(getLatLong);
-      setBBox( getLatLong.data[0].boundingbox);
-      setLat(getLatLong.data[0].lat);
-      setLon(getLatLong.data[0].lon);
 
     } catch (error) {
        console.error(error);
@@ -159,7 +155,7 @@ function ExpandableDescription({ text, maxLength = 260 }) {
    
              {/* Description */}
              <div className="bg-white rounded-xl shadow-md p-6">
-              <ExpandableDescription text={property.PublicRemarks} />              
+              <ExpandableDescription text={(property.PublicRemarks).toString()} />              
              </div>
    
              {/* Overview Section */}

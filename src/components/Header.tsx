@@ -14,15 +14,11 @@ export default function Header() {
         <Image
           src="/logo.png"
           alt="Oak Brook Realty"
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           className="object-cover rounded"
         />
         </Link>
-        <div className="text-white font-bold text-base leading-tight">
-          Oak Brook<br />
-          Realty
-        </div>
       </div>
       {/* Desktop Navigation */}
       <nav className="flex-1 justify-center hidden md:flex">

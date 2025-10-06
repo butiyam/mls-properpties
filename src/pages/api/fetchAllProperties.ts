@@ -4,7 +4,7 @@ import { RowDataPacket } from 'mysql2';
  export default async function fetchAllProperties() {
  const INITIAL_URL = "https://images-listings.coldwellbanker.com/MLSNI/"; 
                      //"12/45/66/36/_P/12456636_P01.jpg?width=1024";
- const [rows] = await db.query<RowDataPacket[]>(`SELECT ListingKey,PhotosCount, Media FROM final_properties WHERE ListingKey IS NULL`);
+ const [rows] = await db.query<RowDataPacket[]>(`SELECT ListingKey,PhotosCount, Media FROM properties WHERE ListingKey IS NULL`);
 
 let length = rows.length;
   console.log(rows);
@@ -26,7 +26,7 @@ for (const row of rows) {
 
  try {
        // Save uploaded URLs to DB
-    await db.query('UPDATE final_properties SET Media = ? WHERE ListingKey = ?', [JSON.stringify(uploadedUrls), row.ListingKey]);
+    await db.query('UPDATE properties SET Media = ? WHERE ListingKey = ?', [JSON.stringify(uploadedUrls), row.ListingKey]);
     //console.log(uploadedUrls)
       //await new Promise(res => setTimeout(res, 50)); // 50ms pause
   

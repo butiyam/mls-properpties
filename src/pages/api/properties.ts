@@ -83,8 +83,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const priceMin = parseInt(req.query.priceMin as string) || 0;
     const priceMax = parseInt(req.query.priceMax as string) || 0;
 
-    let query = 'SELECT * FROM final_properties WHERE 1=1 AND ListPrice > 0';
-    let query2 = 'SELECT COUNT(*) AS total FROM final_properties WHERE 1=1 AND ListPrice > 0';
+    let query = 'SELECT * FROM properties WHERE 1=1 AND ListPrice > 0';
+    let query2 = 'SELECT COUNT(*) AS total FROM properties WHERE 1=1 AND ListPrice > 0';
     let query3 = '';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const params: any[] = [];

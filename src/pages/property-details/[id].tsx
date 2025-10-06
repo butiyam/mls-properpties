@@ -1,5 +1,5 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCalendarAlt,  FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaMapMarkerAlt, FaBed, FaBath, FaRulerCombined, FaCalendarAlt,  FaChevronDown, FaChevronUp, FaDollarSign, FaHome, FaToggleOn, FaToggleOff, FaCalendarTimes } from "react-icons/fa";
 import { HiOutlineMail, HiOutlinePhone, HiOutlineLocationMarker } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
+
 export default function PropertyDetails() {
 
   const router = useRouter();
@@ -25,7 +26,30 @@ export default function PropertyDetails() {
   const [property, setProperty] = useState<any>(null);
 
   const [loading, setLoading] = useState(true);
- 
+
+ function formatDateTime(isoString: string): string {
+  const date = new Date(isoString);
+
+  const datePart = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }).format(date);
+
+  const timePart = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  }).format(date);
+
+  return `${datePart}, ${timePart}`;
+}
+
+console.log(formatDateTime('2025-07-16T05:07:00.000Z'));
+// Outputs: July 16, 2025, 5:07 AM
+
+
+
 function sendEmail(agentEmail: string, ListingId : string) {
 
   const nameElement = window.document.getElementById('name') as HTMLInputElement | null;
@@ -161,7 +185,7 @@ function ExpandableDescription({ text }: ExpandableDescriptionProps) {
              {/* Overview Section */}
              <div className="bg-white rounded-xl shadow-md p-6">
                <div className="font-bold text-black text-lg mb-4">Overview</div>
-               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">                  
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">                  
                    <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
                      <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
                       <FaMapMarkerAlt />
@@ -173,7 +197,40 @@ function ExpandableDescription({ text }: ExpandableDescriptionProps) {
                    </div>
                    <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
                      <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
-                      <FaBed />
+                      <FaDollarSign />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Price</div>
+                       <div className="font-semibold text-[#2d3243]">
+                        {new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(property.ListPrice))}
+                       </div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                    {property.StandardStatus === 'Active' ?
+                     <> <FaToggleOn /> </>
+                      :
+                     <> <FaToggleOff /></>
+                    }
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Status</div>
+                       <div className="font-semibold text-[#2d3243]">{property.StandardStatus}</div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaCalendarTimes />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Last Updated</div>
+                       <div className="font-semibold text-[#2d3243]">{ formatDateTime (property.ModificationTimestamp)}</div>
+                     </div>
+                   </div>
+                   <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaHome />
                      </span>
                      <div>
                        <div className="text-xs text-gray-400 font-medium">Type</div>
@@ -214,6 +271,15 @@ function ExpandableDescription({ text }: ExpandableDescriptionProps) {
                      <div>
                        <div className="text-xs text-gray-400 font-medium">Size</div>
                        <div className="font-semibold text-[#2d3243]">{property.LivingArea} sqft</div>
+                     </div>
+                   </div>  
+                      <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-4">
+                     <span className="p-2 bg-[#e6f1c6] rounded-full text-[#2d3243]">
+                      <FaRulerCombined />
+                     </span>
+                     <div>
+                       <div className="text-xs text-gray-400 font-medium">Rate per Sq. Ft</div>
+                       <div className="font-semibold text-[#2d3243]">{Math.floor(property.ListPrice / property.LivingArea)+' per Sq. Ft'}</div>
                      </div>
                    </div>  
                </div>

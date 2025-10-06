@@ -21,6 +21,7 @@ type Property = {
   StreetSuffix?: string;
   PostalCode?: number;
   PhotosCount?: number;
+  StandardStatus?: string;
   City?: string;
   StateOrProvince?: string;
   MRD_LEGALDESC?: string;
@@ -29,7 +30,7 @@ type Property = {
   BathroomsTotalInteger?: number;
   ListPrice?: number;
   ListingKey?: string | number;
-  updatedAt?: string;
+  OriginalEntryTimestamp?: string;
 };
 
  const [properties, setProperties] = React.useState<Property[]>([]);
@@ -98,7 +99,7 @@ function isNew(dateString: string): boolean {
                           : "/placeholder.png"}
                       width={100} height={100} alt={property.ListingKey+" Img"} className="w-full h-48 object-cover"
                     />
-                {isNew(property.updatedAt? property.updatedAt : '') ?
+                {isNew(property.OriginalEntryTimestamp? property.OriginalEntryTimestamp : '') ?
                   <>
                   <span className="absolute left-2 top-2 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">New</span>
                   </>
@@ -113,7 +114,8 @@ function isNew(dateString: string): boolean {
                 <div className="flex flex justify-between mb-1">
                   <h1 className="text-xl text-[#1b3c55] font-bold ">{new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(property.ListPrice))}</h1>
                   <span className="flex gap-2 items-center text-[#000000de] font-medium text-sm">
-                  <FaDotCircle fill='green' />{'Active'}
+                  <FaDotCircle fill={property.StandardStatus === 'Active' ? 'green' : 'red' } />
+                  {property.StandardStatus}
                   </span>
                  </div>
                 <div className="text-xs text-[#000000de] inline-flex flex justify-around font-bold mb-2 flex gap-2 items-center">

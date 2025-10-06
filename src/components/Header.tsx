@@ -7,12 +7,12 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-[#2d3243] flex items-center justify-between px-4 py-3 relative">
+    <header className="bg-[#1A1F2B] flex items-center justify-between px-4 py-3 relative">
       {/* Logo and name */}
       <div className="flex items-center gap-3">
         <Link href="/">
         <Image
-          src="/logo.jpeg"
+          src="/logo.png"
           alt="Oak Brook Realty"
           width={60}
           height={60}

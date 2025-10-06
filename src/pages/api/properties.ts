@@ -20,9 +20,10 @@ type PropertyRow = RowDataPacket & {
   LivingArea: number;
   PublicRemarks: string;
   PhotosCount: number;
+  StandardStatus: string;
   Media: string; // JSON array stored as string
   AssociationAmenities: string; // JSON string
-  updatedAt: Date;
+  OriginalEntryTimestamp: Date;
 };
 
 async function fetchMLSMedia(property: PropertyRow) {

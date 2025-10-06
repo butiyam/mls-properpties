@@ -1,56 +1,127 @@
+import axios from "axios";
 import db from '../../lib/dbConnect';
-import { RowDataPacket } from 'mysql2';
+                     
+const INITIAL_URL = "https://api.mlsgrid.com/v2/Property?$top=5000&$filter=OriginatingSystemName%20eq%20%27mred%27%20and%20MlgCanView%20eq%20true%20and%20PropertyType%20eq%207%20and%20StandardStatus%20eq%201";
 
  export default async function fetchAllProperties() {
- const INITIAL_URL = "https://images-listings.coldwellbanker.com/MLSNI/"; 
-                     //"12/45/66/36/_P/12456636_P01.jpg?width=1024";
- const [rows] = await db.query<RowDataPacket[]>(`SELECT ListingKey,PhotosCount, Media FROM properties WHERE ListingKey IS NULL`);
+  let url = INITIAL_URL;
 
-let length = rows.length;
-  console.log(rows);
-for (const row of rows) {
-  
-  console.log(length--);
-  //console.log(row.Media);
+  while (url) {
 
-    const uploadedUrls: string[] = [];
-  for(let k = 0; k < Number(row.PhotosCount); k++){
-    const listingkey = row.ListingKey;
-    const cleanedKey = listingkey.replace('MRD', ''); 
-    const formatted = cleanedKey.match(/.{1,2}/g)?.join('/') + '/';   
-    const url = INITIAL_URL+formatted+'_P/'+cleanedKey+"_P0"+k+".jpg?width=1024";
-       // console.log(url)
-    uploadedUrls.push(url);
+    // Fetch fresh data from MLS API
+    const { data } = await axios.get(url, { headers: { Authorization: `Bearer ${process.env.API_BEARER_TOKEN}`, Accept: "application/json"  } });
+
+    if (!Array.isArray(data.value)) throw new Error('Invalid MLS data');
+
+    // Bulk insert
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const values = data.value.map((p: any) => [
+      p.ListingKey,
+      p.StreetNumber,
+      p.StreetName,
+      p.StreetSuffix,
+      p.PostalCode,
+      p.City,
+      p.StateOrProvince,
+      p.ListPrice || 0,
+      p.BedroomsTotal || 0,
+      p.BathroomsTotalInteger || 0,
+      p.LivingArea || 0,
+      p.PublicRemarks || '',
+      p.YearBuilt || '',
+      JSON.stringify(p.AssociationAmenities || []),
+      p.ListAgentFullName || '',
+      p.ListAgentEmail || '',
+      p.ListAgentOfficePhone || '',
+      p.ListOfficeURL || '',
+      p.ListingContractDate || '',
+      p.PhotosCount || 0,
+      p.StandardStatus || '',
+      p.StatusChangeTimestamp || '',
+      p.ModificationTimestamp || '',
+      p.OriginalEntryTimestamp || ''
+    ]);
+
+      if (values.length) {
+      
+      // Upsert each property to update selected fields excluding Media
+      const rowCount = values.length;
+      const placeholders = '(' + new Array(24).fill('?').join(', ') + ')';
+      const allPlaceholders = new Array(rowCount).fill(placeholders).join(', ');
+
+      // Flatten all values arrays into one single array of params
+      const flatValues = values.flat();
+
+      
+    await db.query(
+      `INSERT INTO properties 
+        (ListingKey,
+         StreetNumber,
+         StreetName,
+         StreetSuffix,
+         PostalCode,
+         City,
+         StateOrProvince,
+         ListPrice,
+         BedroomsTotal, 
+         BathroomsTotalInteger, 
+         LivingArea, 
+         PublicRemarks,
+         YearBuilt,  
+         AssociationAmenities, 
+         ListAgentFullName, 
+         ListAgentEmail, 
+         ListAgentOfficePhone, 
+         ListOfficeURL, 
+         ListingContractDate,
+         PhotosCount,
+         StandardStatus,
+         StatusChangeTimestamp,
+         ModificationTimestamp,
+         OriginalEntryTimestamp)
+      VALUES ${allPlaceholders}
+      ON DUPLICATE KEY UPDATE
+        ListingKey = VALUES(ListingKey),
+        StreetNumber = VALUES(StreetNumber),
+        StreetName = VALUES(StreetName),
+        StreetSuffix = VALUES(StreetSuffix),
+        PostalCode = VALUES(PostalCode),
+        City = VALUES(City),
+        StateOrProvince = VALUES(StateOrProvince),
+        ListPrice = VALUES(ListPrice),
+        BedroomsTotal = VALUES(BedroomsTotal),
+        BathroomsTotalInteger = VALUES(BathroomsTotalInteger),
+        LivingArea = VALUES(LivingArea),
+        PublicRemarks = VALUES(PublicRemarks),
+        YearBuilt = VALUES(YearBuilt),  
+        AssociationAmenities = VALUES(AssociationAmenities), 
+        ListAgentFullName = VALUES(ListAgentFullName), 
+        ListAgentEmail = VALUES(ListAgentEmail), 
+        ListAgentOfficePhone = VALUES(ListAgentOfficePhone), 
+        ListOfficeURL = VALUES(ListOfficeURL), 
+        ListingContractDate = VALUES(ListingContractDate), 
+        PhotosCount = VALUES(PhotosCount),
+        StandardStatus = VALUES(StandardStatus),
+        StatusChangeTimestamp = VALUES(StatusChangeTimestamp),
+        ModificationTimestamp = VALUES(ModificationTimestamp),
+        OriginalEntryTimestamp = VALUES(OriginalEntryTimestamp)
+      `,
+      flatValues
+    );
+
+    }
     
- }
-
- try {
-       // Save uploaded URLs to DB
-    await db.query('UPDATE properties SET Media = ? WHERE ListingKey = ?', [JSON.stringify(uploadedUrls), row.ListingKey]);
-    //console.log(uploadedUrls)
-      //await new Promise(res => setTimeout(res, 50)); // 50ms pause
-  
- } catch (error) {
-  console.log(error);  
- }
-
-  /*
-  const listingkey = row.ListingKey;
-  const cleanedKey = listingkey.replace('MRD', ''); 
-  const formatted = cleanedKey.match(/.{1,2}/g)?.join('/') + '/';   
-  console.log(INITIAL_URL+formatted+'_P/'+cleanedKey+"_P01.jpg?width=1024");
-  */
-
-}
-
- console.log(`🎉 Finished! All Records`);
-  //return;
-  process.exit(0); // stop node process explicitly after completion
+    url = data['@odata.nextLink'] || null;
+    if (url === null) { // no next page
+      console.log('No more pages, ending');
+      return;
+    }
+  }
 
 }
 
 (async () => {
   await fetchAllProperties();
-
- 
+  console.log(`🎉 Finished! All Records`);
+  process.exit(0); // stop node process explicitly after completion
 })();

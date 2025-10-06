@@ -23,7 +23,7 @@ type PropertyRow = RowDataPacket & {
   PublicRemarks: string;
   Media: string; // JSON array stored as string
   AssociationAmenities: string; // JSON string
-  updatedAt: Date;
+  OriginalEntryTimestamp: Date;
 };
 
 async function fetchMLSMedia(property: PropertyRow) {
@@ -132,7 +132,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     params3.push(limit, offset);
 
     // Check last update timestamp
-    const [rows] = await db.query<LastUpdatedRow[]>('SELECT MAX(updatedAt) AS lastUpdated FROM properties');
+    const [rows] = await db.query<LastUpdatedRow[]>('SELECT MAX(OriginalEntryTimestamp) AS lastUpdated FROM properties');
     const lastUpdated = rows[0]?.lastUpdated ? new Date(rows[0].lastUpdated).getTime() : 0;
     const now = Date.now();
 
@@ -224,7 +224,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (values.length) {
       await db.query(
         `INSERT INTO properties 
-        (ListingKey, UnparsedAddress, ListPrice, BedroomsTotal, BathroomsTotalInteger, LivingArea, PublicRemarks, YearBuilt, City, MRD_SASTATE, Media, AssociationAmenities, ListAgentFullName, ListAgentEmail, ListAgentOfficePhone, ListOfficeURL, ListingContractDate, updatedAt) 
+        (ListingKey, UnparsedAddress, ListPrice, BedroomsTotal, BathroomsTotalInteger, LivingArea, PublicRemarks, YearBuilt, City, MRD_SASTATE, Media, AssociationAmenities, ListAgentFullName, ListAgentEmail, ListAgentOfficePhone, ListOfficeURL, ListingContractDate, OriginalEntryTimestamp) 
         VALUES ?`,
         [values]
       );

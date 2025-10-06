@@ -40,9 +40,10 @@ type PropertyRow = RowDataPacket & {
   BathroomsTotalInteger: number;
   LivingArea: number;
   PublicRemarks: string;
+  StandardStatus: string;
   Media: string; // JSON array stored as string
   AssociationAmenities: string; // JSON string
-  updatedAt: Date;
+  OriginalEntryTimestamp: Date;
 };
 
 async function fetchMLSMedia(property: PropertyDetails) {
@@ -146,12 +147,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const property = rows[0];
 
     // Parse Media if stored as JSON string
-    if (property.Media) {
+    if (property.Media !== '[]') {
     try {
-      property.Media = JSON.parse(property.Media);
+      property.Media = JSON.parse(property.Media || '[]');
     } catch {
       property.Media = '[]';
     }
+   }else{
+          property.Media =  JSON.parse('["/placeholder.svg"]');
    }
 
    if (property.AssociationAmenities) {

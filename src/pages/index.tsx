@@ -29,6 +29,7 @@ type Property = {
   PostalCode?: number;
   City?: string;
   PhotosCount?: number;
+  StandardStatus?: string;
   StateOrProvince?: string;
   PublicRemarks?: string;
   LivingArea?: number;
@@ -36,7 +37,7 @@ type Property = {
   BathroomsTotalInteger?: number;
   ListPrice?: number;
   ListingKey?: string | number;
-  updatedAt?: string;
+  OriginalEntryTimestamp?: string;
 };
 
 type Address = {
@@ -178,7 +179,7 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
         baths: prop.BathroomsTotalInteger,
         sqft: prop.LivingArea,
         address: `${prop.StreetNumber} ${prop.StreetName} ${prop.StreetSuffix}, ${prop.City}, ${prop.StateOrProvince} ${prop.PostalCode}`,
-        image: prop.Media[0] || '/placeholder.png',
+        image: prop.Media[0] || '/placeholder.svg',
       };
     })
   );
@@ -399,8 +400,8 @@ React.useEffect(() => {
           <Link key={index} href={`/property-details/${property.ListingKey}`}>
           <div  className="rounded-lg shadow border bg-white overflow-hidden">
               <div className="relative">
-                <Image src={property.Media?.length? property.Media[0]: '/placeholder.png'} width={100} height={100} alt={property.ListingKey+" Img"} className="w-full h-48 object-cover" />
-                {isNew(property.updatedAt? property.updatedAt : '') ?
+                <Image src={property.Media?.length? property.Media[0]: '/placeholder.svg'} width={100} height={100} alt={property.ListingKey+" Img"} className="w-full h-48 object-cover" />
+                {isNew(property.OriginalEntryTimestamp? property.OriginalEntryTimestamp : '') ?
                   <>
                   <span className="absolute left-2 top-2 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">New</span>
                   </>
@@ -415,7 +416,8 @@ React.useEffect(() => {
                 <div className="flex flex justify-between mb-1">
                   <h1 className="text-xl text-[#1b3c55] font-bold ">{new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(property.ListPrice))}</h1>
                   <span className="flex gap-2 items-center text-[#000000de] font-medium text-sm">
-                  <FaDotCircle fill='green' />{'Active'}
+                  <FaDotCircle fill={property.StandardStatus === 'Active' ? 'green' : 'red' } />
+                  {property.StandardStatus}
                   </span>
                  </div>
                 <div className="text-xs text-[#000000de] inline-flex flex justify-around font-bold mb-2 flex gap-2 items-center">
@@ -616,9 +618,9 @@ React.useEffect(() => {
           <div className="rounded-lg shadow border bg-white overflow-hidden">
               <div className="relative">
                 <Image src={ property.Media && property.Media.length > 0 ? property.Media[0]
-                          : "/placeholder.png"}
+                          : "/placeholder.svg"}
                            width={100} height={100} alt={property.ListingKey+" Img"} className="w-full h-48 object-cover" />
-                {isNew(property.updatedAt? property.updatedAt : '') ?
+                {isNew(property.OriginalEntryTimestamp? property.OriginalEntryTimestamp : '') ?
                   <>
                   <span className="absolute left-2 top-2 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">New</span>
                   </>

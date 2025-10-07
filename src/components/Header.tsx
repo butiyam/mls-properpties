@@ -24,10 +24,13 @@ export default function Header() {
       <nav className="flex-1 justify-center hidden md:flex">
         <ul className="flex gap-8 text-white text-lg font-semibold">
           <li className="hover:text-teal-200">
-            <Link href="/">Home</Link>
+            <Link href="http://obrglobal.com/">Home</Link>
           </li>
           <li className="hover:text-teal-200">
-            <Link href="/properties">Available Properties</Link>
+             <Link href="/contact-us">Contact Us</Link>
+          </li>
+          <li className="hover:text-teal-200">
+            <Link href="/view-properties">View Properties</Link>
           </li>
         </ul>
       </nav>
@@ -38,7 +41,7 @@ export default function Header() {
           className="flex items-center px-6 py-2 border border-[#e6f1c6] rounded-full text-[#e6f1c6] text-lg font-bold hover:bg-[#31374a] transition"
         >
           <FaHome className="mr-2" />
-          View Properties
+          Properties
         </Link>
       </div>
       {/* Mobile Hamburger */}
@@ -54,13 +57,18 @@ export default function Header() {
         <nav>
           <ul className="flex flex-col items-center gap-6 py-6 text-white text-lg font-semibold">
             <li>
-              <Link href="/" className="hover:text-teal-200" onClick={() => setMenuOpen(false)}>
+              <Link href="http://obrglobal.com/" className="hover:text-teal-200" onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
             </li>
+            <li className="hover:text-teal-200">
+             <Link href="/contact-us">
+             Contact Us
+             </Link>
+            </li>
             <li>
-              <Link href="/properties" className="hover:text-teal-200" onClick={() => setMenuOpen(false)}>
-              Available Properties
+              <Link href="/view-properties" className="hover:text-teal-200" onClick={() => setMenuOpen(false)}>
+              View Properties
               </Link>
             </li>
             <li>
@@ -70,7 +78,7 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               >
                 <FaHome className="mr-2" />
-                View Properties
+                Properties
               </Link>
             </li>
           </ul>

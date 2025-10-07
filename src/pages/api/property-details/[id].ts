@@ -132,9 +132,23 @@ async function syncPropertiesWithMedia(property: PropertyDetails, skip: boolean
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
+  let mlsProperty;
   if (!id) return res.status(400).json({ error: 'Missing property ID' });
 
   try {
+    mlsProperty = await axios.get(`https://api.mlsgrid.com/v2/Property('${id}')`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    mlsProperty = mlsProperty.data;
+
+  } catch (error) {
+    console.error(`something is wrong!`, error);
+    return [];
+  }
+
+  try {
+      
     const [rows] = await db.query<PropertyDetails[]>(
       'SELECT * FROM properties WHERE ListingKey = ?  AND ListPrice > 0 LIMIT 1',
       [id]
@@ -145,6 +159,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const property = rows[0];
+
+    if(mlsProperty.StandardStatus !== property.StandardStatus){
+      console.log('status changed');
+      // update status
+      await db.query('UPDATE properties SET StandardStatus = ? AND StatusChangeTimestamp = ?  WHERE ListingKey = ?', [mlsProperty.StandardStatus, mlsProperty.StatusChangeTimestamp,id]);
+      property.StandardStatus = mlsProperty.StandardStatus;
+      property.StatusChangeTimestamp = mlsProperty.StatusChangeTimestamp;
+    }
 
     // Parse Media if stored as JSON string
     if (property.Media !== '[]') {

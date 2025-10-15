@@ -456,7 +456,8 @@ React.useEffect(() => {
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">
-      SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS
+        Oak Brook Properties
+     {/* SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         { properties.map((property, index) => (
@@ -706,7 +707,8 @@ React.useEffect(() => {
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">
-      SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS
+        Oak Brook Properties
+    {/*  SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         { properties.map((property, index) => (

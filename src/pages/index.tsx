@@ -348,7 +348,7 @@ React.useEffect(() => {
       </Swiper>
       {/* Overlay content: Fixed on top of Swiper */}
       <div className={styles.overlay}>
-        <h1 className={styles.title}>Find a home in style</h1>
+        <h1 className={styles.title}>Find a home <span className="text-[#ffffb3]">in style</span></h1>
         {/* Your search bar or search component */}
         <div className={styles.searchBar}>
           {/* ...Search bar JSX... */}
@@ -574,7 +574,7 @@ React.useEffect(() => {
       </Swiper>
       {/* Overlay content: Fixed on top of Swiper */}
       <div className={styles.overlay}>
-        <h1 className={styles.title}>Find a home in style</h1>
+        <h1 className={styles.title}>Find a home <span className="text-[#ffffb3]">in style</span></h1>
         {/* Your search bar or search component */}
         <div className={styles.searchBar}>
           {/* ...Search bar JSX... */}
@@ -594,6 +594,7 @@ React.useEffect(() => {
                 // Filter your property listings here
               }}
             />
+
             <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
                     onClick={() => setModalOpen(true)}>
                     $ Price
@@ -650,6 +651,15 @@ React.useEffect(() => {
             />
             <button className='text-[#FFF] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
             </div>
+
+             <div className="flex gap-2 pt-2">
+              <button className="search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none" >
+                Browse Properties
+              </button>
+              <button className='search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none'>
+                Get in Touch
+              </button>
+             </div>
 
             {/* Buttons for Mobile */}
             <div className="flex pt-2">

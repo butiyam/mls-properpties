@@ -88,14 +88,14 @@
   .swiper-slide,
   .slideBg,
   .overlay {
-    height: 300px;
+    height: 550px;
     min-height: 180px;
   }
   .slideBg {
     border-radius: 10px;
   }
   .title {
-    font-size: 7vw;
+    font-size: 10vw;
     padding: 0 8vw;
   }
   .searchBar {

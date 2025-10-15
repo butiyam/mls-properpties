@@ -1,0 +1,235 @@
+.section {
+  width: 100%;
+  padding: 70px 0 90px;
+  background-image: url(/bg-01.png);
+  background-repeat: no-repeat;
+  background-position: 95% 100%;
+  overflow: hidden;
+  position: relative;
+}
+.testimonialsRow {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  position: relative;
+}
+.testimonialsCarousel {
+  display: flex;
+  gap: 34px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 14px;
+  scroll-behavior: smooth;
+  min-width: 650px;
+  max-width: 860px;
+  /* Hide scrollbars for Chrome, Safari, Edge */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.testimonialsCarousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.testimonialLine {
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, #25d6bc 70%, #eaf6fa 100%);
+  border-radius: 2px;
+  margin-top: 18px;
+  display: block;
+}
+
+
+
+.testimonialCard {
+  flex: 0 0 45%;
+  min-width: 340px;
+  max-width: 400px;
+}
+.testimonialsCarousel {
+  /* ... as above ... */
+  width: 800px; /* Adjust for your layout */
+  max-width: 100%;
+}
+
+
+.leftCircleImage {
+  width: 44vw;
+  min-width: 350px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 0 100% 100% 0 / 0 100% 100% 0;
+  margin-right: -40px;
+  margin-left: -15px;
+}
+.cardsBlock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  background: transparent;
+  border-radius: 32px;
+
+  padding: 56px 60px 32px 60px;
+  min-width: 540px;
+  z-index: 1;
+  position: relative;
+}
+
+.cardsBlock {
+  /* ... */
+  padding-bottom: 32px; /* Or more if needed */
+}
+
+
+.label {
+  color: #25d6bc;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.title {
+  font-size: 42px;
+  font-weight: bold;
+  color: #222538;
+  margin-bottom: 32px;
+}
+.testimonialsCarousel {
+  display: flex;
+  gap: 34px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 14px;
+  scroll-behavior: smooth;
+  min-width: 650px;
+  max-width: 860px;
+}
+.testimonialCard {
+  min-width: 350px;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 18px;
+  border-top: 5px solid #25d6bc;
+  box-shadow: 0 2px 20px rgba(44,64,87,0.09);
+  padding: 36px 25px 28px;
+  position: relative;
+  scroll-snap-align: start;
+}
+.cardIcon { width: 50px; margin-bottom: 6px; }
+.name { font-weight: 700; font-size: 18px; color: #16243e; margin-bottom: 7px;}
+.stars { font-size: 15px; color: #ffe141; margin-bottom: 9px;}
+.quoteMark {
+  position: absolute; top: 24px; right: 18px; font-size: 40px; color: #25d6bc; font-weight: bold;
+}
+.cardText { font-size: 16px; color: #485465; line-height: 1.5; margin-top: 19px; }
+
+@media (max-width: 900px) {
+  .testimonialsRow { flex-direction: column; }
+  .leftCircleImage { width: 80vw; min-width: 180px; margin: 0 auto 16px 0; border-radius: 50vw; }
+  .cardsBlock { min-width: 0; padding: 30px 10vw; }
+  .testimonialsCarousel, .testimonialCard { min-width: 96vw; max-width: 99vw; }
+}
+
+@media (max-width: 920px) {
+  .testimonialsRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .leftCircleImage {
+    height: 350px;
+    width: 80vw;
+    max-width: 550px;
+    min-width: auto;
+    aspect-ratio: 1/1;
+    margin-right: 0;
+    margin-bottom: 20px;
+    border-radius: 0 100% 100% 0;
+    box-shadow: 0 8px 32px rgba(44,64,87,0.11);
+  }
+
+  .cardsBlock {
+    min-width: 90vw;
+    max-width: 100%;
+    padding: 30px 5vw;
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(44,64,87,0.09);
+  }
+
+  .testimonialsCarousel {
+    min-width: 90vw;
+    max-width: 90vw;
+    gap: 16px;
+    padding-bottom: 16px;
+  }
+
+  .testimonialCard {
+    min-width: 80vw;
+    max-width: 80vw;
+    border-radius: 14px;
+    padding: 24px 20px 20px;
+    box-shadow: 0 4px 20px rgba(44,64,87,0.07);
+  }
+
+  .cardIcon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+
+  .name {
+    font-size: 16px;
+  }
+
+  .stars {
+    font-size: 13px;
+  }
+
+  .quoteMark {
+    font-size: 36px;
+    top: 18px;
+    right: 12px;
+  }
+
+  .cardText {
+    font-size: 14px;
+    line-height: 1.55;
+    margin-top: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leftCircleImage {
+    width: 92vw;
+    max-width: none;
+    margin-bottom: 16px;
+  }
+
+  .cardsBlock {
+    padding: 24px 4vw;
+  }
+
+  .testimonialCard {
+    min-width: 91vw;
+    max-width: 91vw;
+    padding: 20px 16px 16px;
+  }
+
+  .name {
+    font-size: 14px;
+  }
+
+  .stars {
+    font-size: 12px;
+  }
+
+  .cardText {
+    font-size: 13px;
+    margin-top: 12px;
+  }
+}

@@ -1,0 +1,75 @@
+.servicesSection {
+  width: 100%;
+  padding: 64px 0;
+  background: #1A1F2B;
+  text-align: center;
+}
+.servicesLabel {
+  color: #25d6bc;
+  font-size: 20px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.heading {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 48px;
+  color: #fff;
+}
+.highlight {
+  color: #ffffb3;
+}
+.cardsContainer {
+  display: flex;
+  justify-content: space-around;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.card {
+  background: none;
+  border: 2px solid #505465;
+  border-radius: 20px;
+  padding: 32px 24px;
+  width: 280px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: border-color 0.5s;
+}
+
+.card:hover {
+  border-color: #C2DF93;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #505465;
+  border-radius: 16px;
+  width: 72px;
+  height: 72px;
+ transition: border-color 0.5s;
+ margin-bottom: 30px;
+}
+
+.card:hover .iconContainer {
+  border-color: #C2DF93;
+}
+
+.icon {
+  height: 40px;
+  width: 40px;
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.cardDesc {
+  font-size: 16px;
+  color: #fff;
+  margin: 0;
+}

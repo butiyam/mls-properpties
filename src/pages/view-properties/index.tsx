@@ -1,6 +1,6 @@
 import React from 'react';
 import {  useState } from 'react';
-import {  FaLocationArrow , FaDotCircle, FaBed, FaCamera  } from 'react-icons/fa';
+import {  FaLocationArrow , FaDotCircle, FaBed, FaCamera , FaSearch } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,7 +14,6 @@ import BedsBathsModal from '@/components/BedsBathsModal';
 import FilterModal from '@/components/FilterModal';
 import { PropertyData } from '@/lib/types';
 import Head from 'next/head';
-
 const PropertyMap = dynamic(() => import("../../components/PropertyMap"), { ssr: false });
 
 
@@ -277,9 +276,9 @@ React.useEffect(() => {
       <div className="w-full md:w-[50%] h-1/2 md:h-full overflow-y-auto">
         {/* put your homepage sections here */}
         { /* Hero + search + listings */ }
-        <section className="relative min-h-[500px] flex items-center justify-center bg-gray-900 overflow-hidden px-0">
+        <section className="bg-[#1A1F2B] relative min-h-[500px] flex items-center justify-center overflow-hidden px-0">
         {/* Background Image */}
-        <Image src="/bg-hero.jpg" width={700} height={700} alt="Home search background" className="absolute inset-0 w-full h-full object-cover opacity-70 z-0" />
+        <Image src="/bg-hero.jpg" width={700} height={700} alt="Home search background" className="myFillAvailable m-5 rounded-xl absolute h-full object-cover opacity-70 z-0" />
         {/* Main Content */}
         <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0 md:pt-8">
           {/* Heading */}
@@ -288,9 +287,9 @@ React.useEffect(() => {
           </h1>
 
         {/* Search Bar */}
-        <form className="w-full max-w-5xl md:mx-auto" onSubmit={handleSearch}>
+        <form className="w-full max-w-5xl p-8 md:mx-auto" onSubmit={handleSearch}>
           {/* Desktop */}
-          <div className="hidden md:flex flex-row gap-0 bg-[#2d3243] shadow-lg border border-[#e6f1c6] rounded-full items-center overflow-hidden">
+          <div className="hidden md:flex flex-row gap-0 bg-[#ffffff1a] shadow-lg border border-[#ffffff5c] rounded-xl items-center overflow-hidden">
             <PlacesAutocompleteInput inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />      
 
             <PriceFilter
@@ -304,7 +303,7 @@ React.useEffect(() => {
                 // Filter your property listings here
               }}
             />
-            <button className='bg-[#2d3243] text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none min-w-[140px] clickable' 
+            <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
                     onClick={() => setModalOpen(true)}>
                     $ Price
             </button>
@@ -318,14 +317,14 @@ React.useEffect(() => {
                   console.log('Beds:'+beds+', Baths:'+baths)
               }}
             />
-            <button className='flex justify-between items-center bg-[#2d3243] text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none min-w-[160px] clickable' 
+            <button className='flex justify-between items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[160px] clickable' 
                     onClick={() => setBedBathsModalOpen(true)}>
                   <FaBed />  Beds & Baths
             </button>       
             {/* Map Button */}
             <button
               type="button"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-5  ml-2 flex items-center gap-2"
+              className="search-input hover:bg-blue-700 text-[#FFF] border-l border-[#ffffff5c] font-bold px-4 py-5 flex items-center gap-2"
               onClick={() => setShowMap(true)}
 
             >
@@ -334,14 +333,14 @@ React.useEffect(() => {
               {/* Search Button */}
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-5 rounded-r-full flex items-center gap-2"
+              className="bg-[#00bfa6] hover:opacity-86 border-l border-[#ffffff5c] text-white font-bold px-6 py-5 flex items-center gap-2"
             >
             Search
             </button>
           </div>
 
           {/* Mobile */}
-          <div className="md:hidden flex flex-col gap-3 bg-[#2d3243] border border-[#e6f1c6] rounded shadow-lg px-3 py-4 w-full">
+          <div className="md:hidden flex flex-col gap-3 bg-[#ffffff1a] border border-[#ffffff5c] rounded shadow-lg px-3 py-4 w-full">
 
             <div className="flex gap-2 pt-2">
             <PlacesAutocompleteInputMobile inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />
@@ -360,21 +359,21 @@ React.useEffect(() => {
                 console.log(filters)
               }}
             />
-            <button className='text-[#e6f1c6] w-[80px] border border-[#e6f1c6] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
+            <button className='text-[#fff] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
             </div>
 
             {/* Buttons for Mobile */}
             <div className="flex pt-2">
               <button
                 type="button"
-                className="flex text-center justify-center w-[80px] bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-l"
+                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l"
                 onClick={() => setShowMap(true)}
               >
               <FaLocationArrow  size={24} />
               </button>
                 <button
                 type="submit"
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-r"
+                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r"
               >
               Search
               </button>
@@ -393,7 +392,7 @@ React.useEffect(() => {
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">
-      SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {total} LISTINGS
+      SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         { properties.map((property, index) => (
@@ -469,6 +468,7 @@ React.useEffect(() => {
       <></>
 
     }
+    
       </div>
 
       {/* Right side - map */}
@@ -485,9 +485,9 @@ React.useEffect(() => {
     <>
       {/* Normal homepage */}
       { /* Hero + search + listings */ }
-      <section className="relative min-h-[500px] flex items-center justify-center bg-gray-900 overflow-hidden px-0">
+      <section className="bg-[#1A1F2B] relative min-h-[500px] flex items-center justify-center overflow-hidden px-0">
       {/* Background Image */}
-      <Image src="/bg-hero.jpg" width={700} height={700} alt="Home search background" className="absolute inset-0 w-full h-full object-cover opacity-70 z-0" />
+      <Image src="/bg-hero.jpg" width={700} height={700} alt="Home search background" className="myFillAvailable m-5 rounded-xl absolute h-full object-cover opacity-70 z-0" />
 
       {/* Main Content */}
       <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0 md:pt-8 m-5">
@@ -496,9 +496,9 @@ React.useEffect(() => {
           Find a home<br className="md:hidden" /> in style
         </h1>
         {/* Search Bar */}
-        <form className="w-full max-w-5xl md:mx-auto" onSubmit={handleSearch}>
+        <form className="w-full max-w-5xl p-2 md:mx-auto" onSubmit={handleSearch}>
           {/* Desktop */}
-          <div className="hidden md:flex flex-row gap-0 bg-[#2d3243] shadow-lg border border-[#e6f1c6] rounded-full items-center overflow-hidden">
+          <div className="hidden md:flex flex-row gap-0 bg-[#ffffff1a] shadow-lg border border-[#ffffff5c] rounded-xl items-center overflow-hidden">
             <PlacesAutocompleteInput inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />      
 
             <PriceFilter
@@ -512,7 +512,7 @@ React.useEffect(() => {
                 // Filter your property listings here
               }}
             />
-            <button className='bg-[#2d3243] text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none min-w-[140px] clickable' 
+            <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
                     onClick={() => setModalOpen(true)}>
                     $ Price
             </button>
@@ -526,14 +526,14 @@ React.useEffect(() => {
                   console.log('Beds:'+beds+', Baths:'+baths)
               }}
             />
-            <button className='flex justify-between items-center bg-[#2d3243] text-[#e6f1c6] h-16 px-5 py-3 text-md border-l border-[#e6f1c6] outline-none min-w-[160px] clickable' 
+            <button className='flex justify-between items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[160px] clickable' 
                     onClick={() => setBedBathsModalOpen(true)}>
                   <FaBed />  Beds & Baths
             </button>       
             {/* Map Button */}
             <button
               type="button"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-5  ml-2 flex items-center gap-2"
+              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
               onClick={() => setShowMap(true)}
 
             >
@@ -542,14 +542,14 @@ React.useEffect(() => {
               {/* Search Button */}
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-5 rounded-r-full flex items-center gap-2"
+              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
             >
-            Search
+          <FaSearch/>  Search
             </button>
           </div>
 
           {/* Mobile */}
-          <div className="md:hidden flex flex-col gap-3 bg-[#2d3243] border border-[#e6f1c6] rounded shadow-lg px-3 py-4 w-full">
+          <div className="md:hidden flex flex-col gap-3 bg-[#ffffff1a] border border-[#ffffff5c] rounded shadow-lg px-3 py-4 w-full">
 
             <div className="flex gap-2 pt-2">
             <PlacesAutocompleteInputMobile inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />
@@ -557,7 +557,6 @@ React.useEffect(() => {
               open={filterOpen}
               onClose={() => setFilterOpen(false)}
               onApply={(filters) => {
-                console.log("Apply filters", filters);
                 // Filter your listings here based on filters
                 setForm({ ...form, 
                         minPrice: filters.minPrice,
@@ -565,24 +564,23 @@ React.useEffect(() => {
                         bed: filters.bedrooms,
                         bath: filters.bathrooms 
                       })
-                console.log(filters)
               }}
             />
-            <button className='text-[#e6f1c6] w-[80px] border border-[#e6f1c6] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
+            <button className='text-[#FFF] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
             </div>
 
             {/* Buttons for Mobile */}
             <div className="flex pt-2">
               <button
                 type="button"
-                className="flex text-center justify-center w-[80px] bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-l"
+                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l"
                 onClick={() => setShowMap(true)}
               >
               <FaLocationArrow  size={24} />
               </button>
                 <button
                 type="submit"
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-r"
+                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r"
               >
               Search
               </button>
@@ -610,7 +608,7 @@ React.useEffect(() => {
     <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">
-      SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {total} LISTINGS
+      SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         { properties.map((property, index) => (
@@ -690,8 +688,6 @@ React.useEffect(() => {
     </>
   )}
 </div>
-
-  
     </>
   );
 }

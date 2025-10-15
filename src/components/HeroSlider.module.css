@@ -1,0 +1,112 @@
+.heroWrapper {
+  position: relative;
+  width: 100vw;
+  height: 480px;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+/* Desktop/tablet default */
+.heroSwiper, .swiper, .swiper-slide {
+  width: 100vw;
+  min-width: 100vw;
+  height: 480px;
+  background-color: #1a1f2b;
+  position: relative;
+}
+
+.slideBg {
+  opacity: 0.6;
+  width: 100vw;
+  height: 480px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0; /* remove margin for consistent edge */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100vw;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30,35,40,0.24);
+  pointer-events: none;
+}
+
+.title {
+  color: #fff;
+  font-size: 4vw;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 0 10px 32px rgba(44,64,87,0.6);
+}
+
+/* The search bar should remain responsive */
+.searchBar {
+  margin-top: 32px;
+  width: 85vw;
+  max-width: 660px;
+  z-index: 3;
+  pointer-events: all;
+}
+
+/* Tablet breakpoint */
+@media (max-width: 900px) {
+  .heroWrapper,
+  .heroSwiper,
+  .swiper,
+  .swiper-slide,
+  .slideBg,
+  .overlay {
+    height: 320px;
+  }
+  .title {
+    font-size: 7vw; /* a little larger for small screens */
+  }
+  .searchBar {
+    width: 95vw;
+    max-width: unset;
+    margin-top: 18px;
+  }
+}
+
+/* Mobile breakpoint */
+@media (max-width: 600px) {
+  .heroWrapper,
+  .heroSwiper,
+  .swiper,
+  .swiper-slide,
+  .slideBg,
+  .overlay {
+    height: 300px;
+    min-height: 180px;
+  }
+  .slideBg {
+    border-radius: 10px;
+  }
+  .title {
+    font-size: 9vw;
+    padding: 0 8vw;
+  }
+  .searchBar {
+    width: 97vw;
+    max-width: unset;
+    margin-top: 10px;
+    font-size: 4vw;
+  }
+}
+
+/* Extra: Remove overlay margin that breaks layout */
+.overlay {
+  margin-bottom: 0;
+}

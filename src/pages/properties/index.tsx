@@ -8,7 +8,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { SkeletonPropertyCard }  from "@/components/SkeletonPropertyCard ";
 
-
 export default function Properties() {
 
   const title = `Available Properties | Oak Brook Reality`;

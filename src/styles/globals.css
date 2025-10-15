@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -42,40 +48,55 @@ background-color: #2d3243;
   /* ...other styles... */
 }
 
+.myFillAvailable {
+  width: -webkit-fill-available;
+}
 
 .clickable {
   cursor: pointer;
 }
 
+.search-input {
+  background-color: rgb(255 255 255 / 10%);
+  backdrop-filter: blur(12px);
+}
+
 input::placeholder,
 textarea::placeholder {
-  color: #e6f1c6;
+  color: #FFF;
 }
 
 input:-ms-input-placeholder,
 textarea:-ms-input-placeholder {  /* Internet Explorer 10-11 */
-  color: #e6f1c6;
+  color: #FFF;
 }
 
 input::-ms-input-placeholder,
 textarea::-ms-input-placeholder { /* Microsoft Edge */
-  color: #e6f1c6;
+  color: #FFF;
 }
 
 input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder { /* Chrome, Safari, Opera */
-  color: #e6f1c6;
+  color: #FFF;
 }
 
 input::-moz-placeholder,
 textarea::-moz-placeholder { /* Firefox 19+ */
-  color: #e6f1c6;
+  color: #FFF;
   opacity: 1;
 }
 
 input:-moz-placeholder,
 textarea:-moz-placeholder { /* Firefox 4 - 18 */
-  color: #e6f1c6;
+  color: #FFF;
   opacity: 1;
 }
 
+
+.bg-footer {
+  background-color: #16243e;
+  background-image: url(/bg-01-white.png), url(/bg-04-white.png);
+  background-repeat: no-repeat, no-repeat;
+  background-position: center left, center right;
+}

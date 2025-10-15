@@ -12,7 +12,7 @@ const galleryImages = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#16243e] text-white pt-8">
+    <footer className="bg-footer text-white pt-8">
       {/* Contact Bar */}
       <div className="max-w-6xl mx-auto mb-10 p-5">
         <div className="bg-[#00bfa6] rounded-2xl flex flex-wrap justify-between items-center p-6 gap-6 md:gap-0 shadow-md">

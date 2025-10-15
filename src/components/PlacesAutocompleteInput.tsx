@@ -78,7 +78,7 @@ const PlacesAutocompleteInput: React.FC<Props> = ({ inputValue, setInputValue, o
         placeholder="Location"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className = "text-[#e6f1c6] w-full h-16 px-6 py-3 text-md outline-none border-none rounded-none bg-white flex-1"
+        className = "search-input text-[#FFF] w-full h-16 px-6 py-3 text-md outline-none border-none rounded-none flex-1"
       />
     </Autocomplete>
   );

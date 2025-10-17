@@ -142,6 +142,7 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
   });
 
   const divRef = useRef<HTMLDivElement>(null);
+  const contentdivRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [bedbathsmodalOpen, setBedBathsModalOpen] = useState(false);
   const [filterOpen, setFilterOpen] = React.useState(false);
@@ -157,7 +158,12 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
     
   const handleFocusClick = () => {
     // Make the element focusable first if it’s a div
-    divRef.current?.focus();
+    if (divRef.current) {
+      divRef.current.focus(); // Keyboard focus
+      divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Scroll top
+    }
+    
+
   };
 
   const handleMapSelect = async (address: Address[]) => {
@@ -269,6 +275,7 @@ React.useEffect(() => {
 
       setProperties(res.data.data);
       setTotal(res.data.total);
+
     } catch (error) {
       console.error(error);
     } finally {
@@ -284,6 +291,10 @@ React.useEffect(() => {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    if (contentdivRef.current) {
+        contentdivRef.current?.focus();
+      contentdivRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Scroll top
+    }
 
     const parts = inputValue? inputValue.split(',').map(s => s.trim()) : [];
 
@@ -307,6 +318,7 @@ React.useEffect(() => {
       setPropertyData(await processProperties(rawProperties));
       setProperties(res.data.data);
       setTotal(res.data.total);
+      
      // setLoading(false);
       //setShowMap(true);
     } catch (err) {
@@ -710,7 +722,7 @@ React.useEffect(() => {
   }
   { !loading && properties.length > 0 ?
     <>
-    <div className="container mx-auto px-4 py-8">
+    <div ref={contentdivRef} tabIndex={-1} className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-center text-black mb-8">
         Oak Brook Properties
     {/*  SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
@@ -792,10 +804,10 @@ React.useEffect(() => {
     }
 
       <ClientTestimonials />
-     <div  ref={divRef}
-        tabIndex={-1} >
+      <div  ref={divRef}
+        tabIndex={-1}>
         <BookAppointment  />
-     </div> 
+      </div>
     </>
   )}
 </div>

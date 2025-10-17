@@ -1,5 +1,4 @@
-import React from 'react';
-import {  useState } from 'react';
+import React,{  useState, useRef } from 'react';
 import {  FaLocationArrow , FaDotCircle, FaBed, FaCamera , FaSearch } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
@@ -19,7 +18,7 @@ import AboutUsSection from '@/components/AboutUsSection';
 import ClientTestimonials from '@/components/ClientTestimonials';
 import BookAppointment from '@/components/BookAppointment';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade } from 'swiper/modules';
+import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import styles from '../components/HeroSlider.module.css';
@@ -142,6 +141,7 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
     bath: "",
   });
 
+  const divRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [bedbathsmodalOpen, setBedBathsModalOpen] = useState(false);
   const [filterOpen, setFilterOpen] = React.useState(false);
@@ -155,6 +155,11 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
   const [limit] = useState(20); // Adjust as needed
   const [total, setTotal] = useState(0);
     
+  const handleFocusClick = () => {
+    // Make the element focusable first if it’s a div
+    divRef.current?.focus();
+  };
+
   const handleMapSelect = async (address: Address[]) => {
       setForm({ ...form, 
                   streetname: address[0].streetname, 
@@ -389,7 +394,7 @@ React.useEffect(() => {
             {/* Map Button */}
             <button
               type="button"
-              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
+              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
               onClick={() => setShowMap(true)}
 
             >
@@ -398,7 +403,7 @@ React.useEffect(() => {
               {/* Search Button */}
             <button
               type="submit"
-              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
+              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
             >
           <FaSearch/>  Search
             </button>
@@ -429,14 +434,14 @@ React.useEffect(() => {
             <div className="flex pt-2">
               <button
                 type="button"
-                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l"
+                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l cursor-pointer"
                 onClick={() => setShowMap(true)}
               >
               <FaLocationArrow  size={24} />
               </button>
                 <button
                 type="submit"
-                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r"
+                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r cursor-pointer"
               >
               Search
               </button>
@@ -617,7 +622,7 @@ React.useEffect(() => {
             {/* Map Button */}
             <button
               type="button"
-              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
+              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
               onClick={() => setShowMap(true)}
 
             >
@@ -626,7 +631,7 @@ React.useEffect(() => {
               {/* Search Button */}
             <button
               type="submit"
-              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
+              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
             >
           <FaSearch/>  Search
             </button>
@@ -655,9 +660,9 @@ React.useEffect(() => {
 
              <div className="flex gap-2 pt-2">
               <button className="search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none" >
-                Browse Properties
+                <Link href="/view-properties">Browse Properties</Link>
               </button>
-              <button className='search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none'>
+              <button onClick={handleFocusClick} className='search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none'>
                 Get in Touch
               </button>
              </div>
@@ -666,14 +671,14 @@ React.useEffect(() => {
             <div className="flex pt-2">
               <button
                 type="button"
-                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l"
+                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l cursor-pointer"
                 onClick={() => setShowMap(true)}
               >
               <FaLocationArrow  size={24} />
               </button>
                 <button
                 type="submit"
-                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r"
+                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r cursor-pointer"
               >
               Search
               </button>
@@ -787,7 +792,10 @@ React.useEffect(() => {
     }
 
       <ClientTestimonials />
-      <BookAppointment />
+     <div  ref={divRef}
+        tabIndex={-1} >
+        <BookAppointment  />
+     </div> 
     </>
   )}
 </div>

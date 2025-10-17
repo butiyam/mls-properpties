@@ -14,11 +14,57 @@ import BedsBathsModal from '@/components/BedsBathsModal';
 import FilterModal from '@/components/FilterModal';
 import { PropertyData } from '@/lib/types';
 import Head from 'next/head';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import styles from '../../components/HeroSlider.module.css';
+
 const PropertyMap = dynamic(() => import("../../components/PropertyMap"), { ssr: false });
 
 
 export default function Home() {
 
+  const slides = [
+  {
+    image: '/gallery1.png', // Replace with actual image path
+    title: 'Available Properties',
+    subtitle: 'Lush Estates, private communities, and easy access to Chicago',
+    tagline: 'The perfect blend of serenity and sophistication'
+  },
+  {
+    image: '/gallery2.png', // Replace with actual image path
+    title: 'Available Properties',
+    subtitle: 'Lush Estates, private communities, and easy access to Chicago',
+    tagline: 'The perfect blend of serenity and sophistication'
+  },
+  {
+    image: '/gallery3.png', // Replace with actual image path
+    title: 'Available Properties',
+    subtitle: 'Lush Estates, private communities, and easy access to Chicago',
+    tagline: 'The perfect blend of serenity and sophistication'
+  },
+  {
+    image: '/gallery4.png', // Replace with actual image path
+    title: 'Available Properties',
+    subtitle: 'Lush Estates, private communities, and easy access to Chicago',
+    tagline: 'The perfect blend of serenity and sophistication'
+  },
+  {
+    image: '/gallery5.png', // Replace with actual image path
+    title: 'Available Properties',
+    subtitle: 'Lush Estates, private communities, and easy access to Chicago',
+    tagline: 'The perfect blend of serenity and sophistication'
+  },
+  {
+    image: '/gallery6.png', // Replace with actual image path
+    title: 'Available Properties',
+    subtitle: 'Lush Estates, private communities, and easy access to Chicago',
+    tagline: 'The perfect blend of serenity and sophistication'
+  },
+  // Add more slides as needed
+];
+  
 type Property = {
   Media?: string;
   PropertyType?: string;
@@ -276,18 +322,32 @@ React.useEffect(() => {
       <div className="w-full md:w-[50%] h-1/2 md:h-full overflow-y-auto">
         {/* put your homepage sections here */}
         { /* Hero + search + listings */ }
-        <section className="bg-[#1A1F2B] relative min-h-[500px] flex items-center justify-center overflow-hidden px-0">
-        {/* Background Image */}
-        <Image src="/bg-hero.jpg" width={700} height={700} alt="Home search background" className="myFillAvailable m-5 rounded-xl absolute h-full object-cover opacity-70 z-0" />
-        {/* Main Content */}
-        <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0 md:pt-8">
-          {/* Heading */}
-          <h1 className="text-white text-center font-serif font-bold text-4xl md:text-7xl mb-8 md:mb-12 drop-shadow-lg max-w-4xl px-4 md:px-0">
-            Find a home<br className="md:hidden" /> in style
-          </h1>
-
-        {/* Search Bar */}
-        <form className="w-full max-w-5xl p-8 md:mx-auto" onSubmit={handleSearch}>
+         <div className={styles.heroWrapper}>
+      {/* Swiper only for images in the background */}
+      <Swiper
+        modules={[Autoplay]}
+        loop
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        slidesPerView={1}
+        speed={900}
+        className={styles.heroSwiper}
+      >
+        {slides.map((src, idx) => (
+          <SwiperSlide key={idx}>
+            <div
+              className={styles.slideBg}
+              style={{ backgroundImage: `url(${src.image})` }}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      {/* Overlay content: Fixed on top of Swiper */}
+      <div className={styles.overlay}>
+        <h1 className={styles.title}>Find a home <span className="text-[#ffffb3]">in style</span></h1>
+        {/* Your search bar or search component */}
+        <div className={styles.searchBar}>
+          {/* ...Search bar JSX... */}
+           <form className="w-full max-w-5xl p-2 md:mx-auto" onSubmit={handleSearch}>
           {/* Desktop */}
           <div className="hidden md:flex flex-row gap-0 bg-[#ffffff1a] shadow-lg border border-[#ffffff5c] rounded-xl items-center overflow-hidden">
             <PlacesAutocompleteInput inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />      
@@ -303,6 +363,7 @@ React.useEffect(() => {
                 // Filter your property listings here
               }}
             />
+
             <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
                     onClick={() => setModalOpen(true)}>
                     $ Price
@@ -324,7 +385,7 @@ React.useEffect(() => {
             {/* Map Button */}
             <button
               type="button"
-              className="search-input hover:bg-blue-700 text-[#FFF] border-l border-[#ffffff5c] font-bold px-4 py-5 flex items-center gap-2"
+              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
               onClick={() => setShowMap(true)}
 
             >
@@ -333,9 +394,9 @@ React.useEffect(() => {
               {/* Search Button */}
             <button
               type="submit"
-              className="bg-[#00bfa6] hover:opacity-86 border-l border-[#ffffff5c] text-white font-bold px-6 py-5 flex items-center gap-2"
+              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
             >
-            Search
+          <FaSearch/>  Search
             </button>
           </div>
 
@@ -348,7 +409,6 @@ React.useEffect(() => {
               open={filterOpen}
               onClose={() => setFilterOpen(false)}
               onApply={(filters) => {
-                console.log("Apply filters", filters);
                 // Filter your listings here based on filters
                 setForm({ ...form, 
                         minPrice: filters.minPrice,
@@ -356,32 +416,32 @@ React.useEffect(() => {
                         bed: filters.bedrooms,
                         bath: filters.bathrooms 
                       })
-                console.log(filters)
               }}
             />
-            <button className='text-[#fff] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
+            <button className='text-[#FFF] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
             </div>
-
             {/* Buttons for Mobile */}
             <div className="flex pt-2">
               <button
                 type="button"
-                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l"
+                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l cursor-pointer"
                 onClick={() => setShowMap(true)}
               >
               <FaLocationArrow  size={24} />
               </button>
                 <button
                 type="submit"
-                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r"
+                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r cursor-pointer"
               >
               Search
               </button>
             </div>
           </div>
         </form>
-        </div>  
-        </section>
+        </div>
+      </div>
+      </div>
+     
           {loading ?
            Array.from({ length: 8 }).map((_, i) => <SkeletonPropertyCard key={i} />)
 
@@ -485,18 +545,32 @@ React.useEffect(() => {
     <>
       {/* Normal homepage */}
       { /* Hero + search + listings */ }
-      <section className="bg-[#1A1F2B] relative min-h-[500px] flex items-center justify-center overflow-hidden px-0">
-      {/* Background Image */}
-      <Image src="/bg-hero.jpg" width={700} height={700} alt="Home search background" className="myFillAvailable m-5 rounded-xl absolute h-full object-cover opacity-70 z-0" />
-
-      {/* Main Content */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center pt-0 md:pt-8 m-5">
-        {/* Heading */}
-        <h1 className="text-white text-center font-serif font-bold text-4xl md:text-7xl mb-8 md:mb-12 drop-shadow-lg max-w-4xl px-4 md:px-0">
-          Find a home<br className="md:hidden" /> in style
-        </h1>
-        {/* Search Bar */}
-        <form className="w-full max-w-5xl p-2 md:mx-auto" onSubmit={handleSearch}>
+       <div className={styles.heroWrapper}>
+      {/* Swiper only for images in the background */}
+      <Swiper
+        modules={[Autoplay]}
+        loop
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        slidesPerView={1}
+        speed={900}
+        className={styles.heroSwiper}
+      >
+        {slides.map((src, idx) => (
+          <SwiperSlide key={idx}>
+            <div
+              className={styles.slideBg}
+              style={{ backgroundImage: `url(${src.image})` }}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      {/* Overlay content: Fixed on top of Swiper */}
+      <div className={styles.overlay}>
+        <h1 className={styles.title}>Find a home <span className="text-[#ffffb3]">in style</span></h1>
+        {/* Your search bar or search component */}
+        <div className={styles.searchBar}>
+          {/* ...Search bar JSX... */}
+           <form className="w-full max-w-5xl p-2 md:mx-auto" onSubmit={handleSearch}>
           {/* Desktop */}
           <div className="hidden md:flex flex-row gap-0 bg-[#ffffff1a] shadow-lg border border-[#ffffff5c] rounded-xl items-center overflow-hidden">
             <PlacesAutocompleteInput inputValue={inputValue} setInputValue={setInputValue} onAddressSelect={handleAddressSelect} />      
@@ -533,7 +607,7 @@ React.useEffect(() => {
             {/* Map Button */}
             <button
               type="button"
-              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
+              className="search-input hover:bg-blue-700 text-white font-bold px-4 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
               onClick={() => setShowMap(true)}
 
             >
@@ -542,7 +616,7 @@ React.useEffect(() => {
               {/* Search Button */}
             <button
               type="submit"
-              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2"
+              className="bg-[#00bfa6] hover:opacity-86 text-white font-bold px-6 py-5 border-l border-[#ffffff5c] flex items-center gap-2 cursor-pointer"
             >
           <FaSearch/>  Search
             </button>
@@ -573,22 +647,23 @@ React.useEffect(() => {
             <div className="flex pt-2">
               <button
                 type="button"
-                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l"
+                className="flex text-center justify-center w-[80px] search-input hover:bg-blue-700 text-white font-bold py-3 rounded-l cursor-pointer"
                 onClick={() => setShowMap(true)}
               >
               <FaLocationArrow  size={24} />
               </button>
                 <button
                 type="submit"
-                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r"
+                className="flex-1 bg-[#00bfa6] hover:opacity-86 text-white font-bold py-3 rounded-r cursor-pointer"
               >
               Search
               </button>
             </div>
           </div>
         </form>
-      </div>  
-      </section>
+        </div>
+      </div>
+      </div>
         {loading ?
         <>      
         <div className="container mx-auto px-4 py-8">

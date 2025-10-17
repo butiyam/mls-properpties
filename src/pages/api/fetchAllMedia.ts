@@ -22,7 +22,7 @@ for (const row of rows) {
         JSON.stringify(uploadedUrls),
         row.ListingKey
       ]);
-    console.log(uploadedUrls)
+    console.log(row.ListingKey)
       await new Promise(res => setTimeout(res, 50)); // 50ms pause
 
 }

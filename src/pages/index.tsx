@@ -670,7 +670,7 @@ React.useEffect(() => {
             <button className='text-[#FFF] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
             </div>
 
-             <div className="flex gap-2 pt-2">
+             <div className="hidden flex gap-2 pt-2">
               <button className="search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none" >
                 <Link href="/view-properties">Browse Properties</Link>
               </button>

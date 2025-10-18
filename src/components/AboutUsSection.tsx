@@ -114,7 +114,7 @@ export default function AboutUsSection() {
             Our seasoned team blends local expertise with global vision, ensuring every transaction is as seamless as it is sophisticated.
           </p>
 
-            <Link className={styles.cta+' w-full'} href="/view-properties"><FaHome/> Explore More</Link>
+            <Link className={styles.cta} href="/view-properties"><FaHome/> Explore More</Link>
           
         </div>
       </div>

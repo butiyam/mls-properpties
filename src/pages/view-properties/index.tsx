@@ -238,7 +238,7 @@ React.useEffect(() => {
     try {
       const res = await axios.get("/api/properties", {
         params: {
-          city: 'Oak Brook',
+          city: form.city? form.city : 'Oak Brook',
           streetname: form.streetname,
           streetnumber: form.streetnumber,
           state: 'IL',

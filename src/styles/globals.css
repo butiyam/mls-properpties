@@ -96,7 +96,4 @@ textarea:-moz-placeholder { /* Firefox 4 - 18 */
 
 .bg-footer {
   background-color: #16243e;
-  background-image: url(/bg-01-white.png), url(/bg-04-white.png);
-  background-repeat: no-repeat, no-repeat;
-  background-position: center left, center right;
 }

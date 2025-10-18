@@ -1,7 +1,15 @@
+import { useState } from 'react';
 import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaFax, FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-const galleryImages = [
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Zoom } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/zoom';
+import styles from './FooterGallery.module.css';
+
+const images = [
   "/gallery1.png", // Replace with actual image URLs or import statements
   "/gallery2.png",
   "/gallery3.png",
@@ -11,6 +19,23 @@ const galleryImages = [
 ];
 
 export default function Footer() {
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
+
+  function openModal(idx: number) {
+    setCurrentIdx(idx);
+    setModalOpen(true);
+  }
+  function closeModal() {
+    setModalOpen(false);
+    setFullscreen(false);
+  }
+  function toggleFullscreen() {
+    setFullscreen(f => !f);
+  }
+
   return (
     <footer className="bg-footer text-white pt-8">
       {/* Contact Bar */}
@@ -91,17 +116,55 @@ export default function Footer() {
         <div className="p-5">
           <h4 className="text-lg font-semibold mb-2 border-b-2 border-[#1fe6e6] w-fit">Gallery</h4>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
-            {galleryImages.slice(0,6).map((img, idx) => (
-              <Image
-                key={idx}
-                src={img}
-                width={400}
-                height={300}
-                style={{ width: "100%", height: "auto" }}
-                alt={`Property ${idx+1}`}
-                className="object-cover rounded-md"
-              />
+            <div className={styles.gallerySection}>
+          <div className={styles.galleryGrid}>
+            {images.map((src, idx) => (
+              <div className={styles.galleryThumb} key={idx}
+                tabIndex={0}
+                onClick={() => openModal(idx)}
+                onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && openModal(idx)}
+              >
+                <img src={src} alt={`Property ${idx + 1}`} />
+              </div>
             ))}
+          </div>
+          {modalOpen && (
+            <div
+              className={`${styles.modalBackdrop} ${fullscreen ? styles.fullscreen : ''}`}
+              onClick={closeModal}
+            >
+              <div
+                className={styles.modalImageBox}
+                style={{ width: fullscreen ? '100vw' : undefined, height: fullscreen ? '100vh' : undefined }}
+                onClick={e => e.stopPropagation()}
+                tabIndex={-1}
+              >
+                <Swiper
+                  modules={[Navigation, Zoom]}
+                  navigation
+                  zoom
+                  initialSlide={currentIdx}
+                  spaceBetween={30}
+                  slidesPerView={1}
+                  onSlideChange={swiper => setCurrentIdx(swiper.activeIndex)}
+                  className={styles.modalSwiper}
+                >
+                  {images.map((src, idx) => (
+                    <SwiperSlide key={idx}>
+                      <div className="swiper-zoom-container">
+                        <img src={src} alt={`Large property ${idx + 1}`} />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <button className={styles.modalClose} onClick={closeModal} aria-label="Close gallery">&times;</button>
+                <button className={styles.modalFullscreen} onClick={toggleFullscreen} aria-label="Toggle full screen">
+                  {fullscreen ? '🗗' : '🗖'}
+                </button>
+              </div>
+            </div>
+          )}
+            </div>
           </div>
         </div>
       </div>

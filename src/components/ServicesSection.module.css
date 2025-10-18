@@ -17,7 +17,7 @@
   color: #fff;
 }
 .highlight {
-  color: #ffffb3;
+  color: #00bfa6;
 }
 .cardsContainer {
   display: flex;
@@ -39,7 +39,7 @@
 }
 
 .card:hover {
-  border-color: #C2DF93;
+  border-color: #00bfa6;
 }
 
 .iconContainer {
@@ -55,7 +55,7 @@
 }
 
 .card:hover .iconContainer {
-  border-color: #C2DF93;
+  border-color: #00bfa6;
 }
 
 .icon {
@@ -64,6 +64,7 @@
 }
 
 .cardTitle {
+  color: #00bfa6;
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 16px;

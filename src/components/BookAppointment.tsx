@@ -1,55 +1,90 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-function sendEmail(agentEmail: string) {
+const BookAppointment: React.FC = () => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const numberRef = useRef<HTMLInputElement>(null);
+  const subjectRef = useRef<HTMLTextAreaElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
 
-  const subjectElement = document.getElementById('subject') as HTMLTextAreaElement | null;
-  const sub = subjectElement ? encodeURIComponent(subjectElement.value) : '';
+  function sendEmail(e: React.FormEvent<HTMLFormElement>, agentEmail: string) {
+    e.preventDefault();
 
-  const nameElement = window.document.getElementById('name') as HTMLInputElement | null;
-  const name = nameElement ? encodeURIComponent(nameElement.value) : '';
+    const name = nameRef.current?.value || '';
+    const number = numberRef.current?.value || '';
+    const subject = subjectRef.current?.value || '';
+    const message = messageRef.current?.value || '';
 
-  const numberElement = window.document.getElementById('number') as HTMLInputElement | null;
-  const number = numberElement ? encodeURIComponent(numberElement.value) : '';
+    const mailSubject = encodeURIComponent(subject);
+    const mailBody = encodeURIComponent(
+      `Name: ${name}\nMobile: ${number}\nMessage: ${message}`
+    );
 
-  const messageElement = document.getElementById('message') as HTMLTextAreaElement | null;
-  const message = messageElement ? encodeURIComponent(messageElement.value) : '';
+    const mailtoLink = `mailto:${agentEmail}?subject=${mailSubject}&body=${mailBody}`;
 
-  const subject = encodeURIComponent(sub);
-   const body = encodeURIComponent(
-    `Name: ${name}\n Mobile: ${number} \n Message: ${message}`
-  );
+    window.location.href = mailtoLink;
+  }
 
-  const mailtoLink = `mailto:${agentEmail}?subject=${subject}&body=${body}`;
+  return (
+    <div className="bg-white pb-10 w-full">
+      <div className="container mx-auto py-6 px-4">
+        <div className="text-center text-[#00bfa6] font-semibold mb-1">Book Appointment</div>
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-[#16243e]">Send Message Anytime</h1>
 
-  window.location.href = mailtoLink;
-}
+        <form
+          onSubmit={(e) => sendEmail(e, 'info@obrglobal.com')}
+          className="bg-white mx-auto max-w-5xl rounded-lg p-4 shadow flex flex-col gap-4"
+        >
+          {/* Inputs group 1 */}
+          <div className="flex flex-col md:flex-row gap-4">
+            <input
+              ref={nameRef}
+              className="contect-form text-[#000] flex-1 border rounded px-4 py-3"
+              type="text"
+              placeholder="Your Name"
+              required
+            />
+            <input
+              ref={numberRef}
+              className="contect-form text-[#000] flex-1 border rounded px-4 py-3"
+              type="text"
+              placeholder="Phone Number"
+              required
+            />
+          </div>
 
+          {/* Inputs group 2 */}
+          <div className="flex flex-col md:flex-row gap-4">
+            <input
+              className="contect-form text-[#000] flex-1 border rounded px-4 py-3"
+              type="email"
+              placeholder="Email Address"
+              required
+            />
+            <textarea
+              ref={subjectRef}
+              className="contect-form text-[#000] flex-1 border rounded px-4 py-3 resize-none"
+              placeholder="Subject"
+              rows={1}
+            />
+          </div>
 
-const BookAppointment: React.FC = () => (
+          <textarea
+            ref={messageRef}
+            className="contect-form text-[#000] border rounded px-4 py-3 min-h-[120px] resize-none"
+            placeholder="Write a Message"
+            required
+          />
 
-  
-  <div className="bg-white pb-10 w-full">
-
-    {/* Contact Form */}
-    <div className="container mx-auto py-6">
-      <div className="text-center text-[#00bfa6] font-semibold mb-1">Book Appointment</div>
-      <h1 className="text-5xl font-bold text-center mb-4 text-[#16243e]">Send Message Anytime</h1>
-      <form className="bg-white mx-auto max-w-4xl rounded p-6 shadow flex flex-col gap-4">
-        <div className="flex gap-2">
-          <input className="contect-form text-[#000] flex-1 border rounded p-2" type="text" id="name" placeholder="Your Name" required />
-          <input className="contect-form text-[#000] flex-1 border rounded p-2" type="text" id="number" placeholder="Phone Number" required />
-        </div>
-        <div className="flex gap-2">
-          <input className="contect-form text-[#000] flex-1 border rounded p-2" type="email" placeholder="Email Address" required />
-          <input className="contect-form text-[#000] flex-1 border rounded p-2" type="text" id="subject" placeholder="Subject" />
-        </div>
-        <textarea className="contect-form text-[#000] border rounded p-2 min-h-[120px]" id="message" placeholder="Write a Message" required />
-        <button  onClick={ () => sendEmail('info@obrglobal.com')} className="bg-[#00bfa6] text-white rounded-4xl cursor-pointer py-2 font-bold mt-2 mx-auto h-15 w-60">
-          Send a Message
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="bg-[#00bfa6] text-white rounded-full cursor-pointer py-3 font-bold mx-auto w-56 hover:bg-[#009f8f] transition-colors duration-200"
+          >
+            Send a Message
+          </button>
+        </form>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default BookAppointment;

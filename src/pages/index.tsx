@@ -252,9 +252,10 @@ React.useEffect(() => {
   const fetchProperties = async () => {
     setLoading(true);
     try {
+      console.log(form.city)
       const res = await axios.get("/api/properties", {
         params: {
-          city: 'Oak Brook',
+          city: form.city? form.city : 'Oak Brook',
           streetname: form.streetname,
           streetnumber: form.streetnumber,
           state: 'IL',
@@ -365,7 +366,7 @@ React.useEffect(() => {
       </Swiper>
       {/* Overlay content: Fixed on top of Swiper */}
       <div className={styles.overlay}>
-        <h1 className={styles.title}>Find a home <span className="text-[#ffffb3]">in style</span></h1>
+        <h1 className={styles.title}>Find a home <span className="text-[#00bfa6]">in style</span></h1>
         {/* Your search bar or search component */}
         <div className={styles.searchBar}>
           {/* ...Search bar JSX... */}
@@ -592,7 +593,7 @@ React.useEffect(() => {
       </Swiper>
       {/* Overlay content: Fixed on top of Swiper */}
       <div className={styles.overlay}>
-        <h1 className={styles.title}>Find a home <span className="text-[#ffffb3]">in style</span></h1>
+        <h1 className={styles.title}>Find a home <span className="text-[#00bfa6]">in style</span></h1>
         {/* Your search bar or search component */}
         <div className={styles.searchBar}>
           {/* ...Search bar JSX... */}

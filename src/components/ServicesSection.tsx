@@ -26,7 +26,6 @@ const services = [
 export default function ServicesSection() {
   return (
     <section className={"bg-[#1A1F2B] "+styles.servicesSection}>
-      <p className={styles.servicesLabel}>Services</p>
       <h2 className={styles.heading}>
         White-Glove <span className={styles.highlight}>Real Estate</span> Services
       </h2>

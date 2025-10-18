@@ -72,12 +72,6 @@ const ContactPage: React.FC = () => (
   <img src="/header-image.jpg" alt="Banner" className="absolute w-full h-100 object-cover p-5 rounded-4xl" />
   <div className="relative z-10 flex flex-col items-center justify-center w-full">
     <h1 className="text-white text-3xl md:text-4xl font-bold mb-2">Contact</h1>
-    <div className="text-center">
-      <span className="text-white border border-[#ffffff2e] px-4 py-1 rounded-2xl">
-        <a href="http://obrglobal.com/" >Home</a> / 
-        <span className='text-[#00bfa6]'>Contact</span>
-        </span>
-    </div>
   </div>
 </div>
 

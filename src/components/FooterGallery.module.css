@@ -92,9 +92,10 @@
 }
 @media (max-width: 500px) {
   .galleryGrid {
-    grid-template-columns: repeat(3, 42px);
-    grid-template-rows: repeat(2, 32px);
+    grid-template-columns: repeat(2, 150px);
+    grid-template-rows: repeat(2, 110px);
+    gap: 35px;
   }
-  .galleryThumb { width: 42px; height: 32px; }
+  .galleryThumb { width: 180px; height: 140px; }
   .modalImageBox img { width: 96vw; }
 }

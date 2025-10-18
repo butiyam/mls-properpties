@@ -79,7 +79,7 @@ export default function Footer() {
       {/* Main Footer */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 pb-8 items-start">
         {/* Company & Social */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left p-5">
+        <div className="flex flex-col md:items-center items-start text-justify md:text-left p-5">
             <Image src="/logo-footer.png" width={180}  height={180} alt="Company Logo" />
             <p className="mb-4 text-gray-200">Discover timeless elegance, world-class design, and unmatched locations.<br />
               Your next extraordinary home awaits.</p>
@@ -92,7 +92,7 @@ export default function Footer() {
             </div>
         </div>
         {/* Quick Links */}
-        <div className="flex flex-col items-center md:items-start p-5">
+        <div className="flex flex-col md:items-center items-start  p-5">
           <h4 className="text-lg font-semibold mb-2 border-b-2 border-[#1fe6e6] w-fit">Quick Links</h4>
           <ul className="space-y-3 text-[#1fe6e6] text-base mt-2 font-semibold">
             <li>
@@ -115,7 +115,7 @@ export default function Footer() {
         {/* Gallery */}
         <div className="p-5">
           <h4 className="text-lg font-semibold mb-2 border-b-2 border-[#1fe6e6] w-fit">Gallery</h4>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
+          <div className="grid md:grid-cols-2 grid-cols-3 gap-2 mt-2">
             <div className={styles.gallerySection}>
           <div className={styles.galleryGrid}>
             {images.map((src, idx) => (

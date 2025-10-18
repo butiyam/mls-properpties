@@ -172,6 +172,10 @@
 }
 
 @media (max-width: 600px) {
+
+  .content {
+  flex: 1;
+  }
   .root {
     padding: 36px 0;
   }

@@ -88,7 +88,7 @@ export default function AboutUsSection() {
                     <iframe
                       width="560"
                       height="315"
-                      src="/Oak-Brook-Realty-4.mp4"
+                      src="/Oak-Brook-Realty.mp4"
                       title="360° Property Tour"
                       frameBorder="0"
                       allow="autoplay; encrypted-media"

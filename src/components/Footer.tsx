@@ -105,11 +105,6 @@ export default function Footer() {
               &raquo; <span className="text-white hover:text-[#1fe6e6]">Contact Us</span>
               </Link>
             </li>
-            <li>
-              <Link href="/view-properties" className="flex items-center gap-2">
-              &raquo; <span className="text-white hover:text-[#1fe6e6]">View Properties</span>
-              </Link>
-            </li>
           </ul>
         </div>
         {/* Gallery */}

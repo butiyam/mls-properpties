@@ -29,9 +29,6 @@ export default function Header() {
           <li className="hover:text-teal-200">
              <Link href="/contact-us">Contact Us</Link>
           </li>
-          <li className="hover:text-teal-200">
-            <Link href="/view-properties">View Properties</Link>
-          </li>
         </ul>
       </nav>
       {/* View Properties Button Desktop */}
@@ -65,11 +62,6 @@ export default function Header() {
              <Link href="/contact-us">
              Contact Us
              </Link>
-            </li>
-            <li>
-              <Link href="/view-properties" className="hover:text-teal-200" onClick={() => setMenuOpen(false)}>
-              View Properties
-              </Link>
             </li>
             <li>
               <Link

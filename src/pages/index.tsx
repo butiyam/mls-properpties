@@ -1,5 +1,5 @@
 import React,{  useState, useRef } from 'react';
-import {  FaLocationArrow , FaDotCircle, FaBed, FaCamera , FaSearch } from 'react-icons/fa';
+import {  FaLocationArrow , FaDotCircle, FaBed, FaCamera , FaSearch, FaFilter } from 'react-icons/fa';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -289,6 +289,49 @@ React.useEffect(() => {
 }, [page]); // run once on mount
 
   
+  const handleFilters = async (Filters: { minPrice: number; maxPrice: number; bedrooms: string; bathrooms: string; }) => {
+   
+    setLoading(true);
+    setForm({ ...form, 
+                  maxPrice: Filters.maxPrice, 
+                  minPrice: Filters.minPrice,
+                  bed: Filters.bedrooms,
+                  bath: Filters.bathrooms, 
+                });
+  
+   console.log(Filters.bathrooms)
+    const parts = inputValue? inputValue.split(',').map(s => s.trim()) : [];
+
+    try {
+      const res = await axios.get("/api/properties", {
+        params: {
+          city: selectedAddress.length > 0 ?  selectedAddress[0].city  : (parts.length > 0? parts[0] : ''),
+          streetname: form.streetname,
+          streetnumber: form.streetnumber,
+          state: selectedAddress.length > 0 ? selectedAddress[0].state : (parts.length > 0? parts[1] : ''),
+          postalcode: form.postalcode,
+          priceMin: Filters.minPrice,
+          priceMax: Filters.maxPrice,
+          bed: Filters.bedrooms,
+          bath: Filters.bathrooms,
+          limit: limit
+        }
+      });
+
+      const rawProperties: PropertyData[] = res.data.data; // your API raw data
+      setPropertyData(await processProperties(rawProperties));
+      setProperties(res.data.data);
+      setTotal(res.data.total);
+      
+     // setLoading(false);
+      //setShowMap(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -728,6 +771,22 @@ React.useEffect(() => {
         {form.city? form.city : 'Oak Brook'} Properties
     {/*  SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
       </h1>
+
+        <div className="flex justify-end mb-5 gap-2 pt-2">
+              <FilterModal
+              open={filterOpen}
+              onClose={() => setFilterOpen(false)}
+              onApply={(filters) => {
+                // Filter your listings here based on filters
+                handleFilters(filters)
+              }}
+            />
+
+            <button className='flex justify-center items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
+            <FaFilter style={{paddingRight: '5px'}} />Filters
+            </button>
+            </div>
+
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         { properties.map((property, index) => (
           <Link key={index} href={`/property-details/${property.ListingKey}`}>

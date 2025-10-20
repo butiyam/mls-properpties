@@ -113,9 +113,7 @@ export default function AboutUsSection() {
             ...we offer more than homes—we offer access to an extraordinary lifestyle.<br /><br />
             Our seasoned team blends local expertise with global vision, ensuring every transaction is as seamless as it is sophisticated.
           </p>
-
-            <Link className={styles.cta} href="/view-properties"><FaHome/> Explore More</Link>
-          
+          <Link className={styles.cta} href="/properties"><FaHome/> Explore More</Link>
         </div>
       </div>
     </section>

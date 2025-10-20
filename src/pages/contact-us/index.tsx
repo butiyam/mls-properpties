@@ -102,15 +102,15 @@ const ContactPage: React.FC = () => (
     </div>
 
     {/* Contact Form */}
-    <div className="container mx-auto py-6">
+    <div className="bg-white pb-10 w-full">
       <div className="text-center text-[#00bfa6] font-semibold mb-1">Get In Touch</div>
       <h1 className="text-5xl font-bold text-center mb-4 text-[#16243e]">Send Message Anytime</h1>
-      <form className="bg-white mx-auto max-w-4xl rounded p-6 shadow flex flex-col gap-4">
-        <div className="flex gap-2">
+      <form className="bg-white mx-auto max-w-5xl rounded-lg p-4 shadow flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row gap-4">
           <input className="contect-form flex-1 border rounded p-2" type="text" id="name" placeholder="Your Name" required />
           <input className="contect-form flex-1 border rounded p-2" type="text" id="number" placeholder="Phone Number" required />
         </div>
-        <div className="flex gap-2">
+                 <div className="flex flex-col md:flex-row gap-4">
           <input className="contect-form flex-1 border rounded p-2" type="email" id="email" placeholder="Email Address" required />
           <input className="contect-form flex-1 border rounded p-2" type="text" id="subject" placeholder="Subject" />
         </div>

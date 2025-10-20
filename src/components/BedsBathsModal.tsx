@@ -55,7 +55,22 @@ const BedsBathsModal: React.FC<BedsBathsModalProps> = ({
           sx={{ mb: 2, mt: 1 }}
         >
           {bedroomOptions.map((option) => (
-            <ToggleButton key={option} value={option} sx={{ mx: 0.5 }}>
+            <ToggleButton key={option} value={option} sx={{ borderLeft: '1px solid transparent', border: '1px solid #e6f1c6', mx: 0.5,
+                color: "#e6f1c6",
+                "&:hover": {
+                  backgroundColor: "#e6f1c6", // hover color
+                  color: '#000'
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#e6f1c6", // selected color (for ToggleButtons)
+                  color: '#000',
+                },
+                // hover while selected
+                "&.Mui-selected:hover": {
+                  backgroundColor: "#e6f1c6",
+                  color: '#000'
+                },
+              }}>
               {option}
             </ToggleButton>
           ))}
@@ -70,16 +85,37 @@ const BedsBathsModal: React.FC<BedsBathsModalProps> = ({
           sx={{ mb: 2, mt: 1 }}
         >
           {bathroomOptions.map((option) => (
-            <ToggleButton key={option} value={option} sx={{ mx: 0.5 }}>
+            <ToggleButton key={option} value={option} 
+            sx={{ borderLeft: '1px solid transparent', border: '1px solid #e6f1c6', mx: 0.5,
+                color: "#e6f1c6",
+                "&:hover": {
+                  backgroundColor: "#e6f1c6", // hover color
+                  color: '#000'
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#e6f1c6", // selected color (for ToggleButtons)
+                  color: '#000',
+                },
+                // hover while selected
+                "&.Mui-selected:hover": {
+                  backgroundColor: "#e6f1c6",
+                  color: '#000'
+                },
+              }}>
               {option}
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
         <Box mt={3} display="flex" justifyContent="space-between">
-          <Button variant="text" onClick={handleReset}>
+          <Button sx={{
+            color: '#00bfa6'
+          }} variant="text" onClick={handleReset}>
             Reset
           </Button>
           <Button
+          sx={{
+            backgroundColor: '#00bfa6'
+          }}
             variant="contained"
             onClick={() => {
               onApply(bedrooms, bathrooms);

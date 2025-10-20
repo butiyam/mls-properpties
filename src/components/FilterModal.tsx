@@ -100,6 +100,12 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
           PRICE
         </Typography>
         <Slider
+        sx={{
+           "&.MuiSlider-root": {
+            color: "#e6f1c6",
+            
+          },
+        }}
           value={priceRange}
           onChange={handlePriceSliderChange}
           min={0}
@@ -109,7 +115,15 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
         />
         <Box display="flex" gap={2} alignItems="center" pb={2}>
           <Input
-           style={{color: '#FFF'}}
+          sx={{
+            color: '#FFF',
+            "&.MuiInput-root::after": {
+             borderBottom: '1px solid #00bfa6'
+             }, 
+            "&.MuiInput-root::before": {
+             borderBottom: '1px solid #e6f1c6'
+             }
+          }}
             value={minPriceInput}
             size="small"
             onChange={handleMinPriceInputChange}
@@ -119,7 +133,15 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
             startAdornment={<span>$</span>}
           />
           <Input
-            style={{color: '#FFF'}}
+              sx={{
+            color: '#FFF',
+            "&.MuiInput-root::after": {
+             borderBottom: '1px solid #00bfa6'
+             }, 
+            "&.MuiInput-root::before": {
+             borderBottom: '1px solid #e6f1c6'
+             }
+          }}
             value={maxPriceInput}
             size="small"
             onChange={handleMaxPriceInputChange}
@@ -145,7 +167,23 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
           sx={{ mb: 2, flexWrap: "wrap", gap: 1 }}
         >
           {bedroomOptions.map((opt) => (
-            <ToggleButton key={opt} value={opt} sx={{ minWidth: 40 }}>
+            <ToggleButton 
+             key={opt} value={opt} sx={{ borderLeft: '1px solid transparent', border: '1px solid #e6f1c6', minWidth: 40,
+                color: "#e6f1c6",
+                "&:hover": {
+                  backgroundColor: "#e6f1c6", // hover color
+                  color: '#000'
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#e6f1c6", // selected color (for ToggleButtons)
+                  color: '#000',
+                },
+                // hover while selected
+                "&.Mui-selected:hover": {
+                  backgroundColor: "#e6f1c6",
+                  color: '#000'
+                },
+              }}>
               {opt}
             </ToggleButton>
           ))}
@@ -161,7 +199,22 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
           sx={{ mb: 2, flexWrap: "wrap", gap: 1 }}
         >
           {bathroomOptions.map((opt) => (
-            <ToggleButton key={opt} value={opt} sx={{ minWidth: 40 }}>
+            <ToggleButton  key={opt} value={opt} sx={{ borderLeft: '1px solid transparent', border: '1px solid #e6f1c6', minWidth: 40,
+                color: "#e6f1c6",
+                "&:hover": {
+                  backgroundColor: "#e6f1c6", // hover color
+                  color: '#000'
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "#e6f1c6", // selected color (for ToggleButtons)
+                  color: '#000',
+                },
+                // hover while selected
+                "&.Mui-selected:hover": {
+                  backgroundColor: "#e6f1c6",
+                  color: '#000'
+                },
+              }}>
               {opt}
             </ToggleButton>
           ))}
@@ -169,10 +222,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
 
         {/* Actions */}
         <Box display="flex" justifyContent="space-between" mt={2}>
-          <Button variant="text" onClick={handleReset}>
+          <Button variant="text" sx={{ color: '#00bfa6'}} onClick={handleReset}>
             Reset All Filters
           </Button>
-          <Button  variant="contained" onClick={handleApply}>
+          <Button sx={{backgroundColor: '#00bfa6'}} variant="contained" onClick={handleApply}>
             Done
           </Button>
         </Box>

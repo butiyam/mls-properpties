@@ -63,6 +63,12 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
           Price Range
         </Typography>
         <Slider
+         sx={{
+           "&.MuiSlider-root": {
+            color: "#e6f1c6",
+            
+          },
+        }}
           value={values}
           onChange={handleSliderChange}
           min={minDefault}
@@ -72,7 +78,15 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
         />
         <Box display="flex" gap={2} alignItems="center" pt={2}>
           <Input
-          style={{color: '#FFF'}}
+          sx={{
+            color: '#FFF',
+            "&.MuiInput-root::after": {
+             borderBottom: '1px solid #00bfa6'
+             }, 
+            "&.MuiInput-root::before": {
+             borderBottom: '1px solid #e6f1c6'
+             }
+          }}
             value={values[0]}
             size="small"
             type="number"
@@ -82,9 +96,17 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
             placeholder="Min Price"
             startAdornment={<span>$</span>}
           />
-          <span className="text-[#000]">-</span>
+          <span className="text-[#FFF]">-</span>
           <Input
-          style={{color: '#FFF'}}
+          sx={{
+            color: '#FFF',
+            "&.MuiInput-root::after": {
+             borderBottom: '1px solid #00bfa6'
+             }, 
+            "&.MuiInput-root::before": {
+             borderBottom: '1px solid #e6f1c6'
+             }
+          }}
             value={values[1]}
             size="small"
             type="number"
@@ -96,10 +118,10 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
           />
         </Box>
         <Box mt={3} display="flex" justifyContent="space-between">
-          <Button  variant="text" onClick={handleReset}>
+          <Button  variant="text" sx={{ color: '#00bfa6'}} onClick={handleReset}>
             Reset
           </Button>
-          <Button variant="contained" onClick={() => { onApply(values[0], values[1]); onClose(); }}>
+          <Button variant="contained"  sx={{backgroundColor: '#00bfa6'}} onClick={() => { onApply(values[0], values[1]); onClose(); }}>
             Done
           </Button>
         </Box>

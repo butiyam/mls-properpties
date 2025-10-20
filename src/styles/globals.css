@@ -98,6 +98,14 @@ textarea:-moz-placeholder { /* Firefox 4 - 18 */
   background-color: #16243e;
 }
 
+.css-1mhxe8z.Mui-selected {
+  background-color: #e6f1c6 !important;
+  color: #000  !important;
+}
+.css-1mhxe8z:hover {
+    background-color: #e6f1c6 !important;
+  color: #000  !important;
+}
 .css-1vvjtnf-MuiButtonBase-root-MuiToggleButton-root.Mui-selected, .css-1vvjtnf-MuiButtonBase-root-MuiToggleButton-root:hover {
   background-color: #e6f1c6 !important;
   color: #000  !important;
@@ -105,6 +113,13 @@ textarea:-moz-placeholder { /* Firefox 4 - 18 */
 .css-15e62hy-MuiButtonBase-root-MuiToggleButton-root.Mui-selected, .css-15e62hy-MuiButtonBase-root-MuiToggleButton-root:hover {
   background-color: #e6f1c6 !important;
   color: #000  !important;
+}
+
+.css-8aez1v .MuiToggleButtonGroup-middleButton 
+{
+   border: 1px solid #e6f1c6 !important;
+    border-left: 1px solid transparent !important;
+    color: #e6f1c6 !important;
 }
 
 .css-15e62hy-MuiButtonBase-root-MuiToggleButton-root {

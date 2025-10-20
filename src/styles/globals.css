@@ -97,3 +97,59 @@ textarea:-moz-placeholder { /* Firefox 4 - 18 */
 .bg-footer {
   background-color: #16243e;
 }
+
+.css-1vvjtnf-MuiButtonBase-root-MuiToggleButton-root.Mui-selected, .css-1vvjtnf-MuiButtonBase-root-MuiToggleButton-root:hover {
+  background-color: #e6f1c6 !important;
+  color: #000  !important;
+}
+.css-15e62hy-MuiButtonBase-root-MuiToggleButton-root.Mui-selected, .css-15e62hy-MuiButtonBase-root-MuiToggleButton-root:hover {
+  background-color: #e6f1c6 !important;
+  color: #000  !important;
+}
+
+.css-15e62hy-MuiButtonBase-root-MuiToggleButton-root {
+   border: 1px solid #e6f1c6 !important;
+    border-left: 1px solid transparent !important;
+    color: #e6f1c6 !important;
+
+}
+
+
+.css-1vvjtnf-MuiButtonBase-root-MuiToggleButton-root { 
+    border: 1px solid #e6f1c6 !important;
+    border-left: 1px solid transparent !important;
+    color: #e6f1c6 !important;
+}
+
+.css-1uent87-MuiButtonBase-root-MuiButton-root { 
+  color: #00bfa6 !important;
+}
+
+.css-13vpke-MuiSlider-root {
+  color: #e6f1c6 !important;
+}
+.css-xvk2i-MuiSlider-track {
+  border: 1px solid #e6f1c6 !important;
+  background-color: #e6f1c6 !important;
+}
+.css-r64h58-MuiSlider-rail {
+  background-color: #00bfa6 !important;
+}
+
+.css-fars9x-MuiInputBase-root-MuiInput-root::after {
+    border-bottom: 2px solid #e6f1c6 !important;
+}
+.css-fars9x-MuiInputBase-root-MuiInput-root::before {
+    border-bottom: 1px solid #00bfa6 !important;
+}
+.css-74d805-MuiButtonBase-root-MuiButton-root  {
+  background-color: #00bfa6 !important;
+}
+
+.css-1cmet5c-MuiInputBase-root-MuiInput-root::after {
+    border-bottom: 2px solid #e6f1c6 !important;
+}
+
+.css-1cmet5c-MuiInputBase-root-MuiInput-root::before {
+    border-bottom: 1px solid #00bfa6 !important;
+}

@@ -79,7 +79,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
   return (
     <Modal open={open} onClose={onClose}>
       <Box
-        bgcolor="background.paper"
+        bgcolor="#1a1f2b"
         boxShadow={24}
         p={3}
         borderRadius={2}
@@ -96,7 +96,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
         }}
       >
         {/* Price Filter */}
-        <Typography className="text-[#000]" variant="subtitle1" gutterBottom>
+        <Typography className="text-[#FFF]" variant="subtitle1" gutterBottom>
           PRICE
         </Typography>
         <Slider
@@ -109,6 +109,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
         />
         <Box display="flex" gap={2} alignItems="center" pb={2}>
           <Input
+           style={{color: '#FFF'}}
             value={minPriceInput}
             size="small"
             onChange={handleMinPriceInputChange}
@@ -118,6 +119,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
             startAdornment={<span>$</span>}
           />
           <Input
+            style={{color: '#FFF'}}
             value={maxPriceInput}
             size="small"
             onChange={handleMaxPriceInputChange}
@@ -129,11 +131,11 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
         </Box>
 
         {/* Beds & Baths */}
-        <Typography className="text-[#000]" variant="body2" sx={{ fontWeight: "bold", mb: 1 }}>
+        <Typography className="text-[#FFF]" variant="body2" sx={{ fontWeight: "bold", mb: 1 }}>
           BEDS: {bedrooms} / BATHS: {bathrooms}
         </Typography>
 
-        <Typography className="text-[#000]" variant="subtitle1" gutterBottom>
+        <Typography className="text-[#FFF]" variant="subtitle1" gutterBottom>
           Bedrooms
         </Typography>
         <ToggleButtonGroup
@@ -149,7 +151,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
           ))}
         </ToggleButtonGroup>
 
-        <Typography className="text-[#000]" variant="subtitle1" gutterBottom>
+        <Typography className="text-[#FFF]" variant="subtitle1" gutterBottom>
           Bathrooms
         </Typography>
         <ToggleButtonGroup
@@ -170,7 +172,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
           <Button variant="text" onClick={handleReset}>
             Reset All Filters
           </Button>
-          <Button variant="contained" onClick={handleApply}>
+          <Button  variant="contained" onClick={handleApply}>
             Done
           </Button>
         </Box>

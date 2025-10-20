@@ -33,7 +33,7 @@ const BedsBathsModal: React.FC<BedsBathsModalProps> = ({
   return (
     <Modal open={open} onClose={onClose}>
       <Box
-        bgcolor="background.paper"
+        bgcolor="#1a1f2b"
         p={4}
         borderRadius={2}
         boxShadow={24}
@@ -45,7 +45,7 @@ const BedsBathsModal: React.FC<BedsBathsModalProps> = ({
           minWidth: 340,
         }}
       >
-        <Typography className="text-[#000]" variant="subtitle1" gutterBottom>
+        <Typography className="text-[#FFF]" variant="subtitle1" gutterBottom>
           Bedrooms
         </Typography>
         <ToggleButtonGroup
@@ -60,7 +60,7 @@ const BedsBathsModal: React.FC<BedsBathsModalProps> = ({
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <Typography className="text-[#000]" variant="subtitle1" sx={{ mt: 2 }}>
+        <Typography className="text-[#FFF]" variant="subtitle1" sx={{ mt: 2 }}>
           Bathrooms
         </Typography>
         <ToggleButtonGroup

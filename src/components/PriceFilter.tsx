@@ -47,7 +47,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   return (
     <Modal open={open} onClose={onClose}>
       <Box
-        bgcolor="background.paper"
+        bgcolor="#1a1f2b"
         boxShadow={24}
         p={4}
         borderRadius={2}
@@ -59,7 +59,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
           minWidth: 300,
         }}
       >
-        <Typography className="text-[#000]" gutterBottom variant="subtitle1">
+        <Typography className="text-[#FFF]" gutterBottom variant="subtitle1">
           Price Range
         </Typography>
         <Slider
@@ -72,6 +72,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
         />
         <Box display="flex" gap={2} alignItems="center" pt={2}>
           <Input
+          style={{color: '#FFF'}}
             value={values[0]}
             size="small"
             type="number"
@@ -83,6 +84,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
           />
           <span className="text-[#000]">-</span>
           <Input
+          style={{color: '#FFF'}}
             value={values[1]}
             size="small"
             type="number"
@@ -94,7 +96,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
           />
         </Box>
         <Box mt={3} display="flex" justifyContent="space-between">
-          <Button className="text-[#000]" variant="text" color="secondary" onClick={handleReset}>
+          <Button  variant="text" onClick={handleReset}>
             Reset
           </Button>
           <Button variant="contained" onClick={() => { onApply(values[0], values[1]); onClose(); }}>

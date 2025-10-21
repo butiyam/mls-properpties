@@ -30,13 +30,6 @@ const testimonials = [
     quote:
       '“Oak Brook Realty not only found me the condo of my dreams, but also guided the sale years later—both seamless, and stress-free.”',
   },
-  {
-    name: 'Alex Smith',
-    icon: '/home-icon.png',
-    stars: 5,
-    quote:
-      '“Best real estate experience ever with Oak Brook Realty!”',
-  },
 ];
 
 export default function TestimonialsSection() {

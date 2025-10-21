@@ -7,6 +7,9 @@ interface PriceFilterProps {
   minDefault?: number;
   maxDefault?: number;
   onApply: (minPrice: number, maxPrice: number) => void;
+  initialMin?: number;   // NEW - for last applied min price
+  initialMax?: number;   // NEW - for last applied max price
+  
 }
 
 const PriceFilter: React.FC<PriceFilterProps> = ({
@@ -15,8 +18,10 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   minDefault = 0,
   maxDefault = 2000000,
   onApply,
+  initialMin = minDefault,
+  initialMax = maxDefault,
 }) => {
-  const [values, setValues] = useState<[number, number]>([minDefault, maxDefault]);
+  const [values, setValues] = useState<[number, number]>([initialMin, initialMax]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSliderChange = (_: any, newValue: number | number[]) => {
@@ -24,11 +29,13 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   };
 
   const handleInputChange = (idx: 0 | 1, value: string) => {
-    const num = Number(value.replace(/[^0-9]/g, ""));
-    const newValues = [...values] as [number, number];
-    newValues[idx] = num;
-    setValues(newValues);
-  };
+  // Remove all non-digit characters (including commas)
+  const num = Number(value.replace(/,/g, '').replace(/[^0-9]/g, ''));
+  const newValues = [...values] as [number, number];
+  newValues[idx] = num;
+  setValues(newValues);
+};
+
 
   const handleBlur = () => {
     if (values[0] < minDefault) {
@@ -44,6 +51,12 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
 
   const handleReset = () => setValues([minDefault, maxDefault]);
 
+    React.useEffect(() => {
+    if (open) {
+      setValues([initialMin, initialMax]);
+    }
+  }, [open, initialMin, initialMax]);
+  
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -87,9 +100,9 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
              borderBottom: '1px solid #e6f1c6'
              }
           }}
-            value={values[0]}
+            value={values[0].toLocaleString()} // show commas here
             size="small"
-            type="number"
+            type="text"
             onChange={(e) => handleInputChange(0, e.target.value)}
             onBlur={handleBlur}
             inputProps={{ min: minDefault, max: values[1] }}
@@ -107,9 +120,10 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
              borderBottom: '1px solid #e6f1c6'
              }
           }}
-            value={values[1]}
+          
+            value={values[1].toLocaleString()} // show commas here
             size="small"
-            type="number"
+            type="text"
             onChange={(e) => handleInputChange(1, e.target.value)}
             onBlur={handleBlur}
             inputProps={{ min: values[0], max: maxDefault }}

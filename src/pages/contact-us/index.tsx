@@ -6,7 +6,7 @@ const team = [
     name: 'Thomas Chiramel',
     title: 'Managing Broker',
     bio: 'Thomas Chiramel has proudly served as the Managing Broker for over 20 years, dedicated to guiding clients... delivering exceptional results.',
-    image: '/thomas.jpg', // replace with your image path or use placeholder
+    image: '/thomas2.jpg', // replace with your image path or use placeholder
   },
   {
     name: 'Ranesh Phillips',

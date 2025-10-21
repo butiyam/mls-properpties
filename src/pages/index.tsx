@@ -156,13 +156,24 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
   const [limit] = useState(20); // Adjust as needed
   const [total, setTotal] = useState(0);
     
-  const handleFocusClick = () => {
-    // Make the element focusable first if it’s a div
-    if (divRef.current) {
-      divRef.current.focus(); // Keyboard focus
-      divRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Scroll top
-    }
-    
+  // store filters globally here
+  const [filters, setFilters] = useState({
+    minPrice: 0,
+    maxPrice: 2000000,
+    bedrooms: "Any",
+    bathrooms: "Any",
+  });
+
+  const handleApplyFilters = (newFilters: typeof filters) => {
+      setFilters(newFilters);
+      console.log("Applied filters:", newFilters);
+  // Filter your listings here based on filters
+  setForm({ ...form, 
+          minPrice: filters.minPrice,
+          maxPrice: filters.maxPrice,
+          bed: filters.bedrooms,
+          bath: filters.bathrooms 
+        })
 
   };
 
@@ -292,6 +303,7 @@ React.useEffect(() => {
   const handleFilters = async (Filters: { minPrice: number; maxPrice: number; bedrooms: string; bathrooms: string; }) => {
    
     setLoading(true);
+    setFilters(Filters);
     setForm({ ...form, 
                   maxPrice: Filters.maxPrice, 
                   minPrice: Filters.minPrice,
@@ -335,14 +347,23 @@ React.useEffect(() => {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    if (contentdivRef.current) {
-        contentdivRef.current?.focus();
-      contentdivRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Scroll top
-    }
+    const element = contentdivRef.current;
+    if (!element) return;
+
+    // Use bounding rect for precise control
+    const elementTop = element.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: elementTop - 20,
+      behavior: "smooth",
+    });
+    // Optional focus for accessibility
+    element.focus({ preventScroll: true });
 
     const parts = inputValue? inputValue.split(',').map(s => s.trim()) : [];
 
     try {
+
+
       const res = await axios.get("/api/properties", {
         params: {
           city: selectedAddress.length > 0 ?  selectedAddress[0].city  : (parts.length > 0? parts[0] : ''),
@@ -368,6 +389,7 @@ React.useEffect(() => {
     } catch (err) {
       console.error(err);
     } finally {
+      
       setLoading(false);
     }
   };
@@ -425,9 +447,12 @@ React.useEffect(() => {
               maxDefault={2000000}
               onApply={(_min, _max) => {
                 setForm({ ...form, minPrice: _min, maxPrice: _max })
+                setFilters({...filters, maxPrice: _max, minPrice: _min});
                 console.log('Min:'+_min+', Max:'+_max)
                 // Filter your property listings here
               }}
+              initialMin={filters.minPrice}
+              initialMax={filters.maxPrice}
             />
             <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
                     onClick={() => setModalOpen(true)}>
@@ -439,9 +464,13 @@ React.useEffect(() => {
               onClose={() => setBedBathsModalOpen(false)}
               onApply={(beds: string, baths: string) => {
                 // Filter your property listings here
-                setForm({ ...form, bed: beds, bath: baths })
+                setFilters({...filters, bedrooms: beds, bathrooms: baths });
+                setForm({ ...form, bed: beds, bath: baths });
                   console.log('Beds:'+beds+', Baths:'+baths)
               }}
+              
+              initialBeds={filters.bedrooms}
+              initialBaths={filters.bathrooms}
             />
             <button className='flex justify-between items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[160px] clickable' 
                     onClick={() => setBedBathsModalOpen(true)}>
@@ -473,15 +502,8 @@ React.useEffect(() => {
               <FilterModal
               open={filterOpen}
               onClose={() => setFilterOpen(false)}
-              onApply={(filters) => {
-                // Filter your listings here based on filters
-                setForm({ ...form, 
-                        minPrice: filters.minPrice,
-                        maxPrice: filters.maxPrice,
-                        bed: filters.bedrooms,
-                        bath: filters.bathrooms 
-                      })
-              }}
+              onApply={handleApplyFilters }
+              initialFilters={filters} // 👈 pass current filters
             />
             <button className='text-[#FFF] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
             </div>
@@ -516,7 +538,7 @@ React.useEffect(() => {
   { !loading && properties.length > 0 ?
     <>
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-center text-black mb-8">
+      <h1 className="text-4xl font-bold text-center text-black mb-8">
          {form.city? form.city : 'Oak Brook'} Properties
      {/* SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
       </h1>
@@ -587,7 +609,22 @@ React.useEffect(() => {
   { !loading && properties.length == 0 ?
       <>
         <div className="container mx-auto px-4 py-8">
-         <h1 className="text-2xl font-bold text-center text-black">FOUND 0 RESULT.</h1>
+         <h1 className="text-4xl font-bold text-center text-black">FOUND 0 RESULT.</h1>
+          <div className="flex justify-end mb-5 gap-2 pt-2">
+              <FilterModal
+              open={filterOpen}
+              onClose={() => setFilterOpen(false)}
+              onApply={(filters) => {
+                // Filter your listings here based on filters
+                handleFilters(filters)
+              }}
+              initialFilters={filters} // 👈 pass current filters
+            />
+
+            <button className='flex justify-center items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
+            <FaFilter style={{paddingRight: '5px'}} />Filters
+            </button>
+          </div>
         </div>
       </>
       :
@@ -651,10 +688,13 @@ React.useEffect(() => {
               minDefault={0}
               maxDefault={2000000}
               onApply={(_min, _max) => {
+                setFilters({...filters, maxPrice: _max, minPrice: _min});
                 setForm({ ...form, minPrice: _min, maxPrice: _max })
                 console.log('Min:'+_min+', Max:'+_max)
                 // Filter your property listings here
               }}
+              initialMin={filters.minPrice}
+              initialMax={filters.maxPrice}
             />
 
             <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
@@ -667,9 +707,12 @@ React.useEffect(() => {
               onClose={() => setBedBathsModalOpen(false)}
               onApply={(beds: string, baths: string) => {
                 // Filter your property listings here
+                setFilters({...filters, bedrooms: beds, bathrooms: baths });
                 setForm({ ...form, bed: beds, bath: baths })
                   console.log('Beds:'+beds+', Baths:'+baths)
               }}
+              initialBeds={filters.bedrooms}
+              initialBaths={filters.bathrooms}
             />
             <button className='flex justify-between items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[160px] clickable' 
                     onClick={() => setBedBathsModalOpen(true)}>
@@ -703,26 +746,12 @@ React.useEffect(() => {
               onClose={() => setFilterOpen(false)}
               onApply={(filters) => {
                 // Filter your listings here based on filters
-                setForm({ ...form, 
-                        minPrice: filters.minPrice,
-                        maxPrice: filters.maxPrice,
-                        bed: filters.bedrooms,
-                        bath: filters.bathrooms 
-                      })
+                handleFilters(filters)
               }}
+              initialFilters={filters} // 👈 pass current filters
             />
             <button className='text-[#FFF] search-input w-[80px] border border-[#ffffff5c] rounded shadow-lg' onClick={() => setFilterOpen(true)}>Filters</button>
             </div>
-
-             <div className="hidden flex gap-2 pt-2">
-              <button className="search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none" >
-                <Link href="/view-properties">Browse Properties</Link>
-              </button>
-              <button onClick={handleFocusClick} className='search-input text-[#FFF] w-full flex-1  py-3 px-2 text-md border border-[#e6f1c6] rounded focus:outline-none'>
-                Get in Touch
-              </button>
-             </div>
-
             {/* Buttons for Mobile */}
             <div className="flex pt-2">
               <button
@@ -767,7 +796,7 @@ React.useEffect(() => {
   { !loading && properties.length > 0 ?
     <>
     <div ref={contentdivRef} tabIndex={-1} className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-center text-black mb-8">
+      <h1 className="text-4xl font-bold text-center text-black mb-8">
         {form.city? form.city : 'Oak Brook'} Properties
     {/*  SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
       </h1>
@@ -780,6 +809,7 @@ React.useEffect(() => {
                 // Filter your listings here based on filters
                 handleFilters(filters)
               }}
+              initialFilters={filters} // 👈 pass current filters
             />
 
             <button className='flex justify-center items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
@@ -855,7 +885,22 @@ React.useEffect(() => {
   { !loading && properties.length == 0 ?
       <>
         <div className="container mx-auto px-4 py-8">
-         <h1 className="text-2xl font-bold text-center text-black">FOUND 0 RESULT.</h1>
+         <h1 className="text-4xl font-bold text-center text-black">FOUND 0 RESULT.</h1>
+          <div className="flex justify-end mb-5 gap-2 pt-2">
+              <FilterModal
+              open={filterOpen}
+              onClose={() => setFilterOpen(false)}
+              onApply={(filters) => {
+                // Filter your listings here based on filters
+                handleFilters(filters)
+              }}
+              initialFilters={filters} // 👈 pass current filters
+            />
+
+            <button className='flex justify-center items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
+            <FaFilter style={{paddingRight: '5px'}} />Filters
+            </button>
+          </div>
         </div>
       </>
       :

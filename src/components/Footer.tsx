@@ -166,7 +166,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-600 py-4 text-center text-gray-200 text-sm">
-        &copy; 2025 Oak Brook Realty. Designed By Samak Solutions
+        &copy; 2025 Oak Brook Realty. Designed By <a href='https://samaksolutions.com/' target='_blank'>Samak Solutions</a>
       </div>
     </footer>
   );

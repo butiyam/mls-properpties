@@ -22,15 +22,29 @@ interface FilterModalProps {
     bedrooms: string;
     bathrooms: string;
   }) => void;
+  initialFilters?: {
+    minPrice: number;
+    maxPrice: number;
+    bedrooms: string;
+    bathrooms: string;
+  };
 }
 
-const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => {
+
+
+const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply,   initialFilters = {
+    minPrice: 0,
+    maxPrice: 2000000,
+    bedrooms: "Any",
+    bathrooms: "Any",
+  }, }) => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000000]);
   const [minPriceInput, setMinPriceInput] = useState("0");
   const [maxPriceInput, setMaxPriceInput] = useState("2000000");
+
   const [bedrooms, setBedrooms] = useState<string>("Any");
   const [bathrooms, setBathrooms] = useState<string>("Any");
-
+  
   const handlePriceSliderChange = (_: Event, newValue: number | number[]) => {
     const [min, max] = newValue as number[];
     setPriceRange([min, max]);
@@ -75,6 +89,20 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
     });
     onClose();
   };
+
+    // 🔄 Re-sync modal state each time it's reopened
+  React.useEffect(() => {
+     if (open){
+
+      setPriceRange([initialFilters.minPrice , initialFilters.maxPrice]);
+      setMinPriceInput(initialFilters.minPrice.toString());
+      setMaxPriceInput(initialFilters.maxPrice.toString());
+      setBedrooms(initialFilters.bedrooms);
+      setBathrooms(initialFilters.bathrooms);
+     console.log(initialFilters.bathrooms)
+     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);// ✅ only run when modal opens
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -124,7 +152,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
              borderBottom: '1px solid #e6f1c6'
              }
           }}
-            value={minPriceInput}
+            value={Number(minPriceInput || 0).toLocaleString()}
             size="small"
             onChange={handleMinPriceInputChange}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
@@ -142,7 +170,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ open, onClose, onApply }) => 
              borderBottom: '1px solid #e6f1c6'
              }
           }}
-            value={maxPriceInput}
+            value={Number(maxPriceInput || 0).toLocaleString()}
             size="small"
             onChange={handleMaxPriceInputChange}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}

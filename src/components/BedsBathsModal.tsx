@@ -15,20 +15,31 @@ interface BedsBathsModalProps {
   open: boolean;
   onClose: () => void;
   onApply: (bedrooms: string, bathrooms: string) => void;
+  initialBeds?: string;   
+  initialBaths?: string;   
 }
 
 const BedsBathsModal: React.FC<BedsBathsModalProps> = ({
   open,
   onClose,
   onApply,
+  initialBeds = "Any",   
+  initialBaths = "Any",  
 }) => {
-  const [bedrooms, setBedrooms] = useState<string>("Any");
-  const [bathrooms, setBathrooms] = useState<string>("Any");
+  const [bedrooms, setBedrooms] = useState<string>(initialBeds);
+  const [bathrooms, setBathrooms] = useState<string>(initialBaths);
 
   const handleReset = () => {
     setBedrooms("Any");
     setBathrooms("Any");
   };
+    React.useEffect(() => {
+    if (open) {
+      setBedrooms(initialBeds);
+      setBathrooms(initialBaths);
+    }
+  }, [open, initialBeds, initialBaths]);
+
 
   return (
     <Modal open={open} onClose={onClose}>

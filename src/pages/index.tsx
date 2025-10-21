@@ -454,9 +454,12 @@ React.useEffect(() => {
               initialMin={filters.minPrice}
               initialMax={filters.maxPrice}
             />
-            <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
+            <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[240px] clickable' 
                     onClick={() => setModalOpen(true)}>
-                    $ Price
+                  {form.minPrice? new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(form.minPrice))+' - ' : ''}
+                  {(form.maxPrice === 0 && form.minPrice === 0) || (form.minPrice === 0 && form.maxPrice === 2000000) ? '$ Price' : 
+                  form.maxPrice? new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(form.maxPrice)) : ''
+                  }
             </button>
 
             <BedsBathsModal
@@ -472,9 +475,9 @@ React.useEffect(() => {
               initialBeds={filters.bedrooms}
               initialBaths={filters.bathrooms}
             />
-            <button className='flex justify-between items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[160px] clickable' 
+            <button className='flex justify-around items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[240px] clickable' 
                     onClick={() => setBedBathsModalOpen(true)}>
-                  <FaBed />  Beds & Baths
+                  <FaBed />  {(form?.bed && form.bed !== 'Any') ? form.bed: ''}  Beds & {(form?.bed && form.bath !== 'Any') ? form.bath: ''} Baths
             </button>       
             {/* Map Button */}
             <button
@@ -697,9 +700,15 @@ React.useEffect(() => {
               initialMax={filters.maxPrice}
             />
 
-            <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[140px] clickable' 
+            <button className='search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[240px] clickable' 
                     onClick={() => setModalOpen(true)}>
-                    $ Price
+                  {form.minPrice? new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(form.minPrice))+' - ' : ''}
+                  {(form.maxPrice === 0 && form.minPrice === 0) || (form.minPrice === 0 && form.maxPrice === 2000000) ? '$ Price' : 
+                  form.maxPrice? new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(form.maxPrice)) : ''
+                  }
+
+                  
+                  
             </button>
 
             <BedsBathsModal
@@ -714,9 +723,9 @@ React.useEffect(() => {
               initialBeds={filters.bedrooms}
               initialBaths={filters.bathrooms}
             />
-            <button className='flex justify-between items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[160px] clickable' 
+            <button className='flex justify-around items-center search-input text-[#FFF] h-16 px-5 py-3 text-md border-l border-[#ffffff5c] outline-none min-w-[190px] clickable' 
                     onClick={() => setBedBathsModalOpen(true)}>
-                  <FaBed />  Beds & Baths
+                  <FaBed />{(form?.bed && form.bed !== 'Any') ? form.bed: ''}  Beds & {(form?.bed && form.bath !== 'Any') ? form.bath: ''} Baths
             </button>       
             {/* Map Button */}
             <button

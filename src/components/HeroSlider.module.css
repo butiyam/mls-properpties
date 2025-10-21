@@ -55,7 +55,7 @@
 .searchBar {
   margin-top: 32px;
   width: 85vw;
-  max-width: 800px;
+  max-width: 900px;
   z-index: 3;
   pointer-events: all;
 }

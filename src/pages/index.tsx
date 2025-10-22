@@ -17,6 +17,8 @@ import ServicesSection from "@/components/ServicesSection";
 import AboutUsSection from '@/components/AboutUsSection';
 import ClientTestimonials from '@/components/ClientTestimonials';
 import BookAppointment from '@/components/BookAppointment';
+import { Box, Typography, Select, MenuItem } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -64,10 +66,61 @@ const slides = [
   // Add more slides as needed
 ];
 
+const SORT_OPTIONS = [
+  { label: 'Newest', value: 'newest' },
+  { label: 'Price high to low', value: 'priceHigh' },
+  { label: 'Price low to high', value: 'priceLow' },
+];
+
 const PropertyMap = dynamic(() => import("../components/PropertyMap"), { ssr: false });
 
 
 export default function Home() {
+
+interface SortDropdownProps {
+  value: string;
+  onChange: (event: SelectChangeEvent) => void;
+}
+ 
+
+const SortDropdown: React.FC<SortDropdownProps> = ({ value, onChange }) => (
+  <Box display="flex" alignItems="center" gap={1}>
+    <Typography variant="subtitle1" color="#000">
+      Sort by:
+    </Typography>
+    <Select
+      value={value}
+      onChange={onChange}
+      size="small"
+      sx={{
+        minWidth: 170,
+        color: "#fffcb3",
+        bgcolor: "#222538",
+        fontWeight: 'bold',
+        borderRadius: 2,
+        "& .MuiSelect-icon": { color: "#fffcb3" },
+        "& .MuiSelect-select": { py: 1, px: 2 },
+        "& .MuiOutlinedInput-notchedOutline": { border: 0 },
+        boxShadow: 2,
+      }}
+      MenuProps={{
+        anchorOrigin: { vertical: "bottom", horizontal: "left" },
+        PaperProps: { sx: { borderRadius: 2, mt: 0.5 } },
+      }}
+    >
+      {SORT_OPTIONS.map(opt => (
+        <MenuItem
+          key={opt.value}
+          value={opt.value}
+          sx={{ py: 1.2, px: 2, fontWeight: 'bold' }}
+        >
+          {opt.label}
+        </MenuItem>
+      ))}
+    </Select>
+  </Box>
+);
+
 
 type Property = {
   Media?: string;
@@ -140,6 +193,9 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
     bed: "",
     bath: "",
   });
+
+  const [sort, setSort] = useState('newest');
+  const handleSortChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setSort(e.target.value);
 
   const divRef = useRef<HTMLDivElement>(null);
   const contentdivRef = useRef<HTMLDivElement>(null);
@@ -275,6 +331,7 @@ React.useEffect(() => {
           priceMax: form.maxPrice,
           bed: form.bed,
           bath: form.bath,
+          sortBy: sort,
           page,
           limit,
         }
@@ -294,10 +351,10 @@ React.useEffect(() => {
       setLoading(false);
     }
   };
-
+console.log(sort)
   fetchProperties();
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [page]); // run once on mount
+}, [page,sort]); // run once on mount
 
   
   const handleFilters = async (Filters: { minPrice: number; maxPrice: number; bedrooms: string; bathrooms: string; }) => {
@@ -326,6 +383,7 @@ React.useEffect(() => {
           priceMax: Filters.maxPrice,
           bed: Filters.bedrooms,
           bath: Filters.bathrooms,
+          sortBy: sort,
           limit: limit
         }
       });
@@ -545,6 +603,22 @@ React.useEffect(() => {
          {form.city? form.city : 'Oak Brook'} Properties
      {/* SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
       </h1>
+        <div className="flex justify-between mb-5 gap-2 pt-2">
+              <SortDropdown value={sort} onChange={handleSortChange} />
+              <FilterModal
+              open={filterOpen}
+              onClose={() => setFilterOpen(false)}
+              onApply={(filters) => {
+                // Filter your listings here based on filters
+                handleFilters(filters)
+              }}
+              initialFilters={filters} // 👈 pass current filters
+            />
+
+            <button className='flex justify-center font-bold items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
+            <FaFilter style={{paddingRight: '5px'}} />Filters
+            </button>
+          </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         { properties.map((property, index) => (
           <Link key={index} href={`/property-details/${property.ListingKey}`}>
@@ -613,7 +687,8 @@ React.useEffect(() => {
       <>
         <div className="container mx-auto px-4 py-8">
          <h1 className="text-4xl font-bold text-center text-black">FOUND 0 RESULT.</h1>
-          <div className="flex justify-end mb-5 gap-2 pt-2">
+          <div className="flex justify-between mb-5 gap-2 pt-2">
+              <SortDropdown value={sort} onChange={handleSortChange} />
               <FilterModal
               open={filterOpen}
               onClose={() => setFilterOpen(false)}
@@ -624,7 +699,7 @@ React.useEffect(() => {
               initialFilters={filters} // 👈 pass current filters
             />
 
-            <button className='flex justify-center items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
+            <button className='flex justify-center font-bold items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
             <FaFilter style={{paddingRight: '5px'}} />Filters
             </button>
           </div>
@@ -706,9 +781,6 @@ React.useEffect(() => {
                   {(form.maxPrice === 0 && form.minPrice === 0) || (form.minPrice === 0 && form.maxPrice === 2000000) ? '$ Price' : 
                   form.maxPrice? new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(form.maxPrice)) : ''
                   }
-
-                  
-                  
             </button>
 
             <BedsBathsModal
@@ -810,7 +882,8 @@ React.useEffect(() => {
     {/*  SHOWING {page == 1 ? page : 20*page - 20+1} - {(total > 20 ? 20*page : total) > total ? total : (total > 20 ? 20*page : total)  } OF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0,}).format(Number(total))} LISTINGS */}
       </h1>
 
-        <div className="flex justify-end mb-5 gap-2 pt-2">
+        <div className="flex justify-between mb-5 gap-2 pt-2">
+             <SortDropdown value={sort} onChange={handleSortChange} />
               <FilterModal
               open={filterOpen}
               onClose={() => setFilterOpen(false)}
@@ -821,7 +894,7 @@ React.useEffect(() => {
               initialFilters={filters} // 👈 pass current filters
             />
 
-            <button className='flex justify-center items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
+            <button className='flex justify-center font-bold items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
             <FaFilter style={{paddingRight: '5px'}} />Filters
             </button>
             </div>
@@ -895,7 +968,8 @@ React.useEffect(() => {
       <>
         <div className="container mx-auto px-4 py-8">
          <h1 className="text-4xl font-bold text-center text-black">FOUND 0 RESULT.</h1>
-          <div className="flex justify-end mb-5 gap-2 pt-2">
+          <div className="flex justify-between mb-5 gap-2 pt-2">
+              <SortDropdown value={sort} onChange={handleSortChange} />
               <FilterModal
               open={filterOpen}
               onClose={() => setFilterOpen(false)}
@@ -906,7 +980,7 @@ React.useEffect(() => {
               initialFilters={filters} // 👈 pass current filters
             />
 
-            <button className='flex justify-center items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
+            <button className='flex justify-center font-bold items-center p-2 bg-[#222538] text-[#fffcb3] w-max border border-[#ffffff5c] rounded shadow-lg cursor-pointer' onClick={() => setFilterOpen(true)}>
             <FaFilter style={{paddingRight: '5px'}} />Filters
             </button>
           </div>

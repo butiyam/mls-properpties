@@ -26,6 +26,12 @@ type PropertyRow = RowDataPacket & {
   OriginalEntryTimestamp: Date;
 };
 
+const sortMapping: Record<string, string> = {
+  newest: 'OriginalEntryTimestamp DESC',
+  priceHigh: 'ListPrice DESC',
+  priceLow: 'ListPrice ASC',
+};
+
 async function fetchMLSMedia(property: PropertyRow) {
 
   try {
@@ -70,6 +76,8 @@ async function syncPropertiesWithMedia(properties: PropertyRow[]) {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+
+    const sortBy = (req.query.sortBy as string) || '';
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
     const offset = (page - 1) * limit;
@@ -134,81 +142,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
     }
 
-   /*  if (streetname) {
-      query += ' AND StreetName LIKE ?';
-      query2 += ' AND StreetName LIKE ?';
-    
-      params.push(`%${streetname}%`);
-      params2.push(`%${streetname}%`);
-      params3.push(`%${streetname}%`);
-    
-    }
-
-     if (streetnumber) {
-      query += ' AND StreetNumber LIKE ?';
-      query2 += ' AND StreetNumber LIKE ?';
-    
-      params.push(`%${streetnumber}%`);
-      params2.push(`%${streetnumber}%`);
-      params3.push(`%${streetnumber}%`);
-    
-    }
-    
-    if (postalcode) {
-      query += ' AND PostalCode LIKE ?';
-      query2 += ' AND PostalCode LIKE ?';
-    
-      params.push(`%${postalcode}%`);
-      params2.push(`%${postalcode}%`);
-      params3.push(`%${postalcode}%`);
-    
-    }*/
 
       query3 = query;
       query3 +=  ' AND Media = ?'
       params3.push('[]');
 
+    // Build order by clause if valid sortBy provided
+    const orderByClause = sortMapping[sortBy] ? ` ORDER BY ${sortMapping[sortBy]}` : '';
+
+    // Append order by clause before pagination
+    query += orderByClause;
+    query3 += orderByClause;
 
     query += ' LIMIT ? OFFSET ?';
     query3 += ' LIMIT ? OFFSET ?';
     params.push(limit, offset);
     params3.push(limit, offset);
 
-      // Serve cached properties
-      const [properties] = await db.query<PropertyRow[]>(query, params);
-
-      // Filter properties that have non-empty Media
-    /*  const noMediaProperties = properties.filter((p) => {
-      if (!p.Media) return true; // no Media at all → keep
-
-      try {
-        const media = JSON.parse(p.Media);
-
-        // if it's an array, keep only if empty
-        if (Array.isArray(media)) {
-          return media.length === 0;
-        }
-
-        // if it's an object with MediaURL → has media → exclude
-        if (media?.MediaURL) {
-          return false;
-        }
-
-        // fallback: exclude if truthy
-        return !media;
-      } catch {
-        // not JSON → check if it's an empty string
-        return !(typeof p.Media === "string" && p.Media.trim().length > 0);
-      }
-    });*/
-
-
-      // Upload media to Cloudinary & save URLs
-      //console.log(noMediaProperties.length)
-     //await syncPropertiesWithMedia(noMediaProperties);
-
-      // Fetch all newly inserted properties after Media inserted
-      //let [parsedProperties] = await db.query<PropertyRow[]>(query, params);
+    // Serve cached properties
+    const [properties] = await db.query<PropertyRow[]>(query, params);
 
     const  parsedProperties = properties.map(p => ({
         ...p,

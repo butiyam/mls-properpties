@@ -8,7 +8,6 @@ const containerStyle = {
   height: '100%',
 };
 
-const defaultCenter = { lat: 37.7749, lng: -122.4194 } // Example: San Francisco
 
 type Address = {
   streetnumber: string;
@@ -112,16 +111,11 @@ export default function PropertyMap({ onSelectLocation, properties, onClose }: M
         </button>
       </div>
       
-      
-    <GoogleMap mapContainerStyle={containerStyle}   center={{
-                                                      lat: center?.lat ?? defaultCenter.lat,
-                                                      lng: center?.lng ?? defaultCenter.lng,
-                                                    }}
-      zoom={13}  onClick={handleClick} >
+    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}  onClick={handleClick} >
       {properties.map((property, index) => (
         <OverlayView
           key={index}
-          position={{ lat: property?.lat ?? defaultCenter.lat, lng: property?.lng ?? defaultCenter.lng }}
+          position={{ lat: property.lat, lng: property.lng }}
           mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
        
         >
@@ -151,7 +145,7 @@ export default function PropertyMap({ onSelectLocation, properties, onClose }: M
 
       {selectedProperty && (
         <InfoWindow
-          position={{ lat: selectedProperty.lat ?? defaultCenter.lat, lng: selectedProperty.lng ?? defaultCenter.lng }}
+          position={{ lat: selectedProperty.lat, lng: selectedProperty.lng }}
           onCloseClick={() => setSelectedProperty(null)}
         >
           <a href={`/property-details/${selectedProperty.ListingKey}`}>

@@ -298,7 +298,7 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
     rawProps.map(async (prop) => {
     let latLng;
       try {
-        latLng = await getLatLngFromAddress(
+       latLng = await getLatLngFromAddress(
         `${prop.StreetNumber} ${prop.StreetName} ${prop.StreetSuffix}, ${prop.City}, ${prop.StateOrProvince} ${prop.PostalCode}`
       );        
       } catch (error) {

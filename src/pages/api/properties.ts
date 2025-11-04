@@ -82,9 +82,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const limit = parseInt(req.query.limit as string) || 20;
     const offset = (page - 1) * limit;
 
-    const streetname = (req.query.streetname as string) || '';
-    const streetnumber = (req.query.streetnumber as string) || '';
-    const postalcode = (req.query.postalcode as string) || '';
+    //const streetname = (req.query.streetname as string) || '';
+    //const streetnumber = (req.query.streetnumber as string) || '';
+    //const postalcode = (req.query.postalcode as string) || '';
     const city = (req.query.city as string) || '';
     const state = (req.query.state as string) || '';
     const bed = parseInt(req.query.bed as string) || 0;

@@ -1,12 +1,12 @@
 // types.ts
 export interface PropertyData {
   ListingKey: string;  // required
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
   price: number;
   beds: number;
   baths: number;
-  sqft: number;
+  sqft?: number;
   address: string;
   image: string;
 }

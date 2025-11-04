@@ -292,16 +292,24 @@ async function getLatLngFromAddress(address: string): Promise<{ lat: number; lng
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function processProperties(rawProps: any[]) {
+
+
   const processedProps = await Promise.all(
     rawProps.map(async (prop) => {
-      const latLng = await getLatLngFromAddress(
+    let latLng;
+      try {
+        latLng = await getLatLngFromAddress(
         `${prop.StreetNumber} ${prop.StreetName} ${prop.StreetSuffix}, ${prop.City}, ${prop.StateOrProvince} ${prop.PostalCode}`
-      );
+      );        
+      } catch (error) {
+        console.log(error);
+      }
+
       
       return {
         ListingKey: prop.ListingKey || 'unknown',
-        lat: latLng.lat,
-        lng: latLng.lng,
+        lat: latLng?.lat,
+        lng: latLng?.lng,
         price: prop.ListPrice,
         beds: prop.BedroomsTotal,
         baths: prop.BathroomsTotalInteger,

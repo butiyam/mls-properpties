@@ -4,16 +4,23 @@ import { RowDataPacket } from 'mysql2';
  export default async function fetchAllMedia() {
  const INITIAL_URL = "https://images-listings.coldwellbanker.com/MLSNI/"; 
                      //"12/45/66/36/_P/12456636_P01.jpg?width=1024";
- const [rows] = await db.query<RowDataPacket[]>(`SELECT ListingKey, PhotosCount FROM properties WHERE Media IS NULL;`);
+ const [rows] = await db.query<RowDataPacket[]>(`SELECT ListingKey, PhotosCount FROM properties;`);
+
+ let count = 19349;
 
 for (const row of rows) {
-  console.log(row.PhotosCount);
-    const uploadedUrls: string[] = [];
+
+  const uploadedUrls: string[] = [];
   for(let k = 0; k < Number(row.PhotosCount); k++){
     const listingkey = row.ListingKey;
     const cleanedKey = listingkey.replace('MRD', ''); 
-    const formatted = cleanedKey.match(/.{1,2}/g)?.join('/') + '/';   
-    const url = INITIAL_URL+formatted+'_P/'+cleanedKey+"_P0"+k+".jpg?width=1024";
+    const formatted = cleanedKey.match(/.{1,2}/g)?.join('/') + '/';
+    let url;
+    if(k > 9){
+        url = INITIAL_URL+formatted+'_P/'+cleanedKey+"_P"+k+".jpg?width=1024";
+    }else{
+        url = INITIAL_URL+formatted+'_P/'+cleanedKey+"_P0"+k+".jpg?width=1024";
+    }
     uploadedUrls.push(url);
     
  }
@@ -22,7 +29,7 @@ for (const row of rows) {
         JSON.stringify(uploadedUrls),
         row.ListingKey
       ]);
-    console.log(row.ListingKey)
+      console.log(count--)
       await new Promise(res => setTimeout(res, 50)); // 50ms pause
 
 }

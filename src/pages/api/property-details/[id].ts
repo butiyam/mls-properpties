@@ -163,7 +163,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if(mlsProperty.StandardStatus !== property.StandardStatus){
       console.log('status changed');
       // update status
-      await db.query('UPDATE properties SET StandardStatus = ? AND StatusChangeTimestamp = ?  WHERE ListingKey = ?', [mlsProperty.StandardStatus, mlsProperty.StatusChangeTimestamp,id]);
+      const mysqlDate = mlsProperty.StatusChangeTimestamp.replace('T', ' ').replace('Z', '');
+      await db.query('UPDATE properties SET StandardStatus = ?, StatusChangeTimestamp = ?  WHERE ListingKey = ?',
+         [mlsProperty.StandardStatus, mysqlDate, id]
+      );
       property.StandardStatus = mlsProperty.StandardStatus;
       property.StatusChangeTimestamp = mlsProperty.StatusChangeTimestamp;
     }

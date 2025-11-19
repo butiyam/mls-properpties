@@ -930,7 +930,8 @@ console.log(sort)
                 <div className="flex flex justify-between mb-1">
                   <h1 className="text-xl text-[#1b3c55] font-bold ">{new Intl.NumberFormat("en-US", {style: "currency", currency: "USD", maximumFractionDigits: 0,}).format(Number(property.ListPrice))}</h1>
                   <span className="flex gap-2 items-center text-[#000000de] font-medium text-sm">
-                  <FaDotCircle fill='green' />{'Active'}
+                   <FaDotCircle fill={property.StandardStatus === 'Active' ? 'green' : 'red' } />
+                  {property.StandardStatus}
                   </span>
                  </div>
                 <div className="text-xs text-[#000000de] inline-flex flex justify-around font-bold mb-2 flex gap-2 items-center">

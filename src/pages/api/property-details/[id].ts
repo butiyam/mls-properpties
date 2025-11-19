@@ -46,6 +46,12 @@ type PropertyRow = RowDataPacket & {
   OriginalEntryTimestamp: Date;
 };
 
+function toMySQLDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toISOString().slice(0, 19).replace('T', ' ');
+}
+
+
 async function fetchMLSMedia(property: PropertyDetails) {
 
   try {
@@ -163,12 +169,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if(mlsProperty.StandardStatus !== property.StandardStatus){
       console.log('status changed');
       // update status
-      const mysqlDate = mlsProperty.StatusChangeTimestamp.replace('T', ' ').replace('Z', '');
-      await db.query('UPDATE properties SET StandardStatus = ?, StatusChangeTimestamp = ?  WHERE ListingKey = ?',
-         [mlsProperty.StandardStatus, mysqlDate, id]
+      const mysqlDate = toMySQLDate(mlsProperty.StatusChangeTimestamp);
+
+      await db.query('UPDATE properties SET StandardStatus = ?, StatusChangeTimestamp = ?, ModificationTimestamp = ?  WHERE ListingKey = ?',
+         [mlsProperty.StandardStatus, mysqlDate, mysqlDate, id]
       );
       property.StandardStatus = mlsProperty.StandardStatus;
-      property.StatusChangeTimestamp = mlsProperty.StatusChangeTimestamp;
+      property.StatusChangeTimestamp = mysqlDate;
+      property.ModificationTimestamp = mysqlDate;
     }
 
     // Parse Media if stored as JSON string

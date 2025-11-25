@@ -98,3 +98,67 @@ textarea:-moz-placeholder { /* Firefox 4 - 18 */
   background-color: #16243e;
 }
 
+/* Dark Mode */
+.dark-mode {
+  background: #111 !important;
+  color: white !important;
+}
+
+/* High Contrast */
+.a11y-contrast {
+  background: black !important;
+  color: yellow !important;
+}
+
+/* Dyslexia-friendly Font */
+.a11y-dyslexic {
+  font-family: "OpenDyslexic", Arial, sans-serif !important;
+}
+
+.a11y-hide-images img {
+  display: none !important;
+}
+
+/* Grayscale */
+.grayscale {
+  filter: grayscale(100%);
+}
+
+/* Highlighted Links */
+.a11y-highlight-links a {
+  background: yellow;
+  padding: 2px 4px;
+}
+
+.a11y-pause-animations * {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+
+/* Large Cursor */
+.a11y-large-cursor {
+  cursor: url('../../public/cursor-large.png'), auto;
+}
+
+.a11y-bigtext body {
+  font-size: 200%; /* change to 150% or 200% if needed */
+  line-height: 1.6;
+}
+
+.a11y-bigtext * {
+  letter-spacing: 0.2px;
+}
+
+
+.btn {
+  background: #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+
+

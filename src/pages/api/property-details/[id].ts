@@ -148,9 +148,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     mlsProperty = mlsProperty.data;
 
-  } catch (error) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    
+
+    if(error.status === 400){
+    console.log(error.status)
+    
+    // prevent crash
+    if (!mlsProperty) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      mlsProperty = {} as any;
+    }
+
+    mlsProperty.StandardStatus = "Delete";
+    mlsProperty.StatusChangeTimestamp = new Date();
+
+    }else{
     console.error(`something is wrong!`, error);
     return [];
+    }
   }
 
   try {

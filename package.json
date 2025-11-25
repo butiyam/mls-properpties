@@ -16,6 +16,7 @@
     "aws-sdk": "^2.1692.0",
     "axios": "^1.12.2",
     "cloudinary": "^2.7.0",
+    "framer-motion": "^12.23.24",
     "jquery": "^3.7.1",
     "leaflet": "^1.9.4",
     "mysql2": "^3.14.5",

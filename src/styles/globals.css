@@ -151,6 +151,17 @@ textarea:-moz-placeholder { /* Firefox 4 - 18 */
 }
 
 
+/* ---- ACCESSIBILITY: Text Spacing ---- */
+
+html.a11y-textspacing *,
+html.a11y-textspacing *::before,
+html.a11y-textspacing *::after {
+  line-height: 1.8 !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+}
+
+
 .btn {
   background: #e5e7eb;
   padding: 6px 10px;

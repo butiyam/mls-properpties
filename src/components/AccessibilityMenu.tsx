@@ -58,6 +58,8 @@ export default function AccessibilityMenu() {
     if (settings.contrast) document.body.classList.add("a11y-contrast");
     else document.body.classList.remove("a11y-contrast");
 
+    if (settings.textSpacing) document.documentElement.classList.toggle("a11y-textspacing");
+
     if (settings.grayscale) document.body.classList.add("a11y-grayscale");
     else document.body.classList.remove("a11y-grayscale");
 
